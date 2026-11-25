@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TopBar from './TopBar.astro';
+import WorldMap from './WorldMap.astro';
+import CityDrawer from './CityDrawer.astro';
+import AudioPlayer from './AudioPlayer.astro';
+import TripPackModal from './TripPackModal.astro';
+import type { CitiesGeoJSON, CityData } from '../types/podatlas';
+
+interface Props {
+  city: CityData;
+  geoJson: CitiesGeoJSON;
+  pageTitle?: string;
+}
+
+const { city, geoJson, pageTitle } = Astro.props;
+const title = pageTitle ?? `${city.name}, ${city.country} — PodAtlas Podcast World Map`;
+const description = `${city.tagline} Explore ${city.episodes.length} podcast episodes, ${city.books.length} books, and ${city.placesAndGear.length} places & gear for ${city.name}.`;
+---
+
+<Layout title={title} description={description}>
+  <div class="h-full flex flex-col bg-slate-950 text-slate-100">
+    <TopBar />
+
+    <div class="flex-1 flex flex-col sm:flex-row min-h-0 overflow-hidden">
+      <WorldMap geoJson={geoJson} selectedCityId={city.id} />
+      <CityDrawer city={city} />
+    </div>
+
+    <AudioPlayer />
+    <TripPackModal city={city} />
+  </div>
+
+  <!-- Embedded city payload for instant client-side audio & Trip Pack export (zero extra fetch) -->
+  <script id="podatlas-city-payload" type="application/json" set:html={JSON.stringify(city)} />
+  <script>
+    import '../scripts/client';
+  </script>
+</Layout>

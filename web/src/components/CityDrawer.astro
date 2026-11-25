@@ -1,0 +1,282 @@
+---
+import type { CityData, EpisodeRecord } from '../types/podatlas';
+import {
+  buildAmazonUrl,
+  buildBookshopUrl,
+  buildGoogleMapsUrl,
+  buildViatorUrl,
+} from '../config/monetization';
+import { formatCoords, formatTime } from '../lib/format';
+
+interface Props {
+  city: CityData;
+}
+
+const { city } = Astro.props;
+
+function findEpisode(epId: string): EpisodeRecord | undefined {
+  return city.episodes.find((ep) => ep.id === epId) || city.episodes[0];
+}
+---
+
+<aside
+  id="podatlas-city-drawer"
+  data-city-id={city.id}
+  class="w-full sm:w-[400px] lg:w-[440px] shrink-0 border-l border-slate-800 bg-slate-900 flex flex-col min-h-0"
+>
+  <!-- Pre-rendered City Header -->
+  <div class="p-4 border-b border-slate-800 shrink-0">
+    <div class="flex items-start justify-between gap-2">
+      <div>
+        <div class="flex items-baseline gap-2">
+          <h1 class="text-base font-semibold text-slate-100">{city.name}</h1>
+          <span class="text-xs text-slate-400">{city.country}</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-0.5 font-mono">
+          {formatCoords(city.lat, city.lon)} · {city.episodes.length} episodes indexed
+        </p>
+      </div>
+      <button
+        id="podatlas-open-trip-pack"
+        type="button"
+        class="shrink-0 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-sky-500 text-slate-950 hover:bg-sky-400 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+      >
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span>$7 Trip Pack</span>
+      </button>
+    </div>
+
+    <p class="text-xs text-slate-300 mt-2 leading-relaxed">{city.tagline}</p>
+
+    <!-- Drawer Tabs -->
+    <div
+      id="podatlas-drawer-tabs"
+      class="grid grid-cols-3 gap-1 mt-3 p-1 rounded-lg bg-slate-950 border border-slate-800"
+    >
+      <button
+        type="button"
+        data-tab-btn="episodes"
+        class="py-1.5 rounded-md text-xs font-medium bg-slate-800 text-slate-100 shadow-sm transition cursor-pointer"
+      >
+        Episodes <span class="text-slate-400 ml-0.5">({city.episodes.length})</span>
+      </button>
+      <button
+        type="button"
+        data-tab-btn="books"
+        class="py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition cursor-pointer"
+      >
+        Books <span class="text-slate-400 ml-0.5">({city.books.length})</span>
+      </button>
+      <button
+        type="button"
+        data-tab-btn="places"
+        class="py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition cursor-pointer"
+      >
+        Places &amp; Gear <span class="text-slate-400 ml-0.5">({city.placesAndGear.length})</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Pre-rendered Static HTML Panels (SEO-ready on first byte!) -->
+  <div class="flex-1 overflow-y-auto custom-scroll p-4">
+    <!-- Episodes Panel -->
+    <div data-tab-panel="episodes" class="space-y-3">
+      {
+        city.episodes.map((ep) => (
+          <article
+            data-episode-card={ep.id}
+            class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 transition space-y-2.5"
+          >
+            <div class="flex items-start justify-between gap-2.5">
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="text-xs font-medium text-sky-400">{ep.show}</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">
+                    {ep.category}
+                  </span>
+                </div>
+                <h2 class="text-xs font-semibold text-slate-100 mt-1 leading-snug">{ep.title}</h2>
+              </div>
+              <button
+                type="button"
+                data-play-ep={ep.id}
+                data-start-sec="0"
+                title="Play episode"
+                class="shrink-0 w-8 h-8 rounded-full bg-sky-500 text-slate-950 flex items-center justify-center hover:bg-sky-400 transition cursor-pointer"
+              >
+                <svg class="w-3.5 h-3.5 ml-0.5" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+              </button>
+            </div>
+
+            <p class="text-xs text-slate-400 leading-relaxed">{ep.summary}</p>
+
+            <div class="flex items-center justify-between text-[11px] text-slate-500">
+              <span>{ep.publishedAt}</span>
+              <span class="font-mono">{formatTime(ep.durationSec)}</span>
+            </div>
+
+            {ep.mentions.length > 0 && (
+              <div class="pt-2 border-t border-slate-800/80 space-y-1.5">
+                <div class="text-[11px] font-medium text-slate-400">
+                  Extracted Mentions (Jump to Timestamp):
+                </div>
+                <div class="flex flex-wrap gap-1.5">
+                  {ep.mentions.map((m) => (
+                    <button
+                      type="button"
+                      data-play-ep={ep.id}
+                      data-start-sec={String(m.sec)}
+                      data-hint={`${m.type.toUpperCase()}: ${m.label}`}
+                      class="text-[11px] px-2 py-1 rounded-md bg-slate-900 border border-slate-800 hover:border-sky-500 text-slate-200 transition text-left cursor-pointer"
+                    >
+                      <span class="font-mono text-sky-400 mr-1.5">{formatTime(m.sec)}</span>
+                      {m.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </article>
+        ))
+      }
+    </div>
+
+    <!-- Books Panel -->
+    <div data-tab-panel="books" class="hidden space-y-3">
+      {
+        city.books.map((book) => {
+          const ep = findEpisode(book.episodeId);
+          return (
+            <article class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 space-y-2">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <h2 class="text-xs font-semibold text-slate-100 leading-snug">{book.title}</h2>
+                  <p class="text-xs text-slate-400 mt-0.5">by {book.author}</p>
+                </div>
+                {ep && (
+                  <button
+                    type="button"
+                    data-play-ep={ep.id}
+                    data-start-sec={String(book.timestampSec)}
+                    data-hint={`Book: ${book.title}`}
+                    class="shrink-0 text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-sky-400 hover:bg-slate-700 cursor-pointer"
+                  >
+                    ▶ {formatTime(book.timestampSec)}
+                  </button>
+                )}
+              </div>
+
+              {book.quote && (
+                <p class="text-xs text-slate-300 italic leading-relaxed">
+                  &ldquo;{book.quote}&rdquo;
+                </p>
+              )}
+
+              <div class="text-[11px] text-slate-400">
+                Mentioned on <span class="text-slate-200 font-medium">{book.show}</span>
+              </div>
+
+              <div class="flex items-center gap-2 pt-1.5">
+                <a
+                  href={buildBookshopUrl(book)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex-1 text-center py-1.5 rounded-lg text-xs font-medium bg-sky-500 text-slate-950 hover:bg-sky-400 transition"
+                >
+                  Bookshop.org
+                </a>
+                <a
+                  href={buildAmazonUrl(`${book.title} ${book.author}`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex-1 text-center py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-200 hover:bg-slate-700 transition"
+                >
+                  Amazon
+                </a>
+              </div>
+            </article>
+          );
+        })
+      }
+    </div>
+
+    <!-- Places & Gear Panel -->
+    <div data-tab-panel="places" class="hidden space-y-3">
+      {
+        city.placesAndGear.map((item) => {
+          const ep = findEpisode(item.episodeId);
+          const isGear = item.type === 'Gear';
+          const badgeStyle = isGear
+            ? 'bg-sky-500/15 text-sky-300 border-sky-500/30'
+            : item.type === 'Food'
+              ? 'bg-rose-500/15 text-rose-300 border-rose-500/30'
+              : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
+
+          return (
+            <article class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 space-y-2">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h2 class="text-xs font-semibold text-slate-100">{item.name}</h2>
+                  <span class={`text-[10px] px-1.5 py-0.5 rounded border ${badgeStyle}`}>
+                    {item.type}
+                  </span>
+                </div>
+                {ep && (
+                  <button
+                    type="button"
+                    data-play-ep={ep.id}
+                    data-start-sec={String(item.timestampSec)}
+                    data-hint={`${item.type}: ${item.name}`}
+                    class="shrink-0 text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-sky-400 hover:bg-slate-700 cursor-pointer"
+                  >
+                    ▶ {formatTime(item.timestampSec)}
+                  </button>
+                )}
+              </div>
+
+              <p class="text-xs text-slate-400 leading-relaxed">{item.note}</p>
+
+              <div class="pt-1 flex items-center gap-3 flex-wrap">
+                {isGear ? (
+                  <a
+                    href={buildAmazonUrl(item.name)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1 text-xs font-medium text-sky-400 hover:underline"
+                  >
+                    View Gear on Amazon ↗
+                  </a>
+                ) : (
+                  <>
+                    <a
+                      href={buildGoogleMapsUrl(item, city.name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-1 text-xs font-medium text-sky-400 hover:underline"
+                    >
+                      Open in Maps ↗
+                    </a>
+                    <a
+                      href={buildViatorUrl(city.name, item.name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-slate-200 hover:underline"
+                    >
+                      Tours nearby ↗
+                    </a>
+                  </>
+                )}
+              </div>
+            </article>
+          );
+        })
+      }
+    </div>
+  </div>
+</aside>

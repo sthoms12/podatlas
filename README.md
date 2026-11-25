@@ -17,7 +17,7 @@
 
 ## Monorepo Structure
 
-- `web/` — React 19 + TypeScript + Tailwind CSS + Vite frontend powered by MapLibre GL JS, OpenFreeMap vector tiles, Fuse.js search, and a persistent HTML5 `<audio>` player with clickable mention timestamps.
+- `web/` — Pure **Astro 5** (zero React) + TypeScript + Tailwind CSS v4 static site pre-rendering every `/city/:slug` page to HTML at build time, paired with MapLibre GL JS + OpenFreeMap vector tiles, Fuse.js search, and a persisted HTML5 `<audio>` player across View Transitions.
 - `pipeline/` — Modular Python 3.11+ ingestion, transcription, LLM extraction, GeoNames geocoding, Open Library book verification, and static JSON exporter, plus a turnkey Colab notebook (`pipeline/notebooks/PodAtlas_Pipeline.ipynb`).
 - `scripts/` — `seed_from_prototype.py` to generate a validated 10-city starter dataset into `web/public/`.
 

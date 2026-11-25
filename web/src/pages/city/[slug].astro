@@ -1,0 +1,23 @@
+---
+import PodAtlasWorkspace from '../../components/PodAtlasWorkspace.astro';
+import { loadAllCitiesSync, loadCitiesGeoJsonSync } from '../../lib/staticData';
+import type { CitiesGeoJSON, CityData } from '../../types/podatlas';
+
+export function getStaticPaths() {
+  const cities = loadAllCitiesSync();
+  const geoJson = loadCitiesGeoJsonSync();
+  return cities.map((city) => ({
+    params: { slug: city.id },
+    props: { city, geoJson },
+  }));
+}
+
+interface Props {
+  city: CityData;
+  geoJson: CitiesGeoJSON;
+}
+
+const { city, geoJson } = Astro.props;
+---
+
+<PodAtlasWorkspace city={city} geoJson={geoJson} />

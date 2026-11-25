@@ -1,0 +1,21 @@
+---
+import PodAtlasWorkspace from '../components/PodAtlasWorkspace.astro';
+import {
+  loadAllCitiesSync,
+  loadCitiesGeoJsonSync,
+  loadCityBySlugSync,
+} from '../lib/staticData';
+
+const geoJson = loadCitiesGeoJsonSync();
+const defaultCity = loadCityBySlugSync('kyoto-japan') ?? loadAllCitiesSync()[0];
+
+if (!defaultCity) {
+  throw new Error('No seeded city JSON files found in web/public/data/. Run scripts/seed_from_prototype.py first.');
+}
+---
+
+<PodAtlasWorkspace
+  city={defaultCity}
+  geoJson={geoJson}
+  pageTitle="PodAtlas — Podcast World Map & Books, Places & Gear Index"
+/>

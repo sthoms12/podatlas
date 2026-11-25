@@ -1,0 +1,28 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../index.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <ClientRouter />
+  </head>
+  <body class="bg-slate-950 text-slate-100 antialiased selection:bg-sky-500/30">
+    <slot />
+  </body>
+</html>

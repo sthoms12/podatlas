@@ -25,6 +25,7 @@ pipeline/.env
 # Node / Frontend
 web/node_modules/
 web/dist/
+web/.astro/
 web/.env
 web/.env.local
 *.log

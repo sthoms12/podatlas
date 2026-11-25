@@ -1,0 +1,99 @@
+---
+const categories = ['All', 'Travel', 'History', 'Food', 'Culture'] as const;
+---
+
+<header
+  transition:persist="podatlas-topbar"
+  class="shrink-0 border-b border-slate-800 bg-slate-900/95 backdrop-blur px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 z-30"
+>
+  <!-- Brand -->
+  <a href="/" class="flex items-center gap-2.5 group">
+    <div
+      class="w-8 h-8 rounded-lg bg-sky-500 text-slate-950 flex items-center justify-center shadow-sm shadow-sky-500/20 group-hover:bg-sky-400 transition"
+    >
+      <svg
+        class="w-4 h-4"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M2 12h20"></path>
+        <path
+          d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+        ></path>
+      </svg>
+    </div>
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="font-semibold text-sm text-slate-100 leading-tight tracking-tight">
+          PodAtlas
+        </span>
+        <span
+          class="text-[11px] px-1.5 py-0.5 rounded bg-slate-800 text-sky-300 border border-slate-700 font-medium"
+        >
+          Astro
+        </span>
+      </div>
+      <p class="text-[11px] text-slate-400 leading-tight">
+        Podcast World Map · Books, Places &amp; Gear
+      </p>
+    </div>
+  </a>
+
+  <!-- Fuse.js Instant Search -->
+  <div id="podatlas-search-box" class="relative flex-1 min-w-[220px] max-w-md">
+    <svg
+      class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="m21 21-4.3-4.3"></path>
+    </svg>
+    <input
+      id="podatlas-search-input"
+      type="text"
+      autocomplete="off"
+      placeholder="Search city, book, podcast, or restaurant (e.g. Kyoto, SPQR, Tacos)..."
+      class="w-full pl-9 pr-8 py-1.5 text-xs rounded-lg bg-slate-950 border border-slate-800 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-sky-500 transition"
+    />
+    <button
+      id="podatlas-search-clear"
+      type="button"
+      aria-label="Clear search"
+      class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 text-sm leading-none cursor-pointer"
+    >
+      &times;
+    </button>
+    <div
+      id="podatlas-search-dropdown"
+      class="hidden absolute left-0 right-0 top-full mt-1.5 rounded-xl bg-slate-900 border border-slate-700 shadow-2xl z-50 max-h-80 overflow-y-auto custom-scroll"
+    >
+    </div>
+  </div>
+
+  <!-- Category Filters -->
+  <div id="podatlas-category-bar" class="flex items-center gap-1.5 flex-wrap">
+    {
+      categories.map((cat) => (
+        <button
+          type="button"
+          data-cat={cat}
+          class={`cat-btn px-2.5 py-1 rounded-md text-xs font-medium transition cursor-pointer ${
+            cat === 'All'
+              ? 'bg-sky-500 text-slate-950 shadow-sm'
+              : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+          }`}
+        >
+          {cat}
+        </button>
+      ))
+    }
+  </div>
+</header>
