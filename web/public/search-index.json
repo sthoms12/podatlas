@@ -1,0 +1,602 @@
+[
+  {
+    "kind": "City",
+    "title": "Kyoto, Japan",
+    "subtitle": "3 episodes · 3 books · 3 places",
+    "cityId": "kyoto-japan",
+    "tab": "episodes"
+  },
+  {
+    "kind": "Episode",
+    "title": "Walking the Tokaido: Kyoto at the Dawn of the Edo Era",
+    "subtitle": "History of Japan Podcast · Kyoto",
+    "cityId": "kyoto-japan",
+    "tab": "episodes",
+    "episodeId": "ky-1"
+  },
+  {
+    "kind": "Episode",
+    "title": "Kyoto Beyond the Crowds: Backstreet Temples & Dawn Walks",
+    "subtitle": "Zero to Travel · Kyoto",
+    "cityId": "kyoto-japan",
+    "tab": "episodes",
+    "episodeId": "ky-2"
+  },
+  {
+    "kind": "Episode",
+    "title": "Inside Kyoto’s 400-Year-Old Tofu & Matcha Craft",
+    "subtitle": "The Sporkful · Kyoto",
+    "cityId": "kyoto-japan",
+    "tab": "episodes",
+    "episodeId": "ky-3"
+  },
+  {
+    "kind": "Book",
+    "title": "Kyoto: A Cultural History",
+    "subtitle": "John Dougill · Kyoto",
+    "cityId": "kyoto-japan",
+    "tab": "books",
+    "episodeId": "ky-1",
+    "timestampSec": 840
+  },
+  {
+    "kind": "Book",
+    "title": "The Book of Tea",
+    "subtitle": "Kakuzo Okakura · Kyoto",
+    "cityId": "kyoto-japan",
+    "tab": "books",
+    "episodeId": "ky-3",
+    "timestampSec": 620
+  },
+  {
+    "kind": "Book",
+    "title": "Old Kyoto: A Short Social History",
+    "subtitle": "Diane Durston · Kyoto",
+    "cityId": "kyoto-japan",
+    "tab": "books",
+    "episodeId": "ky-2",
+    "timestampSec": 2100
+  },
+  {
+    "kind": "Landmark",
+    "title": "Honen-in Temple",
+    "subtitle": "Kyoto · Moss-covered gate near Philosopher’s Path with 1/10th the crowds",
+    "cityId": "kyoto-japan",
+    "tab": "places",
+    "episodeId": "ky-2",
+    "timestampSec": 1120
+  },
+  {
+    "kind": "Food",
+    "title": "Ippodo Tea Main Store",
+    "subtitle": "Kyoto · 300-year-old tea house serving fresh hand-whisked matcha at the ",
+    "cityId": "kyoto-japan",
+    "tab": "places",
+    "episodeId": "ky-3",
+    "timestampSec": 1540
+  },
+  {
+    "kind": "Gear",
+    "title": "Peak Design Travel Backpack 30L",
+    "subtitle": "Kyoto · Recommended for fitting cleanly into Japanese station coin locke",
+    "cityId": "kyoto-japan",
+    "tab": "places",
+    "episodeId": "ky-2",
+    "timestampSec": 2410
+  },
+  {
+    "kind": "City",
+    "title": "Lisbon, Portugal",
+    "subtitle": "2 episodes · 2 books · 3 places",
+    "cityId": "lisbon-portugal",
+    "tab": "episodes"
+  },
+  {
+    "kind": "Episode",
+    "title": "The Great Lisbon Earthquake of 1755",
+    "subtitle": "The Rest Is History · Lisbon",
+    "cityId": "lisbon-portugal",
+    "tab": "episodes",
+    "episodeId": "li-1"
+  },
+  {
+    "kind": "Episode",
+    "title": "4 Perfect Days in Lisbon & Sintra Without Tourist Traps",
+    "subtitle": "Amateur Traveler · Lisbon",
+    "cityId": "lisbon-portugal",
+    "tab": "episodes",
+    "episodeId": "li-2"
+  },
+  {
+    "kind": "Book",
+    "title": "The Last Day: Wrath, Ruin & Reason in 1755 Lisbon",
+    "subtitle": "Nicholas Shrady · Lisbon",
+    "cityId": "lisbon-portugal",
+    "tab": "books",
+    "episodeId": "li-1",
+    "timestampSec": 960
+  },
+  {
+    "kind": "Book",
+    "title": "The Year of the Death of Ricardo Reis",
+    "subtitle": "José Saramago · Lisbon",
+    "cityId": "lisbon-portugal",
+    "tab": "books",
+    "episodeId": "li-2",
+    "timestampSec": 1800
+  },
+  {
+    "kind": "Landmark",
+    "title": "Carmo Convent Ruins",
+    "subtitle": "Lisbon · Open-air Gothic nave left roofless since the 1755 quake.",
+    "cityId": "lisbon-portugal",
+    "tab": "places",
+    "episodeId": "li-1",
+    "timestampSec": 2220
+  },
+  {
+    "kind": "Food",
+    "title": "Ponto Final",
+    "subtitle": "Lisbon · Waterfront tables across the Tagus with sunset views back at the",
+    "cityId": "lisbon-portugal",
+    "tab": "places",
+    "episodeId": "li-2",
+    "timestampSec": 1350
+  },
+  {
+    "kind": "Gear",
+    "title": "Grip-Sole Walking Shoes",
+    "subtitle": "Lisbon · Essential for slick white limestone calçada cobblestones on stee",
+    "cityId": "lisbon-portugal",
+    "tab": "places",
+    "episodeId": "li-2",
+    "timestampSec": 2100
+  },
+  {
+    "kind": "City",
+    "title": "Rome, Italy",
+    "subtitle": "2 episodes · 2 books · 2 places",
+    "cityId": "rome-italy",
+    "tab": "episodes"
+  },
+  {
+    "kind": "Episode",
+    "title": "Walking Caesar’s Forum: Power & Propaganda in Stone",
+    "subtitle": "Fall of Civilizations · Rome",
+    "cityId": "rome-italy",
+    "tab": "episodes",
+    "episodeId": "ro-1"
+  },
+  {
+    "kind": "Episode",
+    "title": "The Real Science of Cacio e Pepe & Carbonara",
+    "subtitle": "Gastropod · Rome",
+    "cityId": "rome-italy",
+    "tab": "episodes",
+    "episodeId": "ro-2"
+  },
+  {
+    "kind": "Book",
+    "title": "SPQR: A History of Ancient Rome",
+    "subtitle": "Mary Beard · Rome",
+    "cityId": "rome-italy",
+    "tab": "books",
+    "episodeId": "ro-1",
+    "timestampSec": 1200
+  },
+  {
+    "kind": "Book",
+    "title": "Tasting Rome",
+    "subtitle": "Katie Parla & Kristina Gill · Rome",
+    "cityId": "rome-italy",
+    "tab": "books",
+    "episodeId": "ro-2",
+    "timestampSec": 1980
+  },
+  {
+    "kind": "Landmark",
+    "title": "Basilica of San Clemente",
+    "subtitle": "Rome · Descend 3 stories underground from a 12th-century church into a ",
+    "cityId": "rome-italy",
+    "tab": "places",
+    "episodeId": "ro-1",
+    "timestampSec": 2900
+  },
+  {
+    "kind": "Food",
+    "title": "Testaccio Market",
+    "subtitle": "Rome · Locals-first food hall famous for Mordi e Vai braised-beef sandw",
+    "cityId": "rome-italy",
+    "tab": "places",
+    "episodeId": "ro-2",
+    "timestampSec": 1440
+  },
+  {
+    "kind": "City",
+    "title": "Mexico City, Mexico",
+    "subtitle": "2 episodes · 2 books · 2 places",
+    "cityId": "mexico-city-mexico",
+    "tab": "episodes"
+  },
+  {
+    "kind": "Episode",
+    "title": "Tacos al Pastor: From Lebanese Spit to CDMX Street Icon",
+    "subtitle": "Proof (America’s Test Kitchen) · Mexico City",
+    "cityId": "mexico-city-mexico",
+    "tab": "episodes",
+    "episodeId": "mx-1"
+  },
+  {
+    "kind": "Episode",
+    "title": "The Sinking City Built on Lake Texcoco",
+    "subtitle": "99% Invisible · Mexico City",
+    "cityId": "mexico-city-mexico",
+    "tab": "episodes",
+    "episodeId": "mx-2"
+  },
+  {
+    "kind": "Book",
+    "title": "Fifth Sun: A New History of the Aztecs",
+    "subtitle": "Camilla Townsend · Mexico City",
+    "cityId": "mexico-city-mexico",
+    "tab": "books",
+    "episodeId": "mx-2",
+    "timestampSec": 1740
+  },
+  {
+    "kind": "Book",
+    "title": "Planet Taco: A Global History of Mexican Food",
+    "subtitle": "Jeffrey M. Pilcher · Mexico City",
+    "cityId": "mexico-city-mexico",
+    "tab": "books",
+    "episodeId": "mx-1",
+    "timestampSec": 1680
+  },
+  {
+    "kind": "Food",
+    "title": "El Vilsito",
+    "subtitle": "Mexico City · Working mechanic garage by day that transforms into a legendary ",
+    "cityId": "mexico-city-mexico",
+    "tab": "places",
+    "episodeId": "mx-1",
+    "timestampSec": 780
+  },
+  {
+    "kind": "Landmark",
+    "title": "Templo Mayor",
+    "subtitle": "Mexico City · Excavated Aztec pyramid sitting directly beside the Zócalo cathe",
+    "cityId": "mexico-city-mexico",
+    "tab": "places",
+    "episodeId": "mx-2",
+    "timestampSec": 1020
+  },
+  {
+    "kind": "City",
+    "title": "Reykjavik, Iceland",
+    "subtitle": "2 episodes · 2 books · 2 places",
+    "cityId": "reykjavik-iceland",
+    "tab": "episodes"
+  },
+  {
+    "kind": "Episode",
+    "title": "Ring Road Reality Check: Winter Driving & Geothermal Pools",
+    "subtitle": "Women Who Travel · Reykjavik",
+    "cityId": "reykjavik-iceland",
+    "tab": "episodes",
+    "episodeId": "re-1"
+  },
+  {
+    "kind": "Episode",
+    "title": "Njal’s Saga: Lawsuits, Feuds & Fire in Medieval Iceland",
+    "subtitle": "Saga Thing · Reykjavik",
+    "cityId": "reykjavik-iceland",
+    "tab": "episodes",
+    "episodeId": "re-2"
+  },
+  {
+    "kind": "Book",
+    "title": "The Sagas of Icelanders",
+    "subtitle": "Preface by Jane Smiley · Reykjavik",
+    "cityId": "reykjavik-iceland",
+    "tab": "books",
+    "episodeId": "re-2",
+    "timestampSec": 1140
+  },
+  {
+    "kind": "Book",
+    "title": "Names for the Sea",
+    "subtitle": "Sarah Moss · Reykjavik",
+    "cityId": "reykjavik-iceland",
+    "tab": "books",
+    "episodeId": "re-1",
+    "timestampSec": 2220
+  },
+  {
+    "kind": "Landmark",
+    "title": "Vesturbæjarlaug",
+    "subtitle": "Reykjavik · Beloved local geothermal pool with hot tubs and steam rooms for ",
+    "cityId": "reykjavik-iceland",
+    "tab": "places",
+    "episodeId": "re-1",
+    "timestampSec": 900
+  },
+  {
+    "kind": "Gear",
+    "title": "Darn Tough Merino Socks",
+    "subtitle": "Reykjavik · Lifetime warranty wool socks praised for wet waterfall hikes.",
+    "cityId": "reykjavik-iceland",
+    "tab": "places",
+    "episodeId": "re-1",
+    "timestampSec": 1860
+  },
+  {
+    "kind": "City",
+    "title": "New Orleans, USA",
+    "subtitle": "2 episodes · 2 books · 2 places",
+    "cityId": "new-orleans-usa",
+    "tab": "episodes"
+  },
+  {
+    "kind": "Episode",
+    "title": "How New Orleans Second Lines Invented Modern Rhythm",
+    "subtitle": "A History of Rock Music in 500 Songs · New Orleans",
+    "cityId": "new-orleans-usa",
+    "tab": "episodes",
+    "episodeId": "no-1"
+  },
+  {
+    "kind": "Episode",
+    "title": "Dark Roux Diplomacy: Gumbo Across Bayou & City",
+    "subtitle": "Gravy (Southern Foodways) · New Orleans",
+    "cityId": "new-orleans-usa",
+    "tab": "episodes",
+    "episodeId": "no-2"
+  },
+  {
+    "kind": "Book",
+    "title": "Nine Lives: Mystery, Magic, Death & Life in New Orleans",
+    "subtitle": "Dan Baum · New Orleans",
+    "cityId": "new-orleans-usa",
+    "tab": "books",
+    "episodeId": "no-1",
+    "timestampSec": 2340
+  },
+  {
+    "kind": "Book",
+    "title": "A Confederacy of Dunces",
+    "subtitle": "John Kennedy Toole · New Orleans",
+    "cityId": "new-orleans-usa",
+    "tab": "books",
+    "episodeId": "no-2",
+    "timestampSec": 1500
+  },
+  {
+    "kind": "Landmark",
+    "title": "Preservation Hall",
+    "subtitle": "New Orleans · Intimate acoustic jazz hall in the French Quarter—no drinks, no ",
+    "cityId": "new-orleans-usa",
+    "tab": "places",
+    "episodeId": "no-1",
+    "timestampSec": 1080
+  },
+  {
+    "kind": "Food",
+    "title": "Dooky Chase’s Restaurant",
+    "subtitle": "New Orleans · Historic Creole landmark and civil-rights meeting place.",
+    "cityId": "new-orleans-usa",
+    "tab": "places",
+    "episodeId": "no-2",
+    "timestampSec": 840
+  },
+  {
+    "kind": "City",
+    "title": "Istanbul, Turkey",
+    "subtitle": "2 episodes · 2 books · 2 places",
+    "cityId": "istanbul-turkey",
+    "tab": "episodes"
+  },
+  {
+    "kind": "Episode",
+    "title": "1453: The Walls of Constantinople & Hagia Sophia",
+    "subtitle": "History of Byzantium · Istanbul",
+    "cityId": "istanbul-turkey",
+    "tab": "episodes",
+    "episodeId": "is-1"
+  },
+  {
+    "kind": "Episode",
+    "title": "Crossing to Kadıköy: Istanbul’s Best Breakfast & Meyhanes",
+    "subtitle": "Culinary Backstreets Audio · Istanbul",
+    "cityId": "istanbul-turkey",
+    "tab": "episodes",
+    "episodeId": "is-2"
+  },
+  {
+    "kind": "Book",
+    "title": "1453: The Holy War for Constantinople",
+    "subtitle": "Roger Crowley · Istanbul",
+    "cityId": "istanbul-turkey",
+    "tab": "books",
+    "episodeId": "is-1",
+    "timestampSec": 1320
+  },
+  {
+    "kind": "Book",
+    "title": "Istanbul: Memories and the City",
+    "subtitle": "Orhan Pamuk · Istanbul",
+    "cityId": "istanbul-turkey",
+    "tab": "books",
+    "episodeId": "is-2",
+    "timestampSec": 1860
+  },
+  {
+    "kind": "Food",
+    "title": "Çiya Sofrası",
+    "subtitle": "Istanbul · Anatolian regional dishes rescued from forgotten village recipes",
+    "cityId": "istanbul-turkey",
+    "tab": "places",
+    "episodeId": "is-2",
+    "timestampSec": 900
+  },
+  {
+    "kind": "Landmark",
+    "title": "Basilica Cistern",
+    "subtitle": "Istanbul · Subterranean forest of 336 Roman marble columns beneath Sultanah",
+    "cityId": "istanbul-turkey",
+    "tab": "places",
+    "episodeId": "is-1",
+    "timestampSec": 2700
+  },
+  {
+    "kind": "City",
+    "title": "Edinburgh, Scotland",
+    "subtitle": "2 episodes · 2 books · 2 places",
+    "cityId": "edinburgh-scotland",
+    "tab": "episodes"
+  },
+  {
+    "kind": "Episode",
+    "title": "The Scottish Enlightenment: Hume, Smith & Old Town Taverns",
+    "subtitle": "In Our Time (BBC) · Edinburgh",
+    "cityId": "edinburgh-scotland",
+    "tab": "episodes",
+    "episodeId": "ed-1"
+  },
+  {
+    "kind": "Episode",
+    "title": "Royal Mile Secrets, Arthur’s Seat & Dean Village",
+    "subtitle": "Rick Steves Audio Europe · Edinburgh",
+    "cityId": "edinburgh-scotland",
+    "tab": "episodes",
+    "episodeId": "ed-2"
+  },
+  {
+    "kind": "Book",
+    "title": "How the Scots Invented the Modern World",
+    "subtitle": "Arthur Herman · Edinburgh",
+    "cityId": "edinburgh-scotland",
+    "tab": "books",
+    "episodeId": "ed-1",
+    "timestampSec": 1200
+  },
+  {
+    "kind": "Book",
+    "title": "The Prime of Miss Jean Brodie",
+    "subtitle": "Muriel Spark · Edinburgh",
+    "cityId": "edinburgh-scotland",
+    "tab": "books",
+    "episodeId": "ed-2",
+    "timestampSec": 1440
+  },
+  {
+    "kind": "Landmark",
+    "title": "Dean Village",
+    "subtitle": "Edinburgh · 19th-century milling hamlet tucked 10 minutes below Princes Stre",
+    "cityId": "edinburgh-scotland",
+    "tab": "places",
+    "episodeId": "ed-2",
+    "timestampSec": 720
+  },
+  {
+    "kind": "Gear",
+    "title": "Waterproof Packable Shell",
+    "subtitle": "Edinburgh · Umbrellas invert immediately in Edinburgh wind—bring a hooded sh",
+    "cityId": "edinburgh-scotland",
+    "tab": "places",
+    "episodeId": "ed-2",
+    "timestampSec": 1620
+  },
+  {
+    "kind": "City",
+    "title": "Cusco, Peru",
+    "subtitle": "1 episodes · 2 books · 2 places",
+    "cityId": "cusco-peru",
+    "tab": "episodes"
+  },
+  {
+    "kind": "Episode",
+    "title": "The Inca Empire: Stone, Quipu & High-Altitude Roads",
+    "subtitle": "Fall of Civilizations · Cusco",
+    "cityId": "cusco-peru",
+    "tab": "episodes",
+    "episodeId": "cu-1"
+  },
+  {
+    "kind": "Book",
+    "title": "Turn Right at Machu Picchu",
+    "subtitle": "Mark Adams · Cusco",
+    "cityId": "cusco-peru",
+    "tab": "books",
+    "episodeId": "cu-1",
+    "timestampSec": 1620
+  },
+  {
+    "kind": "Book",
+    "title": "The Last Days of the Incas",
+    "subtitle": "Kim MacQuarrie · Cusco",
+    "cityId": "cusco-peru",
+    "tab": "books",
+    "episodeId": "cu-1",
+    "timestampSec": 2640
+  },
+  {
+    "kind": "Landmark",
+    "title": "Sacsayhuamán",
+    "subtitle": "Cusco · Zigzag megalithic walls overlooking Cusco with 100-ton interlock",
+    "cityId": "cusco-peru",
+    "tab": "places",
+    "episodeId": "cu-1",
+    "timestampSec": 3120
+  },
+  {
+    "kind": "Gear",
+    "title": "Electrolyte Packets + Coca Tea",
+    "subtitle": "Cusco · Acclimatize in the Sacred Valley first to beat 11,000ft altitude",
+    "cityId": "cusco-peru",
+    "tab": "places",
+    "episodeId": "cu-1",
+    "timestampSec": 3660
+  },
+  {
+    "kind": "City",
+    "title": "Marrakech, Morocco",
+    "subtitle": "1 episodes · 1 books · 2 places",
+    "cityId": "marrakech-morocco",
+    "tab": "episodes"
+  },
+  {
+    "kind": "Episode",
+    "title": "Navigating Marrakech’s Medina & Jemaa el-Fnaa at Dusk",
+    "subtitle": "Travel With Rick Steves · Marrakech",
+    "cityId": "marrakech-morocco",
+    "tab": "episodes",
+    "episodeId": "ma-1"
+  },
+  {
+    "kind": "Book",
+    "title": "The Caliph’s House: A Year in Casablanca",
+    "subtitle": "Tahir Shah · Marrakech",
+    "cityId": "marrakech-morocco",
+    "tab": "books",
+    "episodeId": "ma-1",
+    "timestampSec": 1980
+  },
+  {
+    "kind": "Landmark",
+    "title": "Le Jardin Secret",
+    "subtitle": "Marrakech · Restored 19th-century Islamic courtyard garden hidden right insi",
+    "cityId": "marrakech-morocco",
+    "tab": "places",
+    "episodeId": "ma-1",
+    "timestampSec": 1020
+  },
+  {
+    "kind": "Gear",
+    "title": "Organic Maps (Offline Navigation)",
+    "subtitle": "Marrakech · GPS drifts in narrow medina alleys—offline footpath maps are a l",
+    "cityId": "marrakech-morocco",
+    "tab": "places",
+    "episodeId": "ma-1",
+    "timestampSec": 2460
+  }
+]

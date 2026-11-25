@@ -1,0 +1,234 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          135.7681,
+          35.0116
+        ]
+      },
+      "properties": {
+        "id": "kyoto-japan",
+        "name": "Kyoto",
+        "country": "Japan",
+        "primaryCategory": "History",
+        "categories": [
+          "History",
+          "Travel",
+          "Food"
+        ],
+        "episodeCount": 3,
+        "bookCount": 3,
+        "placeCount": 3
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.1883,
+          55.9533
+        ]
+      },
+      "properties": {
+        "id": "edinburgh-scotland",
+        "name": "Edinburgh",
+        "country": "Scotland",
+        "primaryCategory": "History",
+        "categories": [
+          "History",
+          "Travel"
+        ],
+        "episodeCount": 2,
+        "bookCount": 2,
+        "placeCount": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9784,
+          41.0082
+        ]
+      },
+      "properties": {
+        "id": "istanbul-turkey",
+        "name": "Istanbul",
+        "country": "Turkey",
+        "primaryCategory": "History",
+        "categories": [
+          "History",
+          "Food"
+        ],
+        "episodeCount": 2,
+        "bookCount": 2,
+        "placeCount": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -9.1393,
+          38.7223
+        ]
+      },
+      "properties": {
+        "id": "lisbon-portugal",
+        "name": "Lisbon",
+        "country": "Portugal",
+        "primaryCategory": "History",
+        "categories": [
+          "History",
+          "Travel"
+        ],
+        "episodeCount": 2,
+        "bookCount": 2,
+        "placeCount": 3
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -99.1332,
+          19.4326
+        ]
+      },
+      "properties": {
+        "id": "mexico-city-mexico",
+        "name": "Mexico City",
+        "country": "Mexico",
+        "primaryCategory": "Food",
+        "categories": [
+          "Food",
+          "Culture"
+        ],
+        "episodeCount": 2,
+        "bookCount": 2,
+        "placeCount": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0715,
+          29.9511
+        ]
+      },
+      "properties": {
+        "id": "new-orleans-usa",
+        "name": "New Orleans",
+        "country": "USA",
+        "primaryCategory": "Culture",
+        "categories": [
+          "Culture",
+          "Food"
+        ],
+        "episodeCount": 2,
+        "bookCount": 2,
+        "placeCount": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -21.9426,
+          64.1466
+        ]
+      },
+      "properties": {
+        "id": "reykjavik-iceland",
+        "name": "Reykjavik",
+        "country": "Iceland",
+        "primaryCategory": "Travel",
+        "categories": [
+          "Travel",
+          "History"
+        ],
+        "episodeCount": 2,
+        "bookCount": 2,
+        "placeCount": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.4964,
+          41.9028
+        ]
+      },
+      "properties": {
+        "id": "rome-italy",
+        "name": "Rome",
+        "country": "Italy",
+        "primaryCategory": "History",
+        "categories": [
+          "History",
+          "Food"
+        ],
+        "episodeCount": 2,
+        "bookCount": 2,
+        "placeCount": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.9675,
+          -13.5319
+        ]
+      },
+      "properties": {
+        "id": "cusco-peru",
+        "name": "Cusco",
+        "country": "Peru",
+        "primaryCategory": "History",
+        "categories": [
+          "History"
+        ],
+        "episodeCount": 1,
+        "bookCount": 2,
+        "placeCount": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.9811,
+          31.6295
+        ]
+      },
+      "properties": {
+        "id": "marrakech-morocco",
+        "name": "Marrakech",
+        "country": "Morocco",
+        "primaryCategory": "Culture",
+        "categories": [
+          "Culture"
+        ],
+        "episodeCount": 1,
+        "bookCount": 1,
+        "placeCount": 2
+      }
+    }
+  ]
+}

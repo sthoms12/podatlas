@@ -1,0 +1,88 @@
+{
+  "id": "new-orleans-usa",
+  "name": "New Orleans",
+  "country": "USA",
+  "lat": 29.9511,
+  "lon": -90.0715,
+  "primaryCategory": "Culture",
+  "tagline": "Brass bands, Congo Square jazz roots, gumbo debates, and Creole architecture.",
+  "episodes": [
+    {
+      "id": "no-1",
+      "show": "A History of Rock Music in 500 Songs",
+      "title": "How New Orleans Second Lines Invented Modern Rhythm",
+      "category": "Culture",
+      "audioUrl": "",
+      "durationSec": 3300,
+      "publishedAt": "2026-09-03",
+      "summary": "From Congo Square drumming to Professor Longhair and Preservation Hall.",
+      "mentions": [
+        {
+          "sec": 1080,
+          "type": "place",
+          "label": "Preservation Hall"
+        },
+        {
+          "sec": 2340,
+          "type": "book",
+          "label": "Nine Lives by Dan Baum"
+        }
+      ]
+    },
+    {
+      "id": "no-2",
+      "show": "Gravy (Southern Foodways)",
+      "title": "Dark Roux Diplomacy: Gumbo Across Bayou & City",
+      "category": "Food",
+      "audioUrl": "",
+      "durationSec": 2040,
+      "publishedAt": "2026-10-22",
+      "summary": "Creole vs. Cajun gumbo lineages and the family kitchens keeping Bywater and Tremé fed.",
+      "mentions": [
+        {
+          "sec": 840,
+          "type": "place",
+          "label": "Dooky Chase’s Restaurant"
+        }
+      ]
+    }
+  ],
+  "books": [
+    {
+      "title": "Nine Lives: Mystery, Magic, Death & Life in New Orleans",
+      "author": "Dan Baum",
+      "isbn": "9780385523202",
+      "openLibraryKey": null,
+      "episodeId": "no-1",
+      "show": "500 Songs",
+      "timestampSec": 2340,
+      "quote": "Follows nine real New Orleanians from Hurricane Betsy to Katrina."
+    },
+    {
+      "title": "A Confederacy of Dunces",
+      "author": "John Kennedy Toole",
+      "isbn": "9780802130204",
+      "openLibraryKey": null,
+      "episodeId": "no-2",
+      "show": "Gravy",
+      "timestampSec": 1500,
+      "quote": "The funniest French Quarter novel ever written."
+    }
+  ],
+  "placesAndGear": [
+    {
+      "name": "Preservation Hall",
+      "type": "Landmark",
+      "note": "Intimate acoustic jazz hall in the French Quarter—no drinks, no AC, pure magic.",
+      "episodeId": "no-1",
+      "timestampSec": 1080
+    },
+    {
+      "name": "Dooky Chase’s Restaurant",
+      "type": "Food",
+      "note": "Historic Creole landmark and civil-rights meeting place.",
+      "episodeId": "no-2",
+      "timestampSec": 840
+    }
+  ]
+}

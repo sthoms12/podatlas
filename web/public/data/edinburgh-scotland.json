@@ -1,0 +1,83 @@
+{
+  "id": "edinburgh-scotland",
+  "name": "Edinburgh",
+  "country": "Scotland",
+  "lat": 55.9533,
+  "lon": -3.1883,
+  "primaryCategory": "Culture",
+  "tagline": "Volcanic crags, underground closes, Enlightenment pubs, and literary ghosts.",
+  "episodes": [
+    {
+      "id": "ed-1",
+      "show": "In Our Time (BBC)",
+      "title": "The Scottish Enlightenment: Hume, Smith & Old Town Taverns",
+      "category": "History",
+      "audioUrl": "",
+      "durationSec": 2700,
+      "publishedAt": "2026-09-18",
+      "summary": "How a smoky, overcrowded 18th-century hill town invented modern economics and philosophy.",
+      "mentions": [
+        {
+          "sec": 1200,
+          "type": "book",
+          "label": "How the Scots Invented the Modern World"
+        }
+      ]
+    },
+    {
+      "id": "ed-2",
+      "show": "Rick Steves Audio Europe",
+      "title": "Royal Mile Secrets, Arthur’s Seat & Dean Village",
+      "category": "Travel",
+      "audioUrl": "",
+      "durationSec": 1980,
+      "publishedAt": "2026-10-26",
+      "summary": "A self-guided walking loop from Calton Hill down into hidden riverside Dean Village.",
+      "mentions": [
+        {
+          "sec": 720,
+          "type": "place",
+          "label": "Dean Village & Water of Leith"
+        }
+      ]
+    }
+  ],
+  "books": [
+    {
+      "title": "How the Scots Invented the Modern World",
+      "author": "Arthur Herman",
+      "isbn": "9780609809990",
+      "openLibraryKey": null,
+      "episodeId": "ed-1",
+      "show": "In Our Time",
+      "timestampSec": 1200,
+      "quote": "Explains why Edinburgh’s New Town was built like a blueprint for reason."
+    },
+    {
+      "title": "The Prime of Miss Jean Brodie",
+      "author": "Muriel Spark",
+      "isbn": "9780061711299",
+      "openLibraryKey": null,
+      "episodeId": "ed-2",
+      "show": "Rick Steves Audio",
+      "timestampSec": 1440,
+      "quote": "Razor-sharp 1930s Edinburgh classic."
+    }
+  ],
+  "placesAndGear": [
+    {
+      "name": "Dean Village",
+      "type": "Landmark",
+      "note": "19th-century milling hamlet tucked 10 minutes below Princes Street.",
+      "episodeId": "ed-2",
+      "timestampSec": 720
+    },
+    {
+      "name": "Waterproof Packable Shell",
+      "type": "Gear",
+      "note": "Umbrellas invert immediately in Edinburgh wind—bring a hooded shell.",
+      "episodeId": "ed-2",
+      "timestampSec": 1620
+    }
+  ]
+}

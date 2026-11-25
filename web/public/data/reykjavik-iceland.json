@@ -1,0 +1,88 @@
+{
+  "id": "reykjavik-iceland",
+  "name": "Reykjavik",
+  "country": "Iceland",
+  "lat": 64.1466,
+  "lon": -21.9426,
+  "primaryCategory": "Travel",
+  "tagline": "Geothermal pools, Viking sagas, volcanic Ring Road drives, and winter aurora chasing.",
+  "episodes": [
+    {
+      "id": "re-1",
+      "show": "Women Who Travel",
+      "title": "Ring Road Reality Check: Winter Driving & Geothermal Pools",
+      "category": "Travel",
+      "audioUrl": "",
+      "durationSec": 2640,
+      "publishedAt": "2026-11-01",
+      "summary": "Skip the $100 tourist lagoons—how locals use neighborhood sundlaugar pools and pack for 40mph winds.",
+      "mentions": [
+        {
+          "sec": 900,
+          "type": "place",
+          "label": "Vesturbæjarlaug Neighborhood Pool"
+        },
+        {
+          "sec": 1860,
+          "type": "gear",
+          "label": "Darn Tough Merino Wool Socks"
+        }
+      ]
+    },
+    {
+      "id": "re-2",
+      "show": "Saga Thing",
+      "title": "Njal’s Saga: Lawsuits, Feuds & Fire in Medieval Iceland",
+      "category": "History",
+      "audioUrl": "",
+      "durationSec": 3420,
+      "publishedAt": "2026-07-08",
+      "summary": "Why medieval Icelanders settled blood feuds at Thingvellir’s rocky open-air parliament.",
+      "mentions": [
+        {
+          "sec": 1140,
+          "type": "book",
+          "label": "The Sagas of Icelanders"
+        }
+      ]
+    }
+  ],
+  "books": [
+    {
+      "title": "The Sagas of Icelanders",
+      "author": "Preface by Jane Smiley",
+      "isbn": "9780141000039",
+      "openLibraryKey": null,
+      "episodeId": "re-2",
+      "show": "Saga Thing",
+      "timestampSec": 1140,
+      "quote": "Dry Viking humor and courtroom drama set right along the Ring Road."
+    },
+    {
+      "title": "Names for the Sea",
+      "author": "Sarah Moss",
+      "isbn": "9781619022676",
+      "openLibraryKey": null,
+      "episodeId": "re-1",
+      "show": "Women Who Travel",
+      "timestampSec": 2220,
+      "quote": "Hilarious memoir of a British family moving to Iceland for a year."
+    }
+  ],
+  "placesAndGear": [
+    {
+      "name": "Vesturbæjarlaug",
+      "type": "Landmark",
+      "note": "Beloved local geothermal pool with hot tubs and steam rooms for ~$9.",
+      "episodeId": "re-1",
+      "timestampSec": 900
+    },
+    {
+      "name": "Darn Tough Merino Socks",
+      "type": "Gear",
+      "note": "Lifetime warranty wool socks praised for wet waterfall hikes.",
+      "episodeId": "re-1",
+      "timestampSec": 1860
+    }
+  ]
+}

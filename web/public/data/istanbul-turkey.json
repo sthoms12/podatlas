@@ -1,0 +1,88 @@
+{
+  "id": "istanbul-turkey",
+  "name": "Istanbul",
+  "country": "Turkey",
+  "lat": 41.0082,
+  "lon": 28.9784,
+  "primaryCategory": "History",
+  "tagline": "Where Byzantine domes meet Ottoman bazaars across the Bosphorus Strait.",
+  "episodes": [
+    {
+      "id": "is-1",
+      "show": "History of Byzantium",
+      "title": "1453: The Walls of Constantinople & Hagia Sophia",
+      "category": "History",
+      "audioUrl": "",
+      "durationSec": 3600,
+      "publishedAt": "2026-08-12",
+      "summary": "Walk the Theodosian Walls and learn how Hagia Sophia’s dome stood for 1,500 years.",
+      "mentions": [
+        {
+          "sec": 1320,
+          "type": "book",
+          "label": "1453 by Roger Crowley"
+        },
+        {
+          "sec": 2700,
+          "type": "place",
+          "label": "Basilica Cistern"
+        }
+      ]
+    },
+    {
+      "id": "is-2",
+      "show": "Culinary Backstreets Audio",
+      "title": "Crossing to Kadıköy: Istanbul’s Best Breakfast & Meyhanes",
+      "category": "Food",
+      "audioUrl": "",
+      "durationSec": 2460,
+      "publishedAt": "2026-10-09",
+      "summary": "Why the 20-minute commuter ferry to the Asian side unlocks Istanbul’s best street food.",
+      "mentions": [
+        {
+          "sec": 900,
+          "type": "place",
+          "label": "Çiya Sofrası (Kadıköy)"
+        }
+      ]
+    }
+  ],
+  "books": [
+    {
+      "title": "1453: The Holy War for Constantinople",
+      "author": "Roger Crowley",
+      "isbn": "9781401308506",
+      "openLibraryKey": null,
+      "episodeId": "is-1",
+      "show": "History of Byzantium",
+      "timestampSec": 1320,
+      "quote": "Impossible to put down—every rampart you visit has a story."
+    },
+    {
+      "title": "Istanbul: Memories and the City",
+      "author": "Orhan Pamuk",
+      "isbn": "9781400033881",
+      "openLibraryKey": null,
+      "episodeId": "is-2",
+      "show": "Culinary Backstreets",
+      "timestampSec": 1860,
+      "quote": "Nobel laureate’s moody love letter to Bosphorus ferries."
+    }
+  ],
+  "placesAndGear": [
+    {
+      "name": "Çiya Sofrası",
+      "type": "Food",
+      "note": "Anatolian regional dishes rescued from forgotten village recipes on the Asian side.",
+      "episodeId": "is-2",
+      "timestampSec": 900
+    },
+    {
+      "name": "Basilica Cistern",
+      "type": "Landmark",
+      "note": "Subterranean forest of 336 Roman marble columns beneath Sultanahmet.",
+      "episodeId": "is-1",
+      "timestampSec": 2700
+    }
+  ]
+}

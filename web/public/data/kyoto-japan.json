@@ -1,0 +1,132 @@
+{
+  "id": "kyoto-japan",
+  "name": "Kyoto",
+  "country": "Japan",
+  "lat": 35.0116,
+  "lon": 135.7681,
+  "primaryCategory": "History",
+  "tagline": "Former imperial capital packed with Zen gardens, Edo-era lore, and century-old ramen & matcha shops.",
+  "episodes": [
+    {
+      "id": "ky-1",
+      "show": "History of Japan Podcast",
+      "title": "Walking the Tokaido: Kyoto at the Dawn of the Edo Era",
+      "category": "History",
+      "audioUrl": "",
+      "durationSec": 2880,
+      "publishedAt": "2026-09-14",
+      "summary": "Traces merchant life, geisha districts in Gion, and why Kyoto survived WWII bombing lists.",
+      "mentions": [
+        {
+          "sec": 840,
+          "type": "book",
+          "label": "Kyoto: A Cultural History"
+        },
+        {
+          "sec": 1950,
+          "type": "place",
+          "label": "Nishiki Market"
+        }
+      ]
+    },
+    {
+      "id": "ky-2",
+      "show": "Zero to Travel",
+      "title": "Kyoto Beyond the Crowds: Backstreet Temples & Dawn Walks",
+      "category": "Travel",
+      "audioUrl": "",
+      "durationSec": 3240,
+      "publishedAt": "2026-10-02",
+      "summary": "How to beat 9 AM tour buses at Fushimi Inari, plus hidden northern Zen gardens and rail pass math.",
+      "mentions": [
+        {
+          "sec": 1120,
+          "type": "place",
+          "label": "Honen-in Temple"
+        },
+        {
+          "sec": 2410,
+          "type": "gear",
+          "label": "Peak Design Travel Backpack 30L"
+        }
+      ]
+    },
+    {
+      "id": "ky-3",
+      "show": "The Sporkful",
+      "title": "Inside Kyoto’s 400-Year-Old Tofu & Matcha Craft",
+      "category": "Food",
+      "audioUrl": "",
+      "durationSec": 2160,
+      "publishedAt": "2026-08-21",
+      "summary": "Why soft mountain water made Kyoto the capital of kaiseki dining and Uji ceremonial matcha.",
+      "mentions": [
+        {
+          "sec": 620,
+          "type": "book",
+          "label": "The Book of Tea"
+        },
+        {
+          "sec": 1540,
+          "type": "place",
+          "label": "Ippodo Tea Main Store"
+        }
+      ]
+    }
+  ],
+  "books": [
+    {
+      "title": "Kyoto: A Cultural History",
+      "author": "John Dougill",
+      "isbn": "9780195301380",
+      "openLibraryKey": null,
+      "episodeId": "ky-1",
+      "show": "History of Japan Podcast",
+      "timestampSec": 840,
+      "quote": "The single best primer before you step off the Shinkansen."
+    },
+    {
+      "title": "The Book of Tea",
+      "author": "Kakuzo Okakura",
+      "isbn": "9780486200705",
+      "openLibraryKey": null,
+      "episodeId": "ky-3",
+      "show": "The Sporkful",
+      "timestampSec": 620,
+      "quote": "Short 1906 classic explaining why Japanese tea rooms feel so calm."
+    },
+    {
+      "title": "Old Kyoto: A Short Social History",
+      "author": "Diane Durston",
+      "isbn": "9784770029942",
+      "openLibraryKey": null,
+      "episodeId": "ky-2",
+      "show": "Zero to Travel",
+      "timestampSec": 2100,
+      "quote": "Maps out historic wooden machiya workshops still open today."
+    }
+  ],
+  "placesAndGear": [
+    {
+      "name": "Honen-in Temple",
+      "type": "Landmark",
+      "note": "Moss-covered gate near Philosopher’s Path with 1/10th the crowds of Kinkaku-ji.",
+      "episodeId": "ky-2",
+      "timestampSec": 1120
+    },
+    {
+      "name": "Ippodo Tea Main Store",
+      "type": "Food",
+      "note": "300-year-old tea house serving fresh hand-whisked matcha at the counter.",
+      "episodeId": "ky-3",
+      "timestampSec": 1540
+    },
+    {
+      "name": "Peak Design Travel Backpack 30L",
+      "type": "Gear",
+      "note": "Recommended for fitting cleanly into Japanese station coin lockers.",
+      "episodeId": "ky-2",
+      "timestampSec": 2410
+    }
+  ]
+}

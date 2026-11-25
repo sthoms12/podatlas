@@ -1,0 +1,100 @@
+{
+  "id": "lisbon-portugal",
+  "name": "Lisbon",
+  "country": "Portugal",
+  "lat": 38.7223,
+  "lon": -9.1393,
+  "primaryCategory": "Travel",
+  "tagline": "Tile-covered hills, 1755 earthquake history, Atlantic seafood, and late-night fado clubs in Alfama.",
+  "episodes": [
+    {
+      "id": "li-1",
+      "show": "The Rest Is History",
+      "title": "The Great Lisbon Earthquake of 1755",
+      "category": "History",
+      "audioUrl": "",
+      "durationSec": 3120,
+      "publishedAt": "2026-07-19",
+      "summary": "How one All Saints’ Day catastrophe reshaped European philosophy and created Baixa’s grid streets.",
+      "mentions": [
+        {
+          "sec": 960,
+          "type": "book",
+          "label": "The Last Day by Nicholas Shrady"
+        },
+        {
+          "sec": 2220,
+          "type": "place",
+          "label": "Carmo Convent Ruins"
+        }
+      ]
+    },
+    {
+      "id": "li-2",
+      "show": "Amateur Traveler",
+      "title": "4 Perfect Days in Lisbon & Sintra Without Tourist Traps",
+      "category": "Travel",
+      "audioUrl": "",
+      "durationSec": 2760,
+      "publishedAt": "2026-10-11",
+      "summary": "Riding Tram 28 at dawn, ferrying across the Tagus to Cacilhas, and dodging Sintra bus lines.",
+      "mentions": [
+        {
+          "sec": 1350,
+          "type": "place",
+          "label": "Ponto Final (Cacilhas)"
+        },
+        {
+          "sec": 2100,
+          "type": "gear",
+          "label": "Grip-Sole Walking Shoes"
+        }
+      ]
+    }
+  ],
+  "books": [
+    {
+      "title": "The Last Day: Wrath, Ruin & Reason in 1755 Lisbon",
+      "author": "Nicholas Shrady",
+      "isbn": "9780143114604",
+      "openLibraryKey": null,
+      "episodeId": "li-1",
+      "show": "The Rest Is History",
+      "timestampSec": 960,
+      "quote": "Reads like a thriller—makes walking through Baixa come alive."
+    },
+    {
+      "title": "The Year of the Death of Ricardo Reis",
+      "author": "José Saramago",
+      "isbn": "9780156996952",
+      "openLibraryKey": null,
+      "episodeId": "li-2",
+      "show": "Amateur Traveler",
+      "timestampSec": 1800,
+      "quote": "Pure atmospheric 1930s Lisbon rain, cafes, and ferries."
+    }
+  ],
+  "placesAndGear": [
+    {
+      "name": "Carmo Convent Ruins",
+      "type": "Landmark",
+      "note": "Open-air Gothic nave left roofless since the 1755 quake.",
+      "episodeId": "li-1",
+      "timestampSec": 2220
+    },
+    {
+      "name": "Ponto Final",
+      "type": "Food",
+      "note": "Waterfront tables across the Tagus with sunset views back at the 25 de Abril Bridge.",
+      "episodeId": "li-2",
+      "timestampSec": 1350
+    },
+    {
+      "name": "Grip-Sole Walking Shoes",
+      "type": "Gear",
+      "note": "Essential for slick white limestone calçada cobblestones on steep hills.",
+      "episodeId": "li-2",
+      "timestampSec": 2100
+    }
+  ]
+}

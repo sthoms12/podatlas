@@ -1,0 +1,61 @@
+{
+  "id": "marrakech-morocco",
+  "name": "Marrakech",
+  "country": "Morocco",
+  "lat": 31.6295,
+  "lon": -7.9811,
+  "primaryCategory": "Culture",
+  "tagline": "Labyrinthine souks, quiet courtyard riads, spice towers, and Atlas Mountain day trips.",
+  "episodes": [
+    {
+      "id": "ma-1",
+      "show": "Travel With Rick Steves",
+      "title": "Navigating Marrakech’s Medina & Jemaa el-Fnaa at Dusk",
+      "category": "Culture",
+      "audioUrl": "",
+      "durationSec": 2820,
+      "publishedAt": "2026-10-15",
+      "summary": "How to read riad architecture, bargain kindly in the souks, and find calm gardens.",
+      "mentions": [
+        {
+          "sec": 1020,
+          "type": "place",
+          "label": "Le Jardin Secret"
+        },
+        {
+          "sec": 1980,
+          "type": "book",
+          "label": "The Caliph’s House by Tahir Shah"
+        }
+      ]
+    }
+  ],
+  "books": [
+    {
+      "title": "The Caliph’s House: A Year in Casablanca",
+      "author": "Tahir Shah",
+      "isbn": "9780553383102",
+      "openLibraryKey": null,
+      "episodeId": "ma-1",
+      "show": "Travel With Rick Steves",
+      "timestampSec": 1980,
+      "quote": "Entertaining deep dive into Moroccan courtyard life and craftsmanship."
+    }
+  ],
+  "placesAndGear": [
+    {
+      "name": "Le Jardin Secret",
+      "type": "Landmark",
+      "note": "Restored 19th-century Islamic courtyard garden hidden right inside the medina.",
+      "episodeId": "ma-1",
+      "timestampSec": 1020
+    },
+    {
+      "name": "Organic Maps (Offline Navigation)",
+      "type": "Gear",
+      "note": "GPS drifts in narrow medina alleys—offline footpath maps are a lifesaver.",
+      "episodeId": "ma-1",
+      "timestampSec": 2460
+    }
+  ]
+}

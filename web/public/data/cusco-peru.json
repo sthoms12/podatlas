@@ -1,0 +1,71 @@
+{
+  "id": "cusco-peru",
+  "name": "Cusco",
+  "country": "Peru",
+  "lat": -13.5319,
+  "lon": -71.9675,
+  "primaryCategory": "History",
+  "tagline": "Inca stonework fitted without mortar at 11,150 feet—gateway to the Sacred Valley.",
+  "episodes": [
+    {
+      "id": "cu-1",
+      "show": "Fall of Civilizations",
+      "title": "The Inca Empire: Stone, Quipu & High-Altitude Roads",
+      "category": "History",
+      "audioUrl": "",
+      "durationSec": 4200,
+      "publishedAt": "2026-07-30",
+      "summary": "How Inca engineers built earthquake-proof granite walls and 25,000 miles of Andean highways.",
+      "mentions": [
+        {
+          "sec": 1620,
+          "type": "book",
+          "label": "Turn Right at Machu Picchu"
+        },
+        {
+          "sec": 3120,
+          "type": "place",
+          "label": "Sacsayhuamán Fortress"
+        }
+      ]
+    }
+  ],
+  "books": [
+    {
+      "title": "Turn Right at Machu Picchu",
+      "author": "Mark Adams",
+      "isbn": "9780452297982",
+      "openLibraryKey": null,
+      "episodeId": "cu-1",
+      "show": "Fall of Civilizations",
+      "timestampSec": 1620,
+      "quote": "Funny, vivid retelling of Hiram Bingham’s 1911 expedition."
+    },
+    {
+      "title": "The Last Days of the Incas",
+      "author": "Kim MacQuarrie",
+      "isbn": "9780743260503",
+      "openLibraryKey": null,
+      "episodeId": "cu-1",
+      "show": "Fall of Civilizations",
+      "timestampSec": 2640,
+      "quote": "Gripping narrative of Pizarro, Atahualpa, and the siege of Cusco."
+    }
+  ],
+  "placesAndGear": [
+    {
+      "name": "Sacsayhuamán",
+      "type": "Landmark",
+      "note": "Zigzag megalithic walls overlooking Cusco with 100-ton interlocked stones.",
+      "episodeId": "cu-1",
+      "timestampSec": 3120
+    },
+    {
+      "name": "Electrolyte Packets + Coca Tea",
+      "type": "Gear",
+      "note": "Acclimatize in the Sacred Valley first to beat 11,000ft altitude headaches.",
+      "episodeId": "cu-1",
+      "timestampSec": 3660
+    }
+  ]
+}

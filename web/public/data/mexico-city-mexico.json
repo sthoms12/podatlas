@@ -1,0 +1,93 @@
+{
+  "id": "mexico-city-mexico",
+  "name": "Mexico City",
+  "country": "Mexico",
+  "lat": 19.4326,
+  "lon": -99.1332,
+  "primaryCategory": "Food",
+  "tagline": "Aztec canals beneath leafy Art Deco neighborhoods and the greatest street-food capital in the Americas.",
+  "episodes": [
+    {
+      "id": "mx-1",
+      "show": "Proof (America’s Test Kitchen)",
+      "title": "Tacos al Pastor: From Lebanese Spit to CDMX Street Icon",
+      "category": "Food",
+      "audioUrl": "",
+      "durationSec": 2340,
+      "publishedAt": "2026-10-18",
+      "summary": "How 1920s Lebanese immigrants in Puebla sparked Mexico City’s late-night trompo revolution.",
+      "mentions": [
+        {
+          "sec": 780,
+          "type": "place",
+          "label": "El Vilsito"
+        },
+        {
+          "sec": 1680,
+          "type": "book",
+          "label": "Planet Taco by Jeffrey Pilcher"
+        }
+      ]
+    },
+    {
+      "id": "mx-2",
+      "show": "99% Invisible",
+      "title": "The Sinking City Built on Lake Texcoco",
+      "category": "Culture",
+      "audioUrl": "",
+      "durationSec": 2280,
+      "publishedAt": "2026-08-05",
+      "summary": "Why Mexico City’s palaces tilt sideways and how engineers battle geology every day.",
+      "mentions": [
+        {
+          "sec": 1020,
+          "type": "place",
+          "label": "Templo Mayor Ruins"
+        },
+        {
+          "sec": 1740,
+          "type": "book",
+          "label": "Fifth Sun by Camilla Townsend"
+        }
+      ]
+    }
+  ],
+  "books": [
+    {
+      "title": "Fifth Sun: A New History of the Aztecs",
+      "author": "Camilla Townsend",
+      "isbn": "9780190673062",
+      "openLibraryKey": null,
+      "episodeId": "mx-2",
+      "show": "99% Invisible",
+      "timestampSec": 1740,
+      "quote": "Told from indigenous Nahuatl sources—totally reframes Tenochtitlan."
+    },
+    {
+      "title": "Planet Taco: A Global History of Mexican Food",
+      "author": "Jeffrey M. Pilcher",
+      "isbn": "9780190655778",
+      "openLibraryKey": null,
+      "episodeId": "mx-1",
+      "show": "Proof",
+      "timestampSec": 1680,
+      "quote": "Essential backstory for every taco stand in Roma and Condesa."
+    }
+  ],
+  "placesAndGear": [
+    {
+      "name": "El Vilsito",
+      "type": "Food",
+      "note": "Working mechanic garage by day that transforms into a legendary al pastor stand at night.",
+      "episodeId": "mx-1",
+      "timestampSec": 780
+    },
+    {
+      "name": "Templo Mayor",
+      "type": "Landmark",
+      "note": "Excavated Aztec pyramid sitting directly beside the Zócalo cathedral.",
+      "episodeId": "mx-2",
+      "timestampSec": 1020
+    }
+  ]
+}
