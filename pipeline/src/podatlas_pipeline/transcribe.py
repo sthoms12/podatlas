@@ -2,12 +2,37 @@
 
 from __future__ import annotations
 
+import subprocess
 import tempfile
 from pathlib import Path
 
 import httpx
+import numpy as np
 
 from .models import TranscriptSegment
+
+
+def decode_audio_ffmpeg(audio_path: Path, sample_rate: int = 16000) -> np.ndarray:
+    """Decode any audio file to 16kHz mono float32 PCM via ffmpeg (avoids PyAV version conflicts)."""
+    cmd = [
+        "ffmpeg",
+        "-nostdin",
+        "-threads",
+        "0",
+        "-i",
+        str(audio_path),
+        "-f",
+        "s16le",
+        "-ac",
+        "1",
+        "-acodec",
+        "pcm_s16le",
+        "-ar",
+        str(sample_rate),
+        "-",
+    ]
+    proc = subprocess.run(cmd, capture_output=True, check=True)
+    return np.frombuffer(proc.stdout, np.int16).astype(np.float32) / 32768.0
 
 
 class WhisperTranscriber:
@@ -49,8 +74,9 @@ class WhisperTranscriber:
 
     def transcribe_file(self, audio_path: Path, model=None) -> list[TranscriptSegment]:
         active_model = model or self._ensure_model()
+        audio_array = decode_audio_ffmpeg(audio_path, sample_rate=16000)
         raw_segments, _info = active_model.transcribe(
-            str(audio_path),
+            audio_array,
             vad_filter=True,
             beam_size=1,
         )
