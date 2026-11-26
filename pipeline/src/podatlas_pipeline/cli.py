@@ -286,12 +286,18 @@ def run_extract_pass(
             cached_ep.title,
             cached_ep.segments,
         )
-        merge_extraction_into_cities(
+        added_cities = merge_extraction_into_cities(
             cities_by_id=cities_by_id,
             cached_ep=cached_ep,
             extraction=extraction,
             geonames=geonames,
             book_verifier=book_verifier,
+        )
+        city_names = [c.city for c in extraction.primaryCities]
+        print(
+            f"[extract] {cached_ep.showTitle} | {cached_ep.title[:60]} -> "
+            f"focused={extraction.isDestinationFocused} cities={city_names} "
+            f"(matched={added_cities}, books={len(extraction.books)}, places={len(extraction.placesAndGear)})"
         )
         processed.add(cached_ep.guid)
         extracted_count += 1
