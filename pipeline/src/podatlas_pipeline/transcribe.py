@@ -77,6 +77,7 @@ class WhisperTranscriber:
         audio_array = decode_audio_ffmpeg(audio_path, sample_rate=16000)
         raw_segments, _info = active_model.transcribe(
             audio_array,
+            language="en",
             vad_filter=True,
             beam_size=1,
         )
