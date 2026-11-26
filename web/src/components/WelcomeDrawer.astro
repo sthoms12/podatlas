@@ -1,0 +1,180 @@
+---
+import type { CitiesGeoJSON, CityData } from '../types/podatlas';
+import { CATEGORY_COLORS } from '../lib/format';
+
+interface Props {
+  geoJson: CitiesGeoJSON;
+  demoCity: CityData;
+}
+
+const { geoJson, demoCity } = Astro.props;
+const features = geoJson.features;
+
+const totalEps = features.reduce((sum, f) => sum + f.properties.episodeCount, 0);
+const totalBooks = features.reduce((sum, f) => sum + f.properties.bookCount, 0);
+const totalPlaces = features.reduce((sum, f) => sum + f.properties.placeCount, 0);
+
+const demoEpisode = demoCity.episodes[0];
+const demoMention = demoEpisode?.mentions[0];
+---
+
+<aside
+  id="podatlas-city-drawer"
+  data-drawer-mode="welcome"
+  class="flex flex-1 md:flex-none w-full md:w-[430px] lg:w-[460px] md:border-l border-stone-200/90 bg-[#faf9f6] flex-col min-h-0"
+>
+  <!-- Editorial Hero Header -->
+  <div class="relative overflow-hidden px-5 pt-5 pb-5 bg-white border-b border-stone-200/80 shrink-0">
+    <!-- Subtle Topographic Contour Watermark -->
+    <svg
+      class="pointer-events-none absolute -right-8 -top-6 w-64 h-44 text-stone-900 opacity-[0.045]"
+      viewBox="0 0 260 180"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.2"
+      aria-hidden="true"
+    >
+      <path d="M25 140 C65 95, 110 120, 155 75 C195 35, 225 55, 255 20" />
+      <path d="M10 160 C60 115, 115 145, 170 95 C210 55, 235 75, 265 40" />
+      <path d="M45 115 C85 75, 120 95, 160 55 C195 20, 220 35, 248 5" />
+      <path d="M75 88 C105 55, 132 72, 168 38 C195 12, 215 22, 238 -5" />
+      <circle cx="195" cy="48" r="24" />
+      <circle cx="195" cy="48" r="42" />
+    </svg>
+
+    <div class="relative">
+      <div class="text-[11px] font-semibold uppercase tracking-widest text-sky-700">
+        Interactive Podcast Atlas
+      </div>
+      <h1 class="font-serif text-[26px] font-semibold text-stone-900 tracking-tight leading-[1.15] mt-1">
+        Spin the globe.<br />Hear the city.
+      </h1>
+      <p class="text-[13.5px] text-stone-600 mt-2.5 leading-relaxed">
+        Click any city on the 3D globe to listen to curated podcasts about it—with every
+        <strong class="font-semibold text-stone-800">book, restaurant, and landmark</strong>
+        extracted and linked to the exact timestamp.
+      </p>
+
+      <!-- Primary Actions -->
+      <div class="flex items-center gap-2 mt-4">
+        <button
+          type="button"
+          data-surprise-trigger
+          class="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-stone-900 text-white hover:bg-sky-700 text-xs font-semibold shadow-xs transition cursor-pointer"
+        >
+          <svg
+            class="w-3.5 h-3.5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="16 3 21 3 21 8"></polyline>
+            <line x1="4" y1="20" x2="21" y2="3"></line>
+            <polyline points="21 16 21 21 16 21"></polyline>
+            <line x1="15" y1="15" x2="21" y2="21"></line>
+            <line x1="4" y1="4" x2="9" y2="9"></line>
+          </svg>
+          <span>Fly to a random city</span>
+        </button>
+
+        {
+          demoEpisode && demoMention && (
+            <button
+              type="button"
+              data-play-ep={demoEpisode.id}
+              data-start-sec={String(demoMention.sec)}
+              title={`Jump to ${demoMention.label} in ${demoCity.name}`}
+              class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-amber-50 text-amber-900 border border-amber-200/90 hover:bg-amber-100 text-xs font-semibold transition cursor-pointer shrink-0"
+            >
+              <span class="text-amber-600 text-[10px]" aria-hidden="true">▶</span>
+              <span>Try a mention jump</span>
+            </button>
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Scrollable Discovery Body -->
+  <div class="flex-1 overflow-y-auto custom-scroll p-4 space-y-4">
+    <!-- 3-Step Visual Explainer -->
+    <div class="grid grid-cols-3 gap-2">
+      <div class="p-3 rounded-xl bg-white border border-stone-200/80">
+        <div class="font-mono text-[10px] font-semibold text-sky-700">01</div>
+        <div class="text-xs font-semibold text-stone-900 mt-0.5">Pick a city</div>
+        <p class="text-[11px] text-stone-500 mt-0.5 leading-snug">
+          Spin the globe or search any book or place.
+        </p>
+      </div>
+      <div class="p-3 rounded-xl bg-white border border-stone-200/80">
+        <div class="font-mono text-[10px] font-semibold text-amber-700">02</div>
+        <div class="text-xs font-semibold text-stone-900 mt-0.5">Hit play</div>
+        <p class="text-[11px] text-stone-500 mt-0.5 leading-snug">
+          Stream travel, history, food &amp; culture shows.
+        </p>
+      </div>
+      <div class="p-3 rounded-xl bg-white border border-stone-200/80">
+        <div class="font-mono text-[10px] font-semibold text-emerald-700">03</div>
+        <div class="text-xs font-semibold text-stone-900 mt-0.5">Jump in</div>
+        <p class="text-[11px] text-stone-500 mt-0.5 leading-snug">
+          Every book &amp; spot links to its exact moment.
+        </p>
+      </div>
+    </div>
+
+    <!-- Curated Destinations List -->
+    <div class="space-y-2">
+      <div class="flex items-center justify-between px-0.5">
+        <h2 class="text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+          Start Exploring ({features.length} Cities)
+        </h2>
+        <span class="text-[11px] text-stone-400">
+          {totalEps} eps · {totalBooks} books · {totalPlaces} spots
+        </span>
+      </div>
+
+      <div class="space-y-2">
+        {
+          features.map((feat) => {
+            const p = feat.properties;
+            const catColor = CATEGORY_COLORS[p.primaryCategory] ?? '#0284c7';
+            return (
+              <a
+                href={`/city/${encodeURIComponent(p.id)}`}
+                data-welcome-city-card={p.id}
+                class="group block p-3.5 rounded-2xl bg-white border border-stone-200/90 hover:border-stone-400 hover:shadow-sm transition"
+              >
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <span
+                      class="w-2.5 h-2.5 rounded-full shrink-0"
+                      style={`background-color: ${catColor};`}
+                      aria-hidden="true"
+                    />
+                    <span class="font-serif text-[16px] font-semibold text-stone-900 truncate">
+                      {p.name}
+                    </span>
+                    <span class="text-xs text-stone-400 truncate">{p.country}</span>
+                  </div>
+                  <span class="text-xs font-medium text-stone-400 group-hover:text-sky-700 group-hover:translate-x-0.5 transition shrink-0">
+                    Explore →
+                  </span>
+                </div>
+                <div class="flex items-center gap-2 text-[11.5px] text-stone-500 mt-1.5 pl-4.5">
+                  <span>{p.episodeCount} episodes</span>
+                  <span class="text-stone-300">·</span>
+                  <span>{p.bookCount} books</span>
+                  <span class="text-stone-300">·</span>
+                  <span>{p.placeCount} places &amp; gear</span>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+    </div>
+  </div>
+</aside>

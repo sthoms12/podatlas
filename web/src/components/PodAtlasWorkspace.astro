@@ -3,35 +3,68 @@ import Layout from '../layouts/Layout.astro';
 import TopBar from './TopBar.astro';
 import WorldMap from './WorldMap.astro';
 import CityDrawer from './CityDrawer.astro';
+import WelcomeDrawer from './WelcomeDrawer.astro';
 import AudioPlayer from './AudioPlayer.astro';
-import TripPackModal from './TripPackModal.astro';
 import type { CitiesGeoJSON, CityData } from '../types/podatlas';
 
 interface Props {
   city: CityData;
   geoJson: CitiesGeoJSON;
+  mode?: 'welcome' | 'city';
   pageTitle?: string;
 }
 
-const { city, geoJson, pageTitle } = Astro.props;
-const title = pageTitle ?? `${city.name}, ${city.country} — PodAtlas Podcast World Map`;
-const description = `${city.tagline} Explore ${city.episodes.length} podcast episodes, ${city.books.length} books, and ${city.placesAndGear.length} places & gear for ${city.name}.`;
+const { city, geoJson, mode = 'city', pageTitle } = Astro.props;
+const isWelcome = mode === 'welcome';
+const title =
+  pageTitle ??
+  (isWelcome
+    ? 'PodAtlas — Spin the Globe, Hear the City'
+    : `${city.name}, ${city.country} — PodAtlas`);
+const description = isWelcome
+  ? 'Interactive 3D Podcast World Map: pick any city to stream curated travel, history, food & culture podcasts with every book, restaurant, and landmark linked to its exact timestamp.'
+  : `${city.tagline} Explore ${city.episodes.length} podcast episodes, ${city.books.length} books, and ${city.placesAndGear.length} places & gear for ${city.name}.`;
 ---
 
 <Layout title={title} description={description}>
-  <div class="h-full flex flex-col bg-slate-950 text-slate-100">
+  <div class="h-dvh flex flex-col bg-[#faf9f6] text-stone-900 overflow-hidden">
     <TopBar />
 
-    <div class="flex-1 flex flex-col sm:flex-row min-h-0 overflow-hidden">
-      <WorldMap geoJson={geoJson} selectedCityId={city.id} />
-      <CityDrawer city={city} />
+    <!-- Mobile View Toggle (3D Globe vs Overview / City Guide) -->
+    <div
+      id="podatlas-mobile-toggle"
+      data-default-mobile-view="drawer"
+      class="md:hidden shrink-0 px-3.5 py-2 bg-white border-b border-stone-200 flex items-center gap-2"
+    >
+      <button
+        type="button"
+        data-mobile-view="map"
+        class="flex-1 py-2 px-2 rounded-lg text-xs truncate transition cursor-pointer font-medium bg-stone-100 text-stone-700"
+      >
+        3D Globe
+      </button>
+      <button
+        type="button"
+        data-mobile-view="drawer"
+        class="flex-1 py-2 px-2 rounded-lg text-xs truncate transition cursor-pointer font-semibold bg-stone-900 text-white"
+      >
+        {isWelcome ? 'Overview' : `${city.name} Guide`}
+      </button>
+    </div>
+
+    <div class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden">
+      <WorldMap
+        geoJson={geoJson}
+        selectedCityId={isWelcome ? '' : city.id}
+        hideOnMobileDefault={true}
+      />
+      {isWelcome ? <WelcomeDrawer geoJson={geoJson} demoCity={city} /> : <CityDrawer city={city} />}
     </div>
 
     <AudioPlayer />
-    <TripPackModal city={city} />
   </div>
 
-  <!-- Embedded city payload for instant client-side audio & Trip Pack export (zero extra fetch) -->
+  <!-- Embedded city payload for instant client-side audio playback (or live mention demo on /) -->
   <script id="podatlas-city-payload" type="application/json" set:html={JSON.stringify(city)} />
   <script>
     import '../scripts/client';

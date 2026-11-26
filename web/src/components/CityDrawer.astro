@@ -6,188 +6,256 @@ import {
   buildGoogleMapsUrl,
   buildViatorUrl,
 } from '../config/monetization';
-import { formatCoords, formatTime } from '../lib/format';
+import { CATEGORY_COLORS, formatTime } from '../lib/format';
 
 interface Props {
   city: CityData;
 }
 
 const { city } = Astro.props;
+const leadEpisode = city.episodes[0];
 
 function findEpisode(epId: string): EpisodeRecord | undefined {
   return city.episodes.find((ep) => ep.id === epId) || city.episodes[0];
+}
+
+function getBookCoverUrl(isbn?: string | null): string | null {
+  if (!isbn) return null;
+  const cleaned = isbn.replace(/[^0-9Xx]/g, '');
+  return cleaned ? `https://covers.openlibrary.org/b/isbn/${cleaned}-M.jpg?default=false` : null;
 }
 ---
 
 <aside
   id="podatlas-city-drawer"
   data-city-id={city.id}
-  class="w-full sm:w-[400px] lg:w-[440px] shrink-0 border-l border-slate-800 bg-slate-900 flex flex-col min-h-0"
+  class="flex flex-1 md:flex-none w-full md:w-[430px] lg:w-[460px] md:border-l border-stone-200/90 bg-[#faf9f6] flex-col min-h-0"
 >
-  <!-- Pre-rendered City Header -->
-  <div class="p-4 border-b border-slate-800 shrink-0">
-    <div class="flex items-start justify-between gap-2">
-      <div>
-        <div class="flex items-baseline gap-2">
-          <h1 class="text-base font-semibold text-slate-100">{city.name}</h1>
-          <span class="text-xs text-slate-400">{city.country}</span>
+  <!-- Editorial Postcard City Header -->
+  <div class="relative overflow-hidden px-4 sm:px-5 pt-4 sm:pt-5 pb-3.5 sm:pb-4 bg-white border-b border-stone-200/80 shrink-0">
+    <!-- Subtle Topographic Contour Watermark -->
+    <svg
+      class="pointer-events-none absolute -right-8 -top-6 w-64 h-44 text-stone-900 opacity-[0.045]"
+      viewBox="0 0 260 180"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.2"
+      aria-hidden="true"
+    >
+      <path d="M25 140 C65 95, 110 120, 155 75 C195 35, 225 55, 255 20" />
+      <path d="M10 160 C60 115, 115 145, 170 95 C210 55, 235 75, 265 40" />
+      <path d="M45 115 C85 75, 120 95, 160 55 C195 20, 220 35, 248 5" />
+      <path d="M75 88 C105 55, 132 72, 168 38 C195 12, 215 22, 238 -5" />
+      <circle cx="195" cy="48" r="24" />
+      <circle cx="195" cy="48" r="42" />
+    </svg>
+
+    <div class="relative flex items-start justify-between gap-3">
+      <div class="min-w-0">
+        <a
+          href="/"
+          class="inline-flex items-center gap-1 text-[11px] font-medium text-stone-400 hover:text-stone-800 transition mb-1.5"
+        >
+          <span aria-hidden="true">←</span>
+          <span>All destinations</span>
+        </a>
+        <div class="text-[11px] font-semibold uppercase tracking-widest text-stone-400">
+          {city.country}
         </div>
-        <p class="text-[11px] text-slate-400 mt-0.5 font-mono">
-          {formatCoords(city.lat, city.lon)} · {city.episodes.length} episodes indexed
-        </p>
+        <h1 class="font-serif text-2xl font-semibold text-stone-900 tracking-tight mt-0.5 leading-tight">
+          {city.name}
+        </h1>
       </div>
-      <button
-        id="podatlas-open-trip-pack"
-        type="button"
-        class="shrink-0 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-sky-500 text-slate-950 hover:bg-sky-400 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
-      >
-        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="7 10 12 15 17 10"></polyline>
-          <line x1="12" y1="15" x2="12" y2="3"></line>
-        </svg>
-        <span>$7 Trip Pack</span>
-      </button>
+
+      {
+        leadEpisode && (
+          <button
+            type="button"
+            data-play-ep={leadEpisode.id}
+            data-start-sec="0"
+            title={`Play ${leadEpisode.title}`}
+            class="shrink-0 mt-1 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-stone-900 text-white hover:bg-sky-700 text-xs font-semibold shadow-xs transition cursor-pointer"
+          >
+            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+            <span>Listen</span>
+          </button>
+        )
+      }
     </div>
 
-    <p class="text-xs text-slate-300 mt-2 leading-relaxed">{city.tagline}</p>
+    <p class="relative text-[13.5px] text-stone-600 mt-2 leading-relaxed">
+      {city.tagline}
+    </p>
 
     <!-- Drawer Tabs -->
     <div
       id="podatlas-drawer-tabs"
-      class="grid grid-cols-3 gap-1 mt-3 p-1 rounded-lg bg-slate-950 border border-slate-800"
+      class="relative grid grid-cols-3 gap-1 mt-3.5 sm:mt-4 p-1 rounded-xl bg-stone-100 border border-stone-200/70"
     >
       <button
         type="button"
         data-tab-btn="episodes"
-        class="py-1.5 rounded-md text-xs font-medium bg-slate-800 text-slate-100 shadow-sm transition cursor-pointer"
+        class="py-2 px-1 rounded-lg text-[11.5px] sm:text-xs font-semibold bg-white text-stone-900 shadow-xs transition cursor-pointer whitespace-nowrap"
       >
-        Episodes <span class="text-slate-400 ml-0.5">({city.episodes.length})</span>
+        Episodes <span class="text-stone-400 font-normal ml-0.5">{city.episodes.length}</span>
       </button>
       <button
         type="button"
         data-tab-btn="books"
-        class="py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition cursor-pointer"
+        class="py-2 px-1 rounded-lg text-[11.5px] sm:text-xs font-medium text-stone-600 hover:text-stone-900 transition cursor-pointer whitespace-nowrap"
       >
-        Books <span class="text-slate-400 ml-0.5">({city.books.length})</span>
+        Books <span class="text-stone-400 font-normal ml-0.5">{city.books.length}</span>
       </button>
       <button
         type="button"
         data-tab-btn="places"
-        class="py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition cursor-pointer"
+        class="py-2 px-1 rounded-lg text-[11.5px] sm:text-xs font-medium text-stone-600 hover:text-stone-900 transition cursor-pointer whitespace-nowrap"
       >
-        Places &amp; Gear <span class="text-slate-400 ml-0.5">({city.placesAndGear.length})</span>
+        Places &amp; Gear <span class="text-stone-400 font-normal ml-0.5">{city.placesAndGear.length}</span>
       </button>
     </div>
   </div>
 
-  <!-- Pre-rendered Static HTML Panels (SEO-ready on first byte!) -->
-  <div class="flex-1 overflow-y-auto custom-scroll p-4">
+  <!-- Pre-rendered Static HTML Panels -->
+  <div class="flex-1 overflow-y-auto custom-scroll p-4 space-y-3.5">
     <!-- Episodes Panel -->
-    <div data-tab-panel="episodes" class="space-y-3">
+    <div data-tab-panel="episodes" class="space-y-3.5">
       {
-        city.episodes.map((ep) => (
-          <article
-            data-episode-card={ep.id}
-            class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 transition space-y-2.5"
-          >
-            <div class="flex items-start justify-between gap-2.5">
-              <div class="min-w-0">
-                <div class="flex items-center gap-1.5 flex-wrap">
-                  <span class="text-xs font-medium text-sky-400">{ep.show}</span>
-                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">
-                    {ep.category}
-                  </span>
+        city.episodes.map((ep) => {
+          const catColor = CATEGORY_COLORS[ep.category] ?? '#0284c7';
+          return (
+            <article
+              data-episode-card={ep.id}
+              class="p-4 rounded-2xl bg-white border border-stone-200/90 shadow-2xs transition space-y-3"
+            >
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-xs font-semibold text-stone-700">{ep.show}</span>
+                    <span class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-stone-100 text-stone-600">
+                      <span
+                        class="w-1.5 h-1.5 rounded-full"
+                        style={`background-color: ${catColor};`}
+                        aria-hidden="true"
+                      />
+                      {ep.category}
+                    </span>
+                  </div>
+                  <h2 class="text-[15px] font-semibold text-stone-900 mt-1.5 leading-snug">
+                    {ep.title}
+                  </h2>
                 </div>
-                <h2 class="text-xs font-semibold text-slate-100 mt-1 leading-snug">{ep.title}</h2>
+                <button
+                  type="button"
+                  data-play-ep={ep.id}
+                  data-start-sec="0"
+                  title="Play episode"
+                  aria-label={`Play ${ep.title}`}
+                  class="shrink-0 w-10 h-10 rounded-full bg-stone-900 text-white flex items-center justify-center hover:bg-sky-700 transition shadow-xs cursor-pointer"
+                >
+                  <svg class="w-4 h-4 ml-0.5" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                </button>
               </div>
-              <button
-                type="button"
-                data-play-ep={ep.id}
-                data-start-sec="0"
-                title="Play episode"
-                class="shrink-0 w-8 h-8 rounded-full bg-sky-500 text-slate-950 flex items-center justify-center hover:bg-sky-400 transition cursor-pointer"
-              >
-                <svg class="w-3.5 h-3.5 ml-0.5" viewBox="0 0 24 24" fill="currentColor">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              </button>
-            </div>
 
-            <p class="text-xs text-slate-400 leading-relaxed">{ep.summary}</p>
+              <p class="text-[13px] text-stone-600 leading-relaxed">{ep.summary}</p>
 
-            <div class="flex items-center justify-between text-[11px] text-slate-500">
-              <span>{ep.publishedAt}</span>
-              <span class="font-mono">{formatTime(ep.durationSec)}</span>
-            </div>
-
-            {ep.mentions.length > 0 && (
-              <div class="pt-2 border-t border-slate-800/80 space-y-1.5">
-                <div class="text-[11px] font-medium text-slate-400">
-                  Extracted Mentions (Jump to Timestamp):
-                </div>
-                <div class="flex flex-wrap gap-1.5">
-                  {ep.mentions.map((m) => (
-                    <button
-                      type="button"
-                      data-play-ep={ep.id}
-                      data-start-sec={String(m.sec)}
-                      data-hint={`${m.type.toUpperCase()}: ${m.label}`}
-                      class="text-[11px] px-2 py-1 rounded-md bg-slate-900 border border-slate-800 hover:border-sky-500 text-slate-200 transition text-left cursor-pointer"
-                    >
-                      <span class="font-mono text-sky-400 mr-1.5">{formatTime(m.sec)}</span>
-                      {m.label}
-                    </button>
-                  ))}
-                </div>
+              <div class="flex items-center justify-between text-xs text-stone-400">
+                <span>{ep.publishedAt}</span>
+                <span class="font-mono">{formatTime(ep.durationSec)}</span>
               </div>
-            )}
-          </article>
-        ))
+
+              {ep.mentions.length > 0 && (
+                <div class="pt-3 border-t border-stone-100 space-y-2">
+                  <div class="text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+                    Jump to a mention
+                  </div>
+                  <div class="flex flex-wrap gap-1.5">
+                    {ep.mentions.map((m) => (
+                      <button
+                        type="button"
+                        data-play-ep={ep.id}
+                        data-start-sec={String(m.sec)}
+                        data-mention-ep={ep.id}
+                        data-mention-sec={String(m.sec)}
+                        class="mention-chip inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-stone-50 border border-stone-200/90 hover:border-sky-500 hover:bg-sky-50/60 text-stone-800 transition text-left cursor-pointer"
+                      >
+                        <span class="text-sky-600 text-[10px]" aria-hidden="true">▶</span>
+                        <span class="font-mono text-[11px] text-sky-700 font-medium">
+                          {formatTime(m.sec)}
+                        </span>
+                        <span class="truncate max-w-[200px]">{m.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </article>
+          );
+        })
       }
     </div>
 
     <!-- Books Panel -->
-    <div data-tab-panel="books" class="hidden space-y-3">
+    <div data-tab-panel="books" class="hidden space-y-3.5">
       {
         city.books.map((book) => {
           const ep = findEpisode(book.episodeId);
+          const coverUrl = getBookCoverUrl(book.isbn);
           return (
-            <article class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 space-y-2">
-              <div class="flex items-start justify-between gap-2">
-                <div>
-                  <h2 class="text-xs font-semibold text-slate-100 leading-snug">{book.title}</h2>
-                  <p class="text-xs text-slate-400 mt-0.5">by {book.author}</p>
-                </div>
-                {ep && (
-                  <button
-                    type="button"
-                    data-play-ep={ep.id}
-                    data-start-sec={String(book.timestampSec)}
-                    data-hint={`Book: ${book.title}`}
-                    class="shrink-0 text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-sky-400 hover:bg-slate-700 cursor-pointer"
-                  >
-                    ▶ {formatTime(book.timestampSec)}
-                  </button>
+            <article class="p-4 rounded-2xl bg-white border border-stone-200/90 shadow-2xs space-y-3">
+              <div class="flex items-start gap-3.5">
+                {coverUrl && (
+                  <img
+                    src={coverUrl}
+                    alt={`Cover of ${book.title}`}
+                    loading="lazy"
+                    onerror="this.style.display='none'"
+                    class="w-12 h-[72px] rounded-md object-cover bg-stone-100 border border-stone-200 shrink-0 shadow-2xs"
+                  />
                 )}
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-start justify-between gap-2">
+                    <div class="min-w-0">
+                      <h2 class="text-[15px] font-semibold text-stone-900 leading-snug">
+                        {book.title}
+                      </h2>
+                      <p class="text-[13px] text-stone-500 mt-0.5">by {book.author}</p>
+                    </div>
+                    {ep && (
+                      <button
+                        type="button"
+                        data-play-ep={ep.id}
+                        data-start-sec={String(book.timestampSec)}
+                        title="Jump to where this book is mentioned"
+                        class="shrink-0 inline-flex items-center gap-1 text-[11px] font-mono font-medium px-2 py-1 rounded-lg bg-sky-50 text-sky-700 border border-sky-200/80 hover:bg-sky-100 transition cursor-pointer"
+                      >
+                        <span class="text-[9px]" aria-hidden="true">▶</span>
+                        {formatTime(book.timestampSec)}
+                      </button>
+                    )}
+                  </div>
+                  <div class="text-xs text-stone-400 mt-1.5">
+                    Mentioned on <span class="text-stone-700 font-medium">{book.show}</span>
+                  </div>
+                </div>
               </div>
 
               {book.quote && (
-                <p class="text-xs text-slate-300 italic leading-relaxed">
+                <blockquote class="text-[13px] text-stone-600 italic leading-relaxed pl-3 border-l-2 border-stone-200">
                   &ldquo;{book.quote}&rdquo;
-                </p>
+                </blockquote>
               )}
 
-              <div class="text-[11px] text-slate-400">
-                Mentioned on <span class="text-slate-200 font-medium">{book.show}</span>
-              </div>
-
-              <div class="flex items-center gap-2 pt-1.5">
+              <div class="flex items-center gap-2 pt-1">
                 <a
                   href={buildBookshopUrl(book)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="flex-1 text-center py-1.5 rounded-lg text-xs font-medium bg-sky-500 text-slate-950 hover:bg-sky-400 transition"
+                  class="flex-1 text-center py-2 rounded-xl text-xs font-semibold bg-stone-900 text-white hover:bg-sky-700 transition"
                 >
                   Bookshop.org
                 </a>
@@ -195,7 +263,7 @@ function findEpisode(epId: string): EpisodeRecord | undefined {
                   href={buildAmazonUrl(`${book.title} ${book.author}`)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="flex-1 text-center py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-200 hover:bg-slate-700 transition"
+                  class="flex-1 text-center py-2 rounded-xl text-xs font-semibold bg-stone-100 text-stone-700 hover:bg-stone-200 transition"
                 >
                   Amazon
                 </a>
@@ -207,50 +275,53 @@ function findEpisode(epId: string): EpisodeRecord | undefined {
     </div>
 
     <!-- Places & Gear Panel -->
-    <div data-tab-panel="places" class="hidden space-y-3">
+    <div data-tab-panel="places" class="hidden space-y-3.5">
       {
         city.placesAndGear.map((item) => {
           const ep = findEpisode(item.episodeId);
           const isGear = item.type === 'Gear';
           const badgeStyle = isGear
-            ? 'bg-sky-500/15 text-sky-300 border-sky-500/30'
+            ? 'bg-sky-50 text-sky-700 border-sky-200'
             : item.type === 'Food'
-              ? 'bg-rose-500/15 text-rose-300 border-rose-500/30'
-              : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
+              ? 'bg-rose-50 text-rose-700 border-rose-200'
+              : 'bg-emerald-50 text-emerald-700 border-emerald-200';
 
           return (
-            <article class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 space-y-2">
-              <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <h2 class="text-xs font-semibold text-slate-100">{item.name}</h2>
-                  <span class={`text-[10px] px-1.5 py-0.5 rounded border ${badgeStyle}`}>
+            <article class="p-4 rounded-2xl bg-white border border-stone-200/90 shadow-2xs space-y-2.5">
+              <div class="flex items-start justify-between gap-2.5">
+                <div class="space-y-1 min-w-0">
+                  <span
+                    class={`inline-block text-[11px] font-medium px-2 py-0.5 rounded-full border ${badgeStyle}`}
+                  >
                     {item.type}
                   </span>
+                  <h2 class="text-[15px] font-semibold text-stone-900 leading-snug">{item.name}</h2>
                 </div>
                 {ep && (
                   <button
                     type="button"
                     data-play-ep={ep.id}
                     data-start-sec={String(item.timestampSec)}
-                    data-hint={`${item.type}: ${item.name}`}
-                    class="shrink-0 text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-sky-400 hover:bg-slate-700 cursor-pointer"
+                    title="Jump to where this is mentioned"
+                    class="shrink-0 inline-flex items-center gap-1 text-[11px] font-mono font-medium px-2 py-1 rounded-lg bg-sky-50 text-sky-700 border border-sky-200/80 hover:bg-sky-100 transition cursor-pointer"
                   >
-                    ▶ {formatTime(item.timestampSec)}
+                    <span class="text-[9px]" aria-hidden="true">▶</span>
+                    {formatTime(item.timestampSec)}
                   </button>
                 )}
               </div>
 
-              <p class="text-xs text-slate-400 leading-relaxed">{item.note}</p>
+              <p class="text-[13px] text-stone-600 leading-relaxed">{item.note}</p>
 
-              <div class="pt-1 flex items-center gap-3 flex-wrap">
+              <div class="pt-1 flex items-center gap-4 flex-wrap">
                 {isGear ? (
                   <a
                     href={buildAmazonUrl(item.name)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex items-center gap-1 text-xs font-medium text-sky-400 hover:underline"
+                    class="inline-flex items-center gap-1 text-xs font-semibold text-sky-700 hover:underline"
                   >
-                    View Gear on Amazon ↗
+                    View gear on Amazon ↗
                   </a>
                 ) : (
                   <>
@@ -258,15 +329,15 @@ function findEpisode(epId: string): EpisodeRecord | undefined {
                       href={buildGoogleMapsUrl(item, city.name)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="inline-flex items-center gap-1 text-xs font-medium text-sky-400 hover:underline"
+                      class="inline-flex items-center gap-1 text-xs font-semibold text-sky-700 hover:underline"
                     >
-                      Open in Maps ↗
+                      Open in Google Maps ↗
                     </a>
                     <a
                       href={buildViatorUrl(city.name, item.name)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="inline-flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-slate-200 hover:underline"
+                      class="inline-flex items-center gap-1 text-xs font-medium text-stone-500 hover:text-stone-800 hover:underline"
                     >
                       Tours nearby ↗
                     </a>

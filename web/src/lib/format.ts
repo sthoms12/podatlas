@@ -1,10 +1,10 @@
 import type { Category } from '../types/podatlas';
 
 export const CATEGORY_COLORS: Record<Category, string> = {
-  Travel: '#38bdf8',   // sky-400
-  History: '#f59e0b',  // amber-500
-  Food: '#fb7185',     // rose-400
-  Culture: '#34d399',  // emerald-400
+  Travel: '#0284c7',   // ocean blue
+  History: '#d97706',  // warm amber
+  Food: '#e11d48',     // terracotta rose
+  Culture: '#059669',  // botanical emerald
 };
 
 export function formatTime(sec: number): string {
