@@ -162,3 +162,104 @@ class GeoNamesIndex:
             ):
                 return cand
         return candidates[0]
+
+
+def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """Great-circle distance in kilometers between two WGS84 coordinates."""
+    import math
+
+    r = 6371.0
+    p1, p2 = math.radians(lat1), math.radians(lat2)
+    dp = math.radians(lat2 - lat1)
+    dl = math.radians(lon2 - lon1)
+    a = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return 2 * r * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+
+class PlaceGeocoder:
+    """Cached OSM Nominatim geocoder for city-scoped landmarks and restaurants."""
+
+    NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
+
+    def __init__(
+        self,
+        cache_path: Path | None = None,
+        max_distance_km: float = 60.0,
+        rate_limit_sec: float = 1.1,
+        timeout: float = 12.0,
+    ) -> None:
+        self.cache_path = cache_path
+        self.max_distance_km = max_distance_km
+        self.rate_limit_sec = rate_limit_sec
+        self.timeout = timeout
+        self._last_request_ts = 0.0
+        self._cache: dict[str, list[float] | None] = {}
+        if cache_path and cache_path.exists():
+            import json
+
+            try:
+                self._cache = json.loads(cache_path.read_text(encoding="utf-8"))
+            except Exception:
+                self._cache = {}
+
+    def _save_cache(self) -> None:
+        if not self.cache_path:
+            return
+        import json
+
+        self.cache_path.parent.mkdir(parents=True, exist_ok=True)
+        self.cache_path.write_text(
+            json.dumps(self._cache, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+
+    def geocode(
+        self,
+        place_name: str,
+        city_name: str,
+        country: str,
+        city_lat: float,
+        city_lon: float,
+    ) -> tuple[float, float] | None:
+        """Geocode a landmark or restaurant, validating it lies near the target city."""
+        import time
+
+        key = normalize_key(f"{place_name} {city_name} {country}")
+        if not key:
+            return None
+        if key in self._cache:
+            cached = self._cache[key]
+            return (cached[0], cached[1]) if cached else None
+
+        elapsed = time.monotonic() - self._last_request_ts
+        if self._last_request_ts > 0 and elapsed < self.rate_limit_sec:
+            time.sleep(self.rate_limit_sec - elapsed)
+
+        query = f"{place_name}, {city_name}, {country}".strip(", ")
+        try:
+            with httpx.Client(timeout=self.timeout) as client:
+                resp = client.get(
+                    self.NOMINATIM_URL,
+                    params={"q": query, "format": "jsonv2", "limit": 3},
+                    headers={"User-Agent": "PodAtlas/0.2 (+https://github.com/sthoms12/podatlas)"},
+                )
+                self._last_request_ts = time.monotonic()
+                resp.raise_for_status()
+                results = resp.json()
+        except Exception:
+            return None
+
+        best: tuple[float, float] | None = None
+        for hit in results:
+            try:
+                lat = round(float(hit["lat"]), 5)
+                lon = round(float(hit["lon"]), 5)
+            except (KeyError, TypeError, ValueError):
+                continue
+            if haversine_km(city_lat, city_lon, lat, lon) <= self.max_distance_km:
+                best = (lat, lon)
+                break
+
+        self._cache[key] = [best[0], best[1]] if best else None
+        self._save_cache()
+        return best

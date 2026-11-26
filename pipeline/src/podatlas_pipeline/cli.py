@@ -9,7 +9,7 @@ from pathlib import Path
 from .config import PipelineSettings
 from .export_static import export_static_site_data, load_existing_cities
 from .extract import LLMExtractor
-from .geocode import GeoNamesIndex, normalize_key
+from .geocode import GeoNamesIndex, PlaceGeocoder, normalize_key
 from .models import (
     BookRecord,
     CachedEpisodeTranscript,
@@ -75,6 +75,7 @@ def merge_extraction_into_cities(
     extraction: EpisodeExtraction,
     geonames: GeoNamesIndex,
     book_verifier: OpenLibraryVerifier | None = None,
+    place_geocoder: PlaceGeocoder | None = None,
 ) -> int:
     """Idempotently merge one episode's extraction into cities_by_id. Returns cities updated."""
     if not extraction.isDestinationFocused or not extraction.primaryCities:
@@ -132,6 +133,8 @@ def merge_extraction_into_cities(
                     show=cached_ep.showTitle,
                     timestampSec=b.timestampSec,
                     quote=b.quote,
+                    endorsement=b.endorsement,
+                    mentionedByShows=[cached_ep.showTitle],
                 )
             )
             mentions.append(EpisodeMention(sec=b.timestampSec, type="book", label=final_title))
@@ -141,6 +144,15 @@ def merge_extraction_into_cities(
             if place_key in existing_place_keys:
                 continue
             existing_place_keys.add(place_key)
+            coords: tuple[float, float] | None = None
+            if place_geocoder and pl.type in {"Landmark", "Food"}:
+                coords = place_geocoder.geocode(
+                    pl.name,
+                    geo.name,
+                    geo.country,
+                    geo.lat,
+                    geo.lon,
+                )
             city.placesAndGear.append(
                 PlaceOrGearRecord(
                     name=pl.name,
@@ -148,6 +160,11 @@ def merge_extraction_into_cities(
                     note=pl.note,
                     episodeId=cached_ep.id,
                     timestampSec=pl.timestampSec,
+                    show=cached_ep.showTitle,
+                    lat=coords[0] if coords else None,
+                    lon=coords[1] if coords else None,
+                    endorsement=pl.endorsement,
+                    mentionedByShows=[cached_ep.showTitle],
                 )
             )
             m_type = "gear" if pl.type == "Gear" else "place"
@@ -253,6 +270,7 @@ def run_transcribe_pass(max_episodes: int | None = None) -> dict[str, int]:
 def run_extract_pass(
     max_episodes: int | None = None,
     verify_books: bool = True,
+    geocode_places: bool = True,
     reprocess: bool = False,
 ) -> dict[str, int]:
     """Pass 2: Run vLLM JSON extraction over cached transcripts, geocode, verify books, and export."""
@@ -269,6 +287,11 @@ def run_extract_pass(
     book_verifier = (
         OpenLibraryVerifier(cache_path=settings.cache_dir / "open_library_cache.json")
         if verify_books
+        else None
+    )
+    place_geocoder = (
+        PlaceGeocoder(cache_path=settings.cache_dir / "place_geocode_cache.json")
+        if geocode_places
         else None
     )
     cities_by_id = load_existing_cities(settings.output_dir)
@@ -292,6 +315,7 @@ def run_extract_pass(
             extraction=extraction,
             geonames=geonames,
             book_verifier=book_verifier,
+            place_geocoder=place_geocoder,
         )
         city_names = [c.city for c in extraction.primaryCities]
         print(
@@ -339,11 +363,13 @@ def main() -> None:
     p2 = sub.add_parser("extract", help="Pass 2: Run vLLM extraction over cached transcripts and export static JSON")
     p2.add_argument("--max-episodes", type=int, default=None, help="Max cached episodes to extract this run")
     p2.add_argument("--skip-book-verify", action="store_true", help="Skip Open Library API verification")
+    p2.add_argument("--skip-place-geocode", action="store_true", help="Skip OSM Nominatim place geocoding")
     p2.add_argument("--reprocess", action="store_true", help="Re-run extraction over already processed transcripts")
 
     run_cmd = sub.add_parser("run", help="Run Pass 1 (transcribe) followed by Pass 2 (extract)")
     run_cmd.add_argument("--max-episodes", type=int, default=None)
     run_cmd.add_argument("--skip-book-verify", action="store_true")
+    run_cmd.add_argument("--skip-place-geocode", action="store_true")
 
     sub.add_parser("check-feeds", help="CPU-only check of all RSS feeds in shows.csv")
 
@@ -359,6 +385,7 @@ def main() -> None:
                 run_extract_pass(
                     max_episodes=args.max_episodes,
                     verify_books=not args.skip_book_verify,
+                    geocode_places=not args.skip_place_geocode,
                     reprocess=args.reprocess,
                 ),
                 indent=2,
@@ -369,6 +396,7 @@ def main() -> None:
         e_stats = run_extract_pass(
             max_episodes=args.max_episodes,
             verify_books=not args.skip_book_verify,
+            geocode_places=not args.skip_place_geocode,
         )
         print(json.dumps({"transcribe": t_stats, "extract": e_stats}, indent=2))
     elif args.command == "check-feeds":

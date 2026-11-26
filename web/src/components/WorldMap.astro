@@ -114,6 +114,23 @@ const totalEps = features.reduce((sum, f) => sum + f.properties.episodeCount, 0)
     </button>
   </div>
 
+  <!-- Story Map Mode Floating Pill (visible when playing an episode with geocoded stops) -->
+  <div
+    id="podatlas-story-pill"
+    class="hidden absolute top-14 left-3 max-w-[calc(100%-4.5rem)] items-center gap-2 pl-3 pr-1.5 py-1.5 rounded-full bg-stone-900/95 backdrop-blur border border-stone-700 text-xs text-white shadow-md z-10"
+  >
+    <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0" aria-hidden="true"></span>
+    <span id="podatlas-story-pill-label" class="font-medium truncate">Story Map · 0 stops</span>
+    <span class="h-3.5 w-px bg-stone-700 shrink-0" aria-hidden="true"></span>
+    <button
+      id="podatlas-exit-story-btn"
+      type="button"
+      class="shrink-0 px-2.5 py-0.5 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-200 hover:text-white font-semibold transition cursor-pointer"
+    >
+      World view
+    </button>
+  </div>
+
   <!-- Subtle Flight Arrival Toast -->
   <div
     id="podatlas-flight-toast"

@@ -23,6 +23,11 @@
           "label": "The Last Day by Nicholas Shrady"
         },
         {
+          "sec": 1620,
+          "type": "place",
+          "label": "Baixa Pombalina"
+        },
+        {
           "sec": 2220,
           "type": "place",
           "label": "Carmo Convent Ruins"
@@ -61,7 +66,13 @@
       "episodeId": "li-1",
       "show": "The Rest Is History",
       "timestampSec": 960,
-      "quote": "Reads like a thriller—makes walking through Baixa come alive."
+      "quote": "Reads like a thriller—makes walking through Baixa come alive.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "The Rest Is History"
+      ]
     },
     {
       "title": "The Year of the Death of Ricardo Reis",
@@ -71,30 +82,80 @@
       "episodeId": "li-2",
       "show": "Amateur Traveler",
       "timestampSec": 1800,
-      "quote": "Pure atmospheric 1930s Lisbon rain, cafes, and ferries."
+      "quote": "Pure atmospheric 1930s Lisbon rain, cafes, and ferries.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Amateur Traveler"
+      ]
     }
   ],
   "placesAndGear": [
     {
       "name": "Carmo Convent Ruins",
       "type": "Landmark",
-      "note": "Open-air Gothic nave left roofless since the 1755 quake.",
-      "episodeId": "li-1",
-      "timestampSec": 2220
+      "note": "Unmissable viewpoint and 1755 landmark right off the Santa Justa terrace.",
+      "episodeId": "li-2",
+      "timestampSec": 920,
+      "show": "Amateur Traveler",
+      "lat": 38.7121,
+      "lon": -9.1402,
+      "endorsement": "strong_rec",
+      "mentionCount": 2,
+      "uniqueShowCount": 2,
+      "mentionedByShows": [
+        "The Rest Is History",
+        "Amateur Traveler"
+      ]
     },
     {
-      "name": "Ponto Final",
-      "type": "Food",
-      "note": "Waterfront tables across the Tagus with sunset views back at the 25 de Abril Bridge.",
-      "episodeId": "li-2",
-      "timestampSec": 1350
+      "name": "Baixa Pombalina",
+      "type": "Landmark",
+      "note": "Neoclassical grid district rebuilt after the 1755 quake with Europe's earliest seismic-cage timber frames.",
+      "episodeId": "li-1",
+      "timestampSec": 1620,
+      "show": "The Rest Is History",
+      "lat": 38.7107,
+      "lon": -9.1369,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "The Rest Is History"
+      ]
     },
     {
       "name": "Grip-Sole Walking Shoes",
       "type": "Gear",
       "note": "Essential for slick white limestone calçada cobblestones on steep hills.",
       "episodeId": "li-2",
-      "timestampSec": 2100
+      "timestampSec": 2100,
+      "show": "Amateur Traveler",
+      "lat": null,
+      "lon": null,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Amateur Traveler"
+      ]
+    },
+    {
+      "name": "Ponto Final",
+      "type": "Food",
+      "note": "Waterfront tables across the Tagus with sunset views back at the 25 de Abril Bridge.",
+      "episodeId": "li-2",
+      "timestampSec": 1350,
+      "show": "Amateur Traveler",
+      "lat": 38.686,
+      "lon": -9.152,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Amateur Traveler"
+      ]
     }
   ]
 }

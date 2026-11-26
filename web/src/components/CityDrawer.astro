@@ -67,22 +67,46 @@ function getBookCoverUrl(isbn?: string | null): string | null {
         </h1>
       </div>
 
-      {
-        leadEpisode && (
-          <button
-            type="button"
-            data-play-ep={leadEpisode.id}
-            data-start-sec="0"
-            title={`Play ${leadEpisode.title}`}
-            class="shrink-0 mt-1 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-stone-900 text-white hover:bg-sky-700 text-xs font-semibold shadow-xs transition cursor-pointer"
+      <div class="shrink-0 mt-1 flex items-center gap-1.5">
+        <button
+          id="podatlas-open-trip-modal"
+          type="button"
+          title="Export playable RSS feed & Google Maps KML"
+          class="inline-flex items-center gap-1 px-3 py-2 rounded-full bg-stone-100 text-stone-800 hover:bg-stone-200 text-xs font-semibold transition cursor-pointer"
+        >
+          <svg
+            class="w-3.5 h-3.5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
           >
-            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <polygon points="5 3 19 12 5 21 5 3" />
-            </svg>
-            <span>Listen</span>
-          </button>
-        )
-      }
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Export</span>
+        </button>
+        {
+          leadEpisode && (
+            <button
+              type="button"
+              data-play-ep={leadEpisode.id}
+              data-start-sec="0"
+              title={`Play ${leadEpisode.title}`}
+              class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-stone-900 text-white hover:bg-sky-700 text-xs font-semibold shadow-xs transition cursor-pointer"
+            >
+              <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              <span>Listen</span>
+            </button>
+          )
+        }
+      </div>
     </div>
 
     <p class="relative text-[13.5px] text-stone-600 mt-2 leading-relaxed">
@@ -205,6 +229,11 @@ function getBookCoverUrl(isbn?: string | null): string | null {
         city.books.map((book) => {
           const ep = findEpisode(book.episodeId);
           const coverUrl = getBookCoverUrl(book.isbn);
+          const showCount = book.uniqueShowCount ?? 1;
+          const showsLabel =
+            book.mentionedByShows && book.mentionedByShows.length > 0
+              ? book.mentionedByShows.join(', ')
+              : book.show;
           return (
             <article class="p-4 rounded-2xl bg-white border border-stone-200/90 shadow-2xs space-y-3">
               <div class="flex items-start gap-3.5">
@@ -220,6 +249,21 @@ function getBookCoverUrl(isbn?: string | null): string | null {
                 <div class="min-w-0 flex-1">
                   <div class="flex items-start justify-between gap-2">
                     <div class="min-w-0">
+                      <div class="flex items-center gap-1.5 flex-wrap mb-1">
+                        {showCount >= 2 ? (
+                          <span class="inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                            ★ {showCount} shows agree
+                          </span>
+                        ) : book.endorsement === 'casual_mention' ? (
+                          <span class="inline-flex items-center text-[10.5px] font-medium px-2 py-0.5 rounded-full bg-stone-100 text-stone-500">
+                            Mentioned
+                          </span>
+                        ) : (
+                          <span class="inline-flex items-center text-[10.5px] font-medium px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200/70">
+                            Host pick
+                          </span>
+                        )}
+                      </div>
                       <h2 class="text-[15px] font-semibold text-stone-900 leading-snug">
                         {book.title}
                       </h2>
@@ -239,7 +283,8 @@ function getBookCoverUrl(isbn?: string | null): string | null {
                     )}
                   </div>
                   <div class="text-xs text-stone-400 mt-1.5">
-                    Mentioned on <span class="text-stone-700 font-medium">{book.show}</span>
+                    {showCount >= 2 ? 'Recommended on ' : 'Mentioned on '}
+                    <span class="text-stone-700 font-medium">{showsLabel}</span>
                   </div>
                 </div>
               </div>
@@ -280,6 +325,8 @@ function getBookCoverUrl(isbn?: string | null): string | null {
         city.placesAndGear.map((item) => {
           const ep = findEpisode(item.episodeId);
           const isGear = item.type === 'Gear';
+          const hasCoords = !isGear && item.lat != null && item.lon != null;
+          const showCount = item.uniqueShowCount ?? 1;
           const badgeStyle = isGear
             ? 'bg-sky-50 text-sky-700 border-sky-200'
             : item.type === 'Food'
@@ -290,11 +337,18 @@ function getBookCoverUrl(isbn?: string | null): string | null {
             <article class="p-4 rounded-2xl bg-white border border-stone-200/90 shadow-2xs space-y-2.5">
               <div class="flex items-start justify-between gap-2.5">
                 <div class="space-y-1 min-w-0">
-                  <span
-                    class={`inline-block text-[11px] font-medium px-2 py-0.5 rounded-full border ${badgeStyle}`}
-                  >
-                    {item.type}
-                  </span>
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span
+                      class={`inline-block text-[11px] font-medium px-2 py-0.5 rounded-full border ${badgeStyle}`}
+                    >
+                      {item.type}
+                    </span>
+                    {showCount >= 2 && (
+                      <span class="inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                        ★ {showCount} shows agree
+                      </span>
+                    )}
+                  </div>
                   <h2 class="text-[15px] font-semibold text-stone-900 leading-snug">{item.name}</h2>
                 </div>
                 {ep && (
@@ -325,13 +379,26 @@ function getBookCoverUrl(isbn?: string | null): string | null {
                   </a>
                 ) : (
                   <>
+                    {hasCoords && (
+                      <button
+                        type="button"
+                        data-focus-place-lat={String(item.lat)}
+                        data-focus-place-lon={String(item.lon)}
+                        data-focus-place-name={item.name}
+                        data-focus-place-ep={item.episodeId}
+                        data-focus-place-sec={String(item.timestampSec)}
+                        class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 hover:underline cursor-pointer"
+                      >
+                        Show on map
+                      </button>
+                    )}
                     <a
                       href={buildGoogleMapsUrl(item, city.name)}
                       target="_blank"
                       rel="noopener noreferrer"
                       class="inline-flex items-center gap-1 text-xs font-semibold text-sky-700 hover:underline"
                     >
-                      Open in Google Maps ↗
+                      Google Maps ↗
                     </a>
                     <a
                       href={buildViatorUrl(city.name, item.name)}

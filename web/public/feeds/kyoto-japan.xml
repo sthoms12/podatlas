@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>PodAtlas: Kyoto, Japan Podcast Playlist</title>
+    <link>https://podatlas.pages.dev/city/kyoto-japan</link>
+    <atom:link href="https://podatlas.pages.dev/feeds/kyoto-japan.xml" rel="self" type="application/rss+xml" />
+    <description>Former imperial capital packed with Zen gardens, Edo-era lore, and century-old ramen &amp; matcha shops.</description>
+    <language>en-us</language>
+    <itunes:author>PodAtlas</itunes:author>
+    <itunes:summary>Former imperial capital packed with Zen gardens, Edo-era lore, and century-old ramen &amp; matcha shops.</itunes:summary>
+    <item>
+      <title>History of Japan Podcast — Walking the Tokaido: Kyoto at the Dawn of the Edo Era</title>
+      <guid isPermaLink="false">podatlas:kyoto-japan:ky-1</guid>
+      <link>https://podatlas.pages.dev/city/kyoto-japan</link>
+      <pubDate>Mon, 14 Sep 2026 00:00:00 +0000</pubDate>
+      <description>History of Japan Podcast: Traces merchant life, geisha districts in Gion, and why Kyoto survived WWII bombing lists.
+
+Mentioned:
+• [08:00] Gion Hanamikoji Street (place)
+• [14:00] Kyoto: A Cultural History (book)
+• [32:30] Nishiki Market (place)</description>
+      <itunes:author>History of Japan Podcast</itunes:author>
+      <itunes:duration>2880</itunes:duration>
+      <itunes:summary>Traces merchant life, geisha districts in Gion, and why Kyoto survived WWII bombing lists.</itunes:summary>
+    </item>
+    <item>
+      <title>Zero to Travel — Kyoto Beyond the Crowds: Backstreet Temples &amp; Dawn Walks</title>
+      <guid isPermaLink="false">podatlas:kyoto-japan:ky-2</guid>
+      <link>https://podatlas.pages.dev/city/kyoto-japan</link>
+      <pubDate>Fri, 02 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Zero to Travel: How to beat 9 AM tour buses at Fushimi Inari, plus hidden northern Zen gardens and rail pass math.
+
+Mentioned:
+• [18:40] Honen-in Temple (place)
+• [40:10] Peak Design Travel Backpack 30L (gear)</description>
+      <itunes:author>Zero to Travel</itunes:author>
+      <itunes:duration>3240</itunes:duration>
+      <itunes:summary>How to beat 9 AM tour buses at Fushimi Inari, plus hidden northern Zen gardens and rail pass math.</itunes:summary>
+    </item>
+    <item>
+      <title>The Sporkful — Inside Kyoto’s 400-Year-Old Tofu &amp; Matcha Craft</title>
+      <guid isPermaLink="false">podatlas:kyoto-japan:ky-3</guid>
+      <link>https://podatlas.pages.dev/city/kyoto-japan</link>
+      <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
+      <description>The Sporkful: Why soft mountain water made Kyoto the capital of kaiseki dining and Uji ceremonial matcha.
+
+Mentioned:
+• [10:20] The Book of Tea (book)
+• [25:40] Ippodo Tea Main Store (place)</description>
+      <itunes:author>The Sporkful</itunes:author>
+      <itunes:duration>2160</itunes:duration>
+      <itunes:summary>Why soft mountain water made Kyoto the capital of kaiseki dining and Uji ceremonial matcha.</itunes:summary>
+    </item>
+  </channel>
+</rss>

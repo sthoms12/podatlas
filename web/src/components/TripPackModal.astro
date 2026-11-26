@@ -7,95 +7,134 @@ interface Props {
 }
 
 const { city } = Astro.props;
+const geocodedCount = city.placesAndGear.filter(
+  (p) => p.type !== 'Gear' && p.lat != null && p.lon != null
+).length;
+const feedPath = `/feeds/${city.id}.xml`;
+const kmlPath = `/maps/${city.id}.kml`;
 ---
 
 <div
   id="podatlas-trip-modal"
-  class="hidden fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-center p-4"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="podatlas-trip-modal-title"
+  class="hidden fixed inset-0 z-50 bg-stone-950/55 backdrop-blur-xs flex items-center justify-center p-4"
 >
   <div
     id="podatlas-trip-modal-card"
-    class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-4"
+    class="bg-white border border-stone-200 rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-4 text-stone-900"
   >
     <div class="flex items-start justify-between gap-3">
       <div>
         <span
-          class="text-[11px] font-medium px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30"
+          class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200"
         >
-          Offline Flight Bundle
+          Offline Flight &amp; Maps Export
         </span>
-        <h3 class="text-base font-semibold text-slate-100 mt-1.5">
-          {city.name} Trip Audio &amp; Reading Pack
+        <h3
+          id="podatlas-trip-modal-title"
+          class="font-serif text-lg font-semibold text-stone-900 mt-1.5"
+        >
+          {city.name} Trip Pack
         </h3>
       </div>
       <button
         id="podatlas-close-trip-modal"
         type="button"
         aria-label="Close modal"
-        class="text-slate-400 hover:text-slate-100 text-lg leading-none cursor-pointer"
+        class="w-8 h-8 rounded-lg text-stone-400 hover:text-stone-900 hover:bg-stone-100 flex items-center justify-center text-lg leading-none cursor-pointer transition"
       >
         &times;
       </button>
     </div>
 
-    <p class="text-xs text-slate-300 leading-relaxed">
-      One-time <strong class="text-slate-100">$7</strong> export for travelers prepping for a flight
-      — generated cleanly from PodAtlas&apos;s static city index with zero server cost:
+    <p class="text-xs text-stone-600 leading-relaxed">
+      Take <strong>{city.name}</strong> offline before your flight — subscribe to a dedicated
+      city-only podcast RSS feed in Apple Podcasts, Pocket Casts, or Overcast, and import
+      geocoded spots straight into Google My Maps.
     </p>
 
-    <ul class="space-y-2 text-xs text-slate-200">
+    <ul class="space-y-2 text-xs text-stone-700 bg-stone-50 border border-stone-200/80 rounded-xl p-3.5">
       <li class="flex items-center gap-2">
-        <span class="text-emerald-400 font-bold">✓</span>
+        <span class="text-emerald-600 font-bold" aria-hidden="true">✓</span>
         <span>
-          <strong>{city.episodes.length} curated podcast episodes</strong> queued as an offline OPML
-          playlist
+          <strong>{city.episodes.length} episodes</strong> in a playable Podcast RSS playlist
         </span>
       </li>
       <li class="flex items-center gap-2">
-        <span class="text-emerald-400 font-bold">✓</span>
+        <span class="text-emerald-600 font-bold" aria-hidden="true">✓</span>
         <span>
-          <strong>{city.books.length} pre-trip books</strong> with exact episode quotes &amp;
+          <strong>{geocodedCount} geocoded landmarks &amp; food spots</strong> as a Google Maps
+          <code>.kml</code> file
+        </span>
+      </li>
+      <li class="flex items-center gap-2">
+        <span class="text-emerald-600 font-bold" aria-hidden="true">✓</span>
+        <span>
+          <strong>{city.books.length} books</strong> with host quotes, consensus badges &amp;
           timestamps
-        </span>
-      </li>
-      <li class="flex items-center gap-2">
-        <span class="text-emerald-400 font-bold">✓</span>
-        <span>
-          <strong>{city.placesAndGear.length} pinned restaurants, landmarks &amp; gear</strong>
-          ready for Google Maps
         </span>
       </li>
     </ul>
 
+    <!-- Playable Episode RSS Feed Copy Box -->
+    <div class="space-y-1.5">
+      <div class="text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+        Playable Episode RSS Feed
+      </div>
+      <div class="flex items-center gap-1.5">
+        <input
+          id="podatlas-rss-url-input"
+          type="text"
+          readonly
+          value={feedPath}
+          data-feed-path={feedPath}
+          aria-label="City podcast RSS feed URL"
+          class="flex-1 min-w-0 px-2.5 py-2 rounded-lg text-[11.5px] font-mono bg-stone-50 border border-stone-200 text-stone-700 focus:outline-none"
+        />
+        <button
+          id="podatlas-copy-rss"
+          type="button"
+          class="shrink-0 px-3 py-2 rounded-lg text-xs font-semibold bg-stone-900 text-white hover:bg-sky-700 transition cursor-pointer"
+        >
+          Copy RSS
+        </button>
+      </div>
+    </div>
+
     <div class="flex flex-col gap-2 pt-1">
+      <div class="grid grid-cols-2 gap-2">
+        <button
+          id="podatlas-download-kml"
+          type="button"
+          data-kml-path={kmlPath}
+          disabled={geocodedCount === 0}
+          class="py-2 px-3 rounded-xl text-xs font-semibold bg-emerald-700 text-white hover:bg-emerald-600 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+        >
+          Google Maps (.kml)
+        </button>
+        <button
+          id="podatlas-download-txt"
+          type="button"
+          class="py-2 px-3 rounded-xl text-xs font-semibold bg-stone-100 text-stone-800 hover:bg-stone-200 transition cursor-pointer"
+        >
+          Trip Itinerary (.txt)
+        </button>
+      </div>
+
       {
         MONETIZATION_CONFIG.stripeTripPackUrl && (
           <a
             href={MONETIZATION_CONFIG.stripeTripPackUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="w-full py-2 px-3 rounded-lg text-xs font-semibold bg-sky-500 text-slate-950 hover:bg-sky-400 transition text-center"
+            class="w-full py-2.5 px-3 rounded-xl text-xs font-semibold bg-sky-600 text-white hover:bg-sky-500 transition text-center"
           >
-            Unlock Full $7 Trip Pack ↗
+            Unlock Full $7 Printable Bundle ↗
           </a>
         )
       }
-      <div class="grid grid-cols-2 gap-2">
-        <button
-          id="podatlas-download-txt"
-          type="button"
-          class="py-2 px-3 rounded-lg text-xs font-medium bg-slate-800 text-slate-100 hover:bg-slate-700 transition cursor-pointer"
-        >
-          Sample Itinerary (.txt)
-        </button>
-        <button
-          id="podatlas-download-opml"
-          type="button"
-          class="py-2 px-3 rounded-lg text-xs font-medium bg-slate-800 text-slate-100 hover:bg-slate-700 transition cursor-pointer"
-        >
-          Podcast OPML (.opml)
-        </button>
-      </div>
     </div>
   </div>
 </div>

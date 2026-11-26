@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>PodAtlas: Lisbon, Portugal Podcast Playlist</title>
+    <link>https://podatlas.pages.dev/city/lisbon-portugal</link>
+    <atom:link href="https://podatlas.pages.dev/feeds/lisbon-portugal.xml" rel="self" type="application/rss+xml" />
+    <description>Tile-covered hills, 1755 earthquake history, Atlantic seafood, and late-night fado clubs in Alfama.</description>
+    <language>en-us</language>
+    <itunes:author>PodAtlas</itunes:author>
+    <itunes:summary>Tile-covered hills, 1755 earthquake history, Atlantic seafood, and late-night fado clubs in Alfama.</itunes:summary>
+    <item>
+      <title>The Rest Is History — The Great Lisbon Earthquake of 1755</title>
+      <guid isPermaLink="false">podatlas:lisbon-portugal:li-1</guid>
+      <link>https://podatlas.pages.dev/city/lisbon-portugal</link>
+      <pubDate>Sun, 19 Jul 2026 00:00:00 +0000</pubDate>
+      <description>The Rest Is History: How one All Saints’ Day catastrophe reshaped European philosophy and created Baixa’s grid streets.
+
+Mentioned:
+• [16:00] The Last Day by Nicholas Shrady (book)
+• [27:00] Baixa Pombalina (place)
+• [37:00] Carmo Convent Ruins (place)</description>
+      <itunes:author>The Rest Is History</itunes:author>
+      <itunes:duration>3120</itunes:duration>
+      <itunes:summary>How one All Saints’ Day catastrophe reshaped European philosophy and created Baixa’s grid streets.</itunes:summary>
+    </item>
+    <item>
+      <title>Amateur Traveler — 4 Perfect Days in Lisbon &amp; Sintra Without Tourist Traps</title>
+      <guid isPermaLink="false">podatlas:lisbon-portugal:li-2</guid>
+      <link>https://podatlas.pages.dev/city/lisbon-portugal</link>
+      <pubDate>Sun, 11 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Amateur Traveler: Riding Tram 28 at dawn, ferrying across the Tagus to Cacilhas, and dodging Sintra bus lines.
+
+Mentioned:
+• [22:30] Ponto Final (Cacilhas) (place)
+• [35:00] Grip-Sole Walking Shoes (gear)</description>
+      <itunes:author>Amateur Traveler</itunes:author>
+      <itunes:duration>2760</itunes:duration>
+      <itunes:summary>Riding Tram 28 at dawn, ferrying across the Tagus to Cacilhas, and dodging Sintra bus lines.</itunes:summary>
+    </item>
+  </channel>
+</rss>

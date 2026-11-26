@@ -5,6 +5,7 @@ import WorldMap from './WorldMap.astro';
 import CityDrawer from './CityDrawer.astro';
 import WelcomeDrawer from './WelcomeDrawer.astro';
 import AudioPlayer from './AudioPlayer.astro';
+import TripPackModal from './TripPackModal.astro';
 import type { CitiesGeoJSON, CityData } from '../types/podatlas';
 
 interface Props {
@@ -63,6 +64,8 @@ const description = isWelcome
 
     <AudioPlayer />
   </div>
+
+  {!isWelcome && <TripPackModal city={city} />}
 
   <!-- Embedded city payload for instant client-side audio playback (or live mention demo on /) -->
   <script id="podatlas-city-payload" type="application/json" set:html={JSON.stringify(city)} />

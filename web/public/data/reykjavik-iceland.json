@@ -49,16 +49,6 @@
   ],
   "books": [
     {
-      "title": "The Sagas of Icelanders",
-      "author": "Preface by Jane Smiley",
-      "isbn": "9780141000039",
-      "openLibraryKey": null,
-      "episodeId": "re-2",
-      "show": "Saga Thing",
-      "timestampSec": 1140,
-      "quote": "Dry Viking humor and courtroom drama set right along the Ring Road."
-    },
-    {
       "title": "Names for the Sea",
       "author": "Sarah Moss",
       "isbn": "9781619022676",
@@ -66,23 +56,63 @@
       "episodeId": "re-1",
       "show": "Women Who Travel",
       "timestampSec": 2220,
-      "quote": "Hilarious memoir of a British family moving to Iceland for a year."
+      "quote": "Hilarious memoir of a British family moving to Iceland for a year.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Women Who Travel"
+      ]
+    },
+    {
+      "title": "The Sagas of Icelanders",
+      "author": "Preface by Jane Smiley",
+      "isbn": "9780141000039",
+      "openLibraryKey": null,
+      "episodeId": "re-2",
+      "show": "Saga Thing",
+      "timestampSec": 1140,
+      "quote": "Dry Viking humor and courtroom drama set right along the Ring Road.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Saga Thing"
+      ]
     }
   ],
   "placesAndGear": [
-    {
-      "name": "Vesturbæjarlaug",
-      "type": "Landmark",
-      "note": "Beloved local geothermal pool with hot tubs and steam rooms for ~$9.",
-      "episodeId": "re-1",
-      "timestampSec": 900
-    },
     {
       "name": "Darn Tough Merino Socks",
       "type": "Gear",
       "note": "Lifetime warranty wool socks praised for wet waterfall hikes.",
       "episodeId": "re-1",
-      "timestampSec": 1860
+      "timestampSec": 1860,
+      "show": "Women Who Travel",
+      "lat": null,
+      "lon": null,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Women Who Travel"
+      ]
+    },
+    {
+      "name": "Vesturbæjarlaug",
+      "type": "Landmark",
+      "note": "Beloved local geothermal pool with hot tubs and steam rooms for ~$9.",
+      "episodeId": "re-1",
+      "timestampSec": 900,
+      "show": "Women Who Travel",
+      "lat": 64.1455,
+      "lon": -21.9619,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Women Who Travel"
+      ]
     }
   ]
 }

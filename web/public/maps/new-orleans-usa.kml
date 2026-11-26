@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>PodAtlas Pins — New Orleans, USA</name>
+    <description>Brass bands, Congo Square jazz roots, gumbo debates, and Creole architecture.</description>
+    <Placemark>
+      <name>Dooky Chase’s Restaurant</name>
+      <description>[Food] Historic Creole landmark and civil-rights meeting place. (Gravy (Southern Foodways) @ 14:00)</description>
+      <Point>
+        <coordinates>-90.0752,29.9647,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Preservation Hall</name>
+      <description>[Landmark] Intimate acoustic jazz hall in the French Quarter—no drinks, no AC, pure magic. (A History of Rock Music in 500 Songs @ 18:00)</description>
+      <Point>
+        <coordinates>-90.0654,29.9584,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

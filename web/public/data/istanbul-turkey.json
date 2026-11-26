@@ -56,7 +56,13 @@
       "episodeId": "is-1",
       "show": "History of Byzantium",
       "timestampSec": 1320,
-      "quote": "Impossible to put down—every rampart you visit has a story."
+      "quote": "Impossible to put down—every rampart you visit has a story.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "History of Byzantium"
+      ]
     },
     {
       "title": "Istanbul: Memories and the City",
@@ -66,23 +72,47 @@
       "episodeId": "is-2",
       "show": "Culinary Backstreets",
       "timestampSec": 1860,
-      "quote": "Nobel laureate’s moody love letter to Bosphorus ferries."
+      "quote": "Nobel laureate’s moody love letter to Bosphorus ferries.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Culinary Backstreets"
+      ]
     }
   ],
   "placesAndGear": [
-    {
-      "name": "Çiya Sofrası",
-      "type": "Food",
-      "note": "Anatolian regional dishes rescued from forgotten village recipes on the Asian side.",
-      "episodeId": "is-2",
-      "timestampSec": 900
-    },
     {
       "name": "Basilica Cistern",
       "type": "Landmark",
       "note": "Subterranean forest of 336 Roman marble columns beneath Sultanahmet.",
       "episodeId": "is-1",
-      "timestampSec": 2700
+      "timestampSec": 2700,
+      "show": "History of Byzantium",
+      "lat": 41.0084,
+      "lon": 28.9779,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "History of Byzantium"
+      ]
+    },
+    {
+      "name": "Çiya Sofrası",
+      "type": "Food",
+      "note": "Anatolian regional dishes rescued from forgotten village recipes on the Asian side.",
+      "episodeId": "is-2",
+      "timestampSec": 900,
+      "show": "Culinary Backstreets Audio",
+      "lat": 40.9891,
+      "lon": 29.0246,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Culinary Backstreets Audio"
+      ]
     }
   ]
 }

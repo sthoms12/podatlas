@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>PodAtlas: Cusco, Peru Podcast Playlist</title>
+    <link>https://podatlas.pages.dev/city/cusco-peru</link>
+    <atom:link href="https://podatlas.pages.dev/feeds/cusco-peru.xml" rel="self" type="application/rss+xml" />
+    <description>Inca stonework fitted without mortar at 11,150 feet—gateway to the Sacred Valley.</description>
+    <language>en-us</language>
+    <itunes:author>PodAtlas</itunes:author>
+    <itunes:summary>Inca stonework fitted without mortar at 11,150 feet—gateway to the Sacred Valley.</itunes:summary>
+    <item>
+      <title>Fall of Civilizations — The Inca Empire: Stone, Quipu &amp; High-Altitude Roads</title>
+      <guid isPermaLink="false">podatlas:cusco-peru:cu-1</guid>
+      <link>https://podatlas.pages.dev/city/cusco-peru</link>
+      <pubDate>Thu, 30 Jul 2026 00:00:00 +0000</pubDate>
+      <description>Fall of Civilizations: How Inca engineers built earthquake-proof granite walls and 25,000 miles of Andean highways.
+
+Mentioned:
+• [27:00] Turn Right at Machu Picchu (book)
+• [52:00] Sacsayhuamán Fortress (place)</description>
+      <itunes:author>Fall of Civilizations</itunes:author>
+      <itunes:duration>4200</itunes:duration>
+      <itunes:summary>How Inca engineers built earthquake-proof granite walls and 25,000 miles of Andean highways.</itunes:summary>
+    </item>
+  </channel>
+</rss>

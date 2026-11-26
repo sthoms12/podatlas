@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>PodAtlas Pins — Reykjavik, Iceland</name>
+    <description>Geothermal pools, Viking sagas, volcanic Ring Road drives, and winter aurora chasing.</description>
+    <Placemark>
+      <name>Vesturbæjarlaug</name>
+      <description>[Landmark] Beloved local geothermal pool with hot tubs and steam rooms for ~$9. (Women Who Travel @ 15:00)</description>
+      <Point>
+        <coordinates>-21.9619,64.1455,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

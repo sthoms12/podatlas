@@ -8,6 +8,7 @@ import type {
   DrawerTab,
   EpisodeMention,
   EpisodeRecord,
+  PlaceOrGearRecord,
   SearchIndexItem,
 } from '../types/podatlas';
 import {
@@ -15,6 +16,11 @@ import {
   buildBookshopUrl,
   buildGoogleMapsUrl,
 } from '../config/monetization';
+import {
+  buildCityKml,
+  buildTripItineraryText,
+  triggerFileDownload,
+} from '../lib/exportPack';
 import { CATEGORY_COLORS, formatTime } from '../lib/format';
 
 const OPENFREEMAP_STYLE = 'https://tiles.openfreemap.org/styles/positron';
@@ -36,6 +42,10 @@ interface ClientRuntime {
   fuse: Fuse<SearchIndexItem> | null;
   searchLoaded: boolean;
   currentCity: CityData | null;
+  // Story Map state
+  storyPlaces: PlaceOrGearRecord[];
+  storyActiveName: string | null;
+  storyModeActive: boolean;
   // Audio player state
   currentEpisode: EpisodeRecord | null;
   playingCity: CityData | null;
@@ -63,6 +73,9 @@ const runtime: ClientRuntime = {
   fuse: null,
   searchLoaded: false,
   currentCity: null,
+  storyPlaces: [],
+  storyActiveName: null,
+  storyModeActive: false,
   currentEpisode: null,
   playingCity: null,
   isPlaying: false,
@@ -275,7 +288,7 @@ async function initMapOnce(): Promise<void> {
     center: [12, 22],
     zoom: 1.25,
     minZoom: 0.75,
-    maxZoom: 12,
+    maxZoom: 16,
     attributionControl: { compact: true },
   });
 
@@ -283,6 +296,13 @@ async function initMapOnce(): Promise<void> {
     closeButton: false,
     closeOnClick: false,
     offset: 14,
+  });
+
+  const storyPopup = new maplibregl.Popup({
+    closeButton: true,
+    closeOnClick: true,
+    offset: 16,
+    maxWidth: '280px',
   });
 
   runtime.map = map;
@@ -304,6 +324,16 @@ async function initMapOnce(): Promise<void> {
       cluster: true,
       clusterMaxZoom: 3,
       clusterRadius: 36,
+    });
+
+    map.addSource('podatlas-story-route', {
+      type: 'geojson',
+      data: { type: 'FeatureCollection', features: [] },
+    });
+
+    map.addSource('podatlas-story-places', {
+      type: 'geojson',
+      data: { type: 'FeatureCollection', features: [] },
     });
 
     map.addLayer({
@@ -387,6 +417,127 @@ async function initMapOnce(): Promise<void> {
       },
     });
 
+    // --- In-Episode Story Map Layers ---
+    map.addLayer({
+      id: 'story-route-line',
+      type: 'line',
+      source: 'podatlas-story-route',
+      layout: {
+        'line-cap': 'round',
+        'line-join': 'round',
+      },
+      paint: {
+        'line-color': '#0284c7',
+        'line-width': 2.5,
+        'line-dasharray': [2, 2],
+        'line-opacity': 0.7,
+      },
+    });
+
+    map.addLayer({
+      id: 'story-place-halo',
+      type: 'circle',
+      source: 'podatlas-story-places',
+      filter: ['==', ['get', 'name'], ''],
+      paint: {
+        'circle-radius': 22,
+        'circle-color': '#f59e0b',
+        'circle-opacity': 0.28,
+        'circle-stroke-width': 2.5,
+        'circle-stroke-color': '#d97706',
+      },
+    });
+
+    map.addLayer({
+      id: 'story-place-pins',
+      type: 'circle',
+      source: 'podatlas-story-places',
+      paint: {
+        'circle-color': [
+          'match',
+          ['get', 'type'],
+          'Food',
+          '#e11d48',
+          'Landmark',
+          '#059669',
+          '#0284c7',
+        ],
+        'circle-radius': 12,
+        'circle-stroke-width': 2.5,
+        'circle-stroke-color': '#ffffff',
+      },
+    });
+
+    map.addLayer({
+      id: 'story-place-numbers',
+      type: 'symbol',
+      source: 'podatlas-story-places',
+      layout: {
+        'text-field': ['to-string', ['get', 'index']],
+        'text-size': 11,
+        'text-allow-overlap': true,
+      },
+      paint: {
+        'text-color': '#ffffff',
+      },
+    });
+
+    map.addLayer({
+      id: 'story-place-labels',
+      type: 'symbol',
+      source: 'podatlas-story-places',
+      layout: {
+        'text-field': ['get', 'name'],
+        'text-size': 12,
+        'text-offset': [0, 1.5],
+        'text-anchor': 'top',
+        'text-optional': false,
+      },
+      paint: {
+        'text-color': '#1c1917',
+        'text-halo-color': '#ffffff',
+        'text-halo-width': 2,
+      },
+    });
+
+    map.on('click', 'story-place-pins', (e) => {
+      stopAutoSpin();
+      const feature = e.features?.[0];
+      if (!feature) return;
+      const geom = feature.geometry as GeoJSON.Point;
+      const props = feature.properties;
+      const sec = Number(props.timestampSec || 0);
+      const name = String(props.name || '');
+      const note = String(props.note || '');
+      const cityName = String(props.cityName || runtime.currentCity?.name || '');
+      const mapsUrl = buildGoogleMapsUrl({ name }, cityName);
+
+      if (runtime.currentEpisode) {
+        seekTo(sec);
+      }
+
+      storyPopup
+        .setLngLat(geom.coordinates as [number, number])
+        .setHTML(
+          `<div style="font-size:12.5px;line-height:1.45;color:#1c1917">
+            <div style="font-weight:700">${props.index}. ${name}</div>
+            <div style="color:#57534e;margin-top:3px">${note}</div>
+            <div style="margin-top:6px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11.5px">
+              <span style="font-family:monospace;color:#0369a1;font-weight:600">▶ ${formatTime(sec)}</span>
+              <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" style="color:#0284c7;font-weight:600;text-decoration:none">Google Maps ↗</a>
+            </div>
+          </div>`
+        )
+        .addTo(map);
+    });
+
+    map.on('mouseenter', 'story-place-pins', () => {
+      map.getCanvas().style.cursor = 'pointer';
+    });
+    map.on('mouseleave', 'story-place-pins', () => {
+      map.getCanvas().style.cursor = '';
+    });
+
     map.on('click', 'city-clusters', async (e) => {
       stopAutoSpin();
       const features = map.queryRenderedFeatures(e.point, { layers: ['city-clusters'] });
@@ -452,12 +603,196 @@ async function initMapOnce(): Promise<void> {
   });
   document.getElementById('podatlas-zoom-reset')?.addEventListener('click', () => {
     stopAutoSpin();
+    clearStoryMap(false);
     map.flyTo({ center: [12, 22], zoom: 1.25, pitch: 0, duration: 850 });
   });
   document.getElementById('podatlas-projection-toggle')?.addEventListener('click', () => {
     runtime.isGlobe = !runtime.isGlobe;
     applyMapProjection();
   });
+  document.getElementById('podatlas-exit-story-btn')?.addEventListener('click', () => {
+    clearStoryMap(true);
+  });
+}
+
+// --- In-Episode Story Map Mode ---
+
+function setStoryPill(visible: boolean, label?: string): void {
+  const pill = document.getElementById('podatlas-story-pill');
+  const textEl = document.getElementById('podatlas-story-pill-label');
+  if (!pill) return;
+  pill.classList.toggle('hidden', !visible);
+  pill.classList.toggle('flex', visible);
+  if (label && textEl) {
+    textEl.textContent = label;
+  }
+}
+
+function clearStoryMap(flyBack = false): void {
+  runtime.storyPlaces = [];
+  runtime.storyActiveName = null;
+  runtime.storyModeActive = false;
+  setStoryPill(false);
+
+  if (runtime.map && runtime.mapReady) {
+    const placesSrc = runtime.map.getSource('podatlas-story-places') as
+      | maplibregl.GeoJSONSource
+      | undefined;
+    const routeSrc = runtime.map.getSource('podatlas-story-route') as
+      | maplibregl.GeoJSONSource
+      | undefined;
+    const empty: GeoJSON.FeatureCollection = { type: 'FeatureCollection', features: [] };
+    placesSrc?.setData(empty);
+    routeSrc?.setData(empty);
+    if (runtime.map.getLayer('story-place-halo')) {
+      runtime.map.setFilter('story-place-halo', ['==', ['get', 'name'], '']);
+    }
+    if (flyBack) {
+      focusSelectedCityOnMap(true);
+    }
+  }
+}
+
+function activateStoryMap(
+  episode: EpisodeRecord | null,
+  city: CityData,
+  focusCoord?: { lat: number; lon: number; name: string }
+): void {
+  const episodePlaces = episode
+    ? city.placesAndGear.filter(
+        (p) => p.type !== 'Gear' && p.lat != null && p.lon != null && p.episodeId === episode.id
+      )
+    : [];
+  const cityPlaces = city.placesAndGear.filter(
+    (p) => p.type !== 'Gear' && p.lat != null && p.lon != null
+  );
+  const stops = (episodePlaces.length > 0 ? episodePlaces : cityPlaces).sort(
+    (a, b) => a.timestampSec - b.timestampSec
+  );
+
+  if (stops.length === 0) {
+    clearStoryMap(false);
+    return;
+  }
+
+  runtime.storyPlaces = stops;
+  runtime.storyModeActive = true;
+  runtime.storyActiveName = focusCoord?.name ?? stops[0]?.name ?? null;
+
+  const features: GeoJSON.Feature<GeoJSON.Point>[] = stops.map((p, idx) => ({
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [p.lon as number, p.lat as number],
+    },
+    properties: {
+      index: idx + 1,
+      name: p.name,
+      type: p.type,
+      note: p.note,
+      timestampSec: p.timestampSec,
+      episodeId: p.episodeId,
+      cityName: city.name,
+    },
+  }));
+
+  const routeFeatures: GeoJSON.Feature<GeoJSON.LineString>[] =
+    stops.length >= 2
+      ? [
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'LineString',
+              coordinates: stops.map((p) => [p.lon as number, p.lat as number]),
+            },
+            properties: {},
+          },
+        ]
+      : [];
+
+  setStoryPill(
+    true,
+    `Story Map · ${stops.length} ${stops.length === 1 ? 'stop' : 'stops'} in ${city.name}`
+  );
+
+  if (!runtime.map || !runtime.mapReady) return;
+  stopAutoSpin();
+
+  const placesSrc = runtime.map.getSource('podatlas-story-places') as
+    | maplibregl.GeoJSONSource
+    | undefined;
+  const routeSrc = runtime.map.getSource('podatlas-story-route') as
+    | maplibregl.GeoJSONSource
+    | undefined;
+  placesSrc?.setData({ type: 'FeatureCollection', features });
+  routeSrc?.setData({ type: 'FeatureCollection', features: routeFeatures });
+
+  if (runtime.map.getLayer('story-place-halo') && runtime.storyActiveName) {
+    runtime.map.setFilter('story-place-halo', ['==', ['get', 'name'], runtime.storyActiveName]);
+  }
+
+  if (focusCoord) {
+    runtime.map.flyTo({
+      center: [focusCoord.lon, focusCoord.lat],
+      zoom: 14.5,
+      pitch: runtime.isGlobe ? 30 : 0,
+      duration: 950,
+      essential: true,
+    });
+  } else if (stops.length === 1) {
+    runtime.map.flyTo({
+      center: [stops[0].lon as number, stops[0].lat as number],
+      zoom: 13.5,
+      pitch: runtime.isGlobe ? 26 : 0,
+      duration: 1000,
+      essential: true,
+    });
+  } else {
+    const bounds = new maplibregl.LngLatBounds();
+    for (const p of stops) {
+      bounds.extend([p.lon as number, p.lat as number]);
+    }
+    runtime.map.fitBounds(bounds, {
+      padding: { top: 96, bottom: 80, left: 64, right: 64 },
+      maxZoom: 14.2,
+      duration: 1050,
+      essential: true,
+    });
+  }
+}
+
+function syncActiveStoryPlace(): void {
+  if (!runtime.storyModeActive || runtime.storyPlaces.length === 0) return;
+  const stops = runtime.storyPlaces;
+
+  let activeIdx = -1;
+  for (let i = 0; i < stops.length; i += 1) {
+    const p = stops[i];
+    if (runtime.currentSec >= p.timestampSec && runtime.currentSec <= p.timestampSec + MENTION_WINDOW_SEC) {
+      activeIdx = i;
+    }
+  }
+  if (activeIdx === -1) {
+    for (let i = stops.length - 1; i >= 0; i -= 1) {
+      if (runtime.currentSec >= stops[i].timestampSec) {
+        activeIdx = i;
+        break;
+      }
+    }
+  }
+
+  const activePlace = activeIdx >= 0 ? stops[activeIdx] : stops[0];
+  if (!activePlace || runtime.storyActiveName === activePlace.name) return;
+  runtime.storyActiveName = activePlace.name;
+
+  setStoryPill(
+    true,
+    `Story Map · Stop ${activeIdx >= 0 ? activeIdx + 1 : 1}/${stops.length}: ${activePlace.name}`
+  );
+
+  if (runtime.map && runtime.mapReady && runtime.map.getLayer('story-place-halo')) {
+    runtime.map.setFilter('story-place-halo', ['==', ['get', 'name'], activePlace.name]);
+  }
 }
 
 // --- Persistent On-Demand Audio Player + Live Mention Sync ---
@@ -601,6 +936,7 @@ function updatePlayerUI(): void {
   });
 
   syncActiveMentionUI();
+  syncActiveStoryPlace();
 }
 
 function stopPreviewTimer(): void {
@@ -646,6 +982,7 @@ function closePlayer(): void {
   runtime.currentEpisode = null;
   runtime.playingCity = null;
   runtime.lastActiveMentionKey = null;
+  clearStoryMap(false);
   setPlayerVisible(false);
   updatePlayerUI();
 }
@@ -693,6 +1030,7 @@ function playEpisode(episode: EpisodeRecord, city: CityData, startSec = 0): void
   runtime.durationSec = episode.durationSec || 2400;
   runtime.lastActiveMentionKey = null;
   setPlayerVisible(true);
+  activateStoryMap(episode, city);
 
   const titleEl = document.getElementById('podatlas-player-title');
   const showEl = document.getElementById('podatlas-player-show');
@@ -1050,9 +1388,24 @@ function bindCurrentPageElements(): void {
     });
   });
 
-  // Episode play & timestamp jump buttons (works on both Welcome demo and City Drawer)
+  // Episode play, timestamp jump, and "Show on map" place focus buttons
   const drawer = document.getElementById('podatlas-city-drawer');
   drawer?.addEventListener('click', (e) => {
+    const focusBtn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-focus-place-lat]');
+    if (focusBtn && city) {
+      const lat = Number(focusBtn.dataset.focusPlaceLat);
+      const lon = Number(focusBtn.dataset.focusPlaceLon);
+      const name = focusBtn.dataset.focusPlaceName || '';
+      const epId = focusBtn.dataset.focusPlaceEp || '';
+      if (Number.isFinite(lat) && Number.isFinite(lon)) {
+        const ep = city.episodes.find((item) => item.id === epId) || null;
+        setMobileView('map');
+        activateStoryMap(ep, city, { lat, lon, name });
+        showFlightToast(`Zooming to ${name}`);
+      }
+      return;
+    }
+
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-play-ep]');
     if (!btn || !city) return;
     const epId = btn.dataset.playEp;
@@ -1062,6 +1415,70 @@ function bindCurrentPageElements(): void {
       playEpisode(ep, city, startSec);
     }
   });
+
+  // Trip Pack Modal (RSS Feed copy + Google Maps KML + Itinerary TXT)
+  const tripModal = document.getElementById('podatlas-trip-modal');
+  const openTripBtn = document.getElementById('podatlas-open-trip-modal');
+  const closeTripBtn = document.getElementById('podatlas-close-trip-modal');
+  const rssInput = document.getElementById('podatlas-rss-url-input') as HTMLInputElement | null;
+  const copyRssBtn = document.getElementById('podatlas-copy-rss');
+  const downloadKmlBtn = document.getElementById('podatlas-download-kml');
+  const downloadTxtBtn = document.getElementById('podatlas-download-txt');
+
+  if (rssInput && rssInput.dataset.feedPath) {
+    rssInput.value = `${window.location.origin}${rssInput.dataset.feedPath}`;
+  }
+
+  openTripBtn?.addEventListener('click', () => {
+    tripModal?.classList.remove('hidden');
+  });
+  closeTripBtn?.addEventListener('click', () => {
+    tripModal?.classList.add('hidden');
+  });
+  tripModal?.addEventListener('click', (e) => {
+    if (e.target === tripModal) {
+      tripModal.classList.add('hidden');
+    }
+  });
+
+  copyRssBtn?.addEventListener('click', async () => {
+    if (!rssInput) return;
+    const url = rssInput.value;
+    try {
+      await navigator.clipboard.writeText(url);
+      copyRssBtn.textContent = 'Copied!';
+      window.setTimeout(() => {
+        copyRssBtn.textContent = 'Copy RSS';
+      }, 1800);
+    } catch {
+      rssInput.select();
+      document.execCommand('copy');
+      copyRssBtn.textContent = 'Copied!';
+      window.setTimeout(() => {
+        copyRssBtn.textContent = 'Copy RSS';
+      }, 1800);
+    }
+  });
+
+  downloadKmlBtn?.addEventListener('click', () => {
+    if (!city) return;
+    const kml = buildCityKml(city);
+    triggerFileDownload(
+      `${city.id}-pins.kml`,
+      kml,
+      'application/vnd.google-earth.kml+xml;charset=utf-8'
+    );
+  });
+
+  downloadTxtBtn?.addEventListener('click', () => {
+    if (!city) return;
+    const txt = buildTripItineraryText(city);
+    triggerFileDownload(`${city.id}-trip-pack.txt`, txt, 'text/plain;charset=utf-8');
+  });
+
+  if (!isCityRoute() || (runtime.playingCity && runtime.playingCity.id !== city?.id)) {
+    clearStoryMap(false);
+  }
 
   syncMapFilter();
   focusSelectedCityOnMap(true);

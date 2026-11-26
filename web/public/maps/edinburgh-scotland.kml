@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>PodAtlas Pins — Edinburgh, Scotland</name>
+    <description>Volcanic crags, underground closes, Enlightenment pubs, and literary ghosts.</description>
+    <Placemark>
+      <name>Dean Village</name>
+      <description>[Landmark] 19th-century milling hamlet tucked 10 minutes below Princes Street. (Rick Steves Audio Europe @ 12:00)</description>
+      <Point>
+        <coordinates>-3.2179,55.9519,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

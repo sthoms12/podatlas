@@ -61,7 +61,13 @@
       "episodeId": "mx-2",
       "show": "99% Invisible",
       "timestampSec": 1740,
-      "quote": "Told from indigenous Nahuatl sources—totally reframes Tenochtitlan."
+      "quote": "Told from indigenous Nahuatl sources—totally reframes Tenochtitlan.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "99% Invisible"
+      ]
     },
     {
       "title": "Planet Taco: A Global History of Mexican Food",
@@ -71,7 +77,13 @@
       "episodeId": "mx-1",
       "show": "Proof",
       "timestampSec": 1680,
-      "quote": "Essential backstory for every taco stand in Roma and Condesa."
+      "quote": "Essential backstory for every taco stand in Roma and Condesa.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Proof"
+      ]
     }
   ],
   "placesAndGear": [
@@ -80,14 +92,32 @@
       "type": "Food",
       "note": "Working mechanic garage by day that transforms into a legendary al pastor stand at night.",
       "episodeId": "mx-1",
-      "timestampSec": 780
+      "timestampSec": 780,
+      "show": "Proof (America’s Test Kitchen)",
+      "lat": 19.3976,
+      "lon": -99.1597,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Proof (America’s Test Kitchen)"
+      ]
     },
     {
       "name": "Templo Mayor",
       "type": "Landmark",
       "note": "Excavated Aztec pyramid sitting directly beside the Zócalo cathedral.",
       "episodeId": "mx-2",
-      "timestampSec": 1020
+      "timestampSec": 1020,
+      "show": "99% Invisible",
+      "lat": 19.435,
+      "lon": -99.1313,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "99% Invisible"
+      ]
     }
   ]
 }

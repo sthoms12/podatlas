@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>PodAtlas Pins — Kyoto, Japan</name>
+    <description>Former imperial capital packed with Zen gardens, Edo-era lore, and century-old ramen &amp; matcha shops.</description>
+    <Placemark>
+      <name>Honen-in Temple</name>
+      <description>[Landmark] Recommended by 2 shows. Moss-covered gate near Philosopher’s Path with 1/10th the crowds of Kinkaku-ji. (Zero to Travel @ 18:40)</description>
+      <Point>
+        <coordinates>135.7973,35.0221,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Gion Hanamikoji Street</name>
+      <description>[Landmark] Historic wooden machiya avenue in Gion where Edo-era merchant and geisha culture took shape. (History of Japan Podcast @ 08:00)</description>
+      <Point>
+        <coordinates>135.7751,35.0037,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Ippodo Tea Main Store</name>
+      <description>[Food] 300-year-old tea house serving fresh hand-whisked matcha at the counter. (The Sporkful @ 25:40)</description>
+      <Point>
+        <coordinates>135.7675,35.0148,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Nishiki Market</name>
+      <description>[Food] Five-block 'Kyoto's Kitchen' food arcade dating back 400 years—sample yuba, pickles, and matcha. (History of Japan Podcast @ 32:30)</description>
+      <Point>
+        <coordinates>135.7649,35.005,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

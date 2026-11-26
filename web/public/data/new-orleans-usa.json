@@ -49,16 +49,6 @@
   ],
   "books": [
     {
-      "title": "Nine Lives: Mystery, Magic, Death & Life in New Orleans",
-      "author": "Dan Baum",
-      "isbn": "9780385523202",
-      "openLibraryKey": null,
-      "episodeId": "no-1",
-      "show": "500 Songs",
-      "timestampSec": 2340,
-      "quote": "Follows nine real New Orleanians from Hurricane Betsy to Katrina."
-    },
-    {
       "title": "A Confederacy of Dunces",
       "author": "John Kennedy Toole",
       "isbn": "9780802130204",
@@ -66,23 +56,63 @@
       "episodeId": "no-2",
       "show": "Gravy",
       "timestampSec": 1500,
-      "quote": "The funniest French Quarter novel ever written."
+      "quote": "The funniest French Quarter novel ever written.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Gravy"
+      ]
+    },
+    {
+      "title": "Nine Lives: Mystery, Magic, Death & Life in New Orleans",
+      "author": "Dan Baum",
+      "isbn": "9780385523202",
+      "openLibraryKey": null,
+      "episodeId": "no-1",
+      "show": "500 Songs",
+      "timestampSec": 2340,
+      "quote": "Follows nine real New Orleanians from Hurricane Betsy to Katrina.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "500 Songs"
+      ]
     }
   ],
   "placesAndGear": [
-    {
-      "name": "Preservation Hall",
-      "type": "Landmark",
-      "note": "Intimate acoustic jazz hall in the French Quarter—no drinks, no AC, pure magic.",
-      "episodeId": "no-1",
-      "timestampSec": 1080
-    },
     {
       "name": "Dooky Chase’s Restaurant",
       "type": "Food",
       "note": "Historic Creole landmark and civil-rights meeting place.",
       "episodeId": "no-2",
-      "timestampSec": 840
+      "timestampSec": 840,
+      "show": "Gravy (Southern Foodways)",
+      "lat": 29.9647,
+      "lon": -90.0752,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Gravy (Southern Foodways)"
+      ]
+    },
+    {
+      "name": "Preservation Hall",
+      "type": "Landmark",
+      "note": "Intimate acoustic jazz hall in the French Quarter—no drinks, no AC, pure magic.",
+      "episodeId": "no-1",
+      "timestampSec": 1080,
+      "show": "A History of Rock Music in 500 Songs",
+      "lat": 29.9584,
+      "lon": -90.0654,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "A History of Rock Music in 500 Songs"
+      ]
     }
   ]
 }

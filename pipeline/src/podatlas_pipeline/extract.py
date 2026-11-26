@@ -16,16 +16,16 @@ Given a timestamped podcast episode transcript (formatted as [MM:SS] text), extr
    - STRICTLY IGNORE where the host lives, where the podcast is recorded, or sponsor headquarters.
    - If the episode is NOT meaningfully about a specific city, set isDestinationFocused=false and primaryCities=[].
 2. summary: A crisp 1-2 sentence summary focused on what a traveler or history/food fan learns about the city.
-3. books: Books explicitly recommended or discussed, with author, short host quote/reason, and timestampSec.
-4. placesAndGear: Specific restaurants, cafes, temples, museums, neighborhoods (type "Landmark" or "Food"), or travel gear items (type "Gear") mentioned, with a helpful note and timestampSec.
+3. books: Books explicitly recommended or discussed, with author, short host quote/reason, timestampSec, and endorsement ("strong_rec" if explicitly praised/recommended, "casual_mention" if mentioned in passing).
+4. placesAndGear: Specific restaurants, cafes, temples, museums, neighborhoods (type "Landmark" or "Food"), or travel gear items (type "Gear") mentioned, with a helpful note, timestampSec, and endorsement ("strong_rec" or "casual_mention").
 
 Return ONLY valid JSON matching this schema:
 {
   "isDestinationFocused": true,
   "primaryCities": [{"city": "Kyoto", "country": "Japan", "tagline": "Short city tagline"}],
   "summary": "1-2 sentence episode summary.",
-  "books": [{"title": "Book Title", "author": "Author Name", "quote": "Why mentioned", "timestampSec": 840}],
-  "placesAndGear": [{"name": "Place or Gear", "type": "Landmark|Food|Gear", "note": "Why notable", "timestampSec": 1120}]
+  "books": [{"title": "Book Title", "author": "Author Name", "quote": "Why mentioned", "timestampSec": 840, "endorsement": "strong_rec"}],
+  "placesAndGear": [{"name": "Place or Gear", "type": "Landmark|Food|Gear", "note": "Why notable", "timestampSec": 1120, "endorsement": "strong_rec"}]
 }"""
 
 

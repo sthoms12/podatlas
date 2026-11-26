@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>PodAtlas Pins — Lisbon, Portugal</name>
+    <description>Tile-covered hills, 1755 earthquake history, Atlantic seafood, and late-night fado clubs in Alfama.</description>
+    <Placemark>
+      <name>Carmo Convent Ruins</name>
+      <description>[Landmark] Recommended by 2 shows. Unmissable viewpoint and 1755 landmark right off the Santa Justa terrace. (Amateur Traveler @ 15:20)</description>
+      <Point>
+        <coordinates>-9.1402,38.7121,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Baixa Pombalina</name>
+      <description>[Landmark] Neoclassical grid district rebuilt after the 1755 quake with Europe's earliest seismic-cage timber frames. (The Rest Is History @ 27:00)</description>
+      <Point>
+        <coordinates>-9.1369,38.7107,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Ponto Final</name>
+      <description>[Food] Waterfront tables across the Tagus with sunset views back at the 25 de Abril Bridge. (Amateur Traveler @ 22:30)</description>
+      <Point>
+        <coordinates>-9.152,38.686,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

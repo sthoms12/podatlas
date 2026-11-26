@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>PodAtlas Pins — Marrakech, Morocco</name>
+    <description>Labyrinthine souks, quiet courtyard riads, spice towers, and Atlas Mountain day trips.</description>
+    <Placemark>
+      <name>Le Jardin Secret</name>
+      <description>[Landmark] Restored 19th-century Islamic courtyard garden hidden right inside the medina. (Travel With Rick Steves @ 17:00)</description>
+      <Point>
+        <coordinates>-7.989,31.6311,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

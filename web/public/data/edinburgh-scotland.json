@@ -51,7 +51,13 @@
       "episodeId": "ed-1",
       "show": "In Our Time",
       "timestampSec": 1200,
-      "quote": "Explains why Edinburgh’s New Town was built like a blueprint for reason."
+      "quote": "Explains why Edinburgh’s New Town was built like a blueprint for reason.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "In Our Time"
+      ]
     },
     {
       "title": "The Prime of Miss Jean Brodie",
@@ -61,7 +67,13 @@
       "episodeId": "ed-2",
       "show": "Rick Steves Audio",
       "timestampSec": 1440,
-      "quote": "Razor-sharp 1930s Edinburgh classic."
+      "quote": "Razor-sharp 1930s Edinburgh classic.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Rick Steves Audio"
+      ]
     }
   ],
   "placesAndGear": [
@@ -70,14 +82,32 @@
       "type": "Landmark",
       "note": "19th-century milling hamlet tucked 10 minutes below Princes Street.",
       "episodeId": "ed-2",
-      "timestampSec": 720
+      "timestampSec": 720,
+      "show": "Rick Steves Audio Europe",
+      "lat": 55.9519,
+      "lon": -3.2179,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Rick Steves Audio Europe"
+      ]
     },
     {
       "name": "Waterproof Packable Shell",
       "type": "Gear",
       "note": "Umbrellas invert immediately in Edinburgh wind—bring a hooded shell.",
       "episodeId": "ed-2",
-      "timestampSec": 1620
+      "timestampSec": 1620,
+      "show": "Rick Steves Audio Europe",
+      "lat": null,
+      "lon": null,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Rick Steves Audio Europe"
+      ]
     }
   ]
 }

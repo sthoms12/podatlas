@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>PodAtlas Pins — Istanbul, Turkey</name>
+    <description>Where Byzantine domes meet Ottoman bazaars across the Bosphorus Strait.</description>
+    <Placemark>
+      <name>Basilica Cistern</name>
+      <description>[Landmark] Subterranean forest of 336 Roman marble columns beneath Sultanahmet. (History of Byzantium @ 45:00)</description>
+      <Point>
+        <coordinates>28.9779,41.0084,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Çiya Sofrası</name>
+      <description>[Food] Anatolian regional dishes rescued from forgotten village recipes on the Asian side. (Culinary Backstreets Audio @ 15:00)</description>
+      <Point>
+        <coordinates>29.0246,40.9891,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>PodAtlas: Marrakech, Morocco Podcast Playlist</title>
+    <link>https://podatlas.pages.dev/city/marrakech-morocco</link>
+    <atom:link href="https://podatlas.pages.dev/feeds/marrakech-morocco.xml" rel="self" type="application/rss+xml" />
+    <description>Labyrinthine souks, quiet courtyard riads, spice towers, and Atlas Mountain day trips.</description>
+    <language>en-us</language>
+    <itunes:author>PodAtlas</itunes:author>
+    <itunes:summary>Labyrinthine souks, quiet courtyard riads, spice towers, and Atlas Mountain day trips.</itunes:summary>
+    <item>
+      <title>Travel With Rick Steves — Navigating Marrakech’s Medina &amp; Jemaa el-Fnaa at Dusk</title>
+      <guid isPermaLink="false">podatlas:marrakech-morocco:ma-1</guid>
+      <link>https://podatlas.pages.dev/city/marrakech-morocco</link>
+      <pubDate>Thu, 15 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Travel With Rick Steves: How to read riad architecture, bargain kindly in the souks, and find calm gardens.
+
+Mentioned:
+• [17:00] Le Jardin Secret (place)
+• [33:00] The Caliph’s House by Tahir Shah (book)</description>
+      <itunes:author>Travel With Rick Steves</itunes:author>
+      <itunes:duration>2820</itunes:duration>
+      <itunes:summary>How to read riad architecture, bargain kindly in the souks, and find calm gardens.</itunes:summary>
+    </item>
+  </channel>
+</rss>

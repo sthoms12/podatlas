@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>PodAtlas: New Orleans, USA Podcast Playlist</title>
+    <link>https://podatlas.pages.dev/city/new-orleans-usa</link>
+    <atom:link href="https://podatlas.pages.dev/feeds/new-orleans-usa.xml" rel="self" type="application/rss+xml" />
+    <description>Brass bands, Congo Square jazz roots, gumbo debates, and Creole architecture.</description>
+    <language>en-us</language>
+    <itunes:author>PodAtlas</itunes:author>
+    <itunes:summary>Brass bands, Congo Square jazz roots, gumbo debates, and Creole architecture.</itunes:summary>
+    <item>
+      <title>A History of Rock Music in 500 Songs — How New Orleans Second Lines Invented Modern Rhythm</title>
+      <guid isPermaLink="false">podatlas:new-orleans-usa:no-1</guid>
+      <link>https://podatlas.pages.dev/city/new-orleans-usa</link>
+      <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
+      <description>A History of Rock Music in 500 Songs: From Congo Square drumming to Professor Longhair and Preservation Hall.
+
+Mentioned:
+• [18:00] Preservation Hall (place)
+• [39:00] Nine Lives by Dan Baum (book)</description>
+      <itunes:author>A History of Rock Music in 500 Songs</itunes:author>
+      <itunes:duration>3300</itunes:duration>
+      <itunes:summary>From Congo Square drumming to Professor Longhair and Preservation Hall.</itunes:summary>
+    </item>
+    <item>
+      <title>Gravy (Southern Foodways) — Dark Roux Diplomacy: Gumbo Across Bayou &amp; City</title>
+      <guid isPermaLink="false">podatlas:new-orleans-usa:no-2</guid>
+      <link>https://podatlas.pages.dev/city/new-orleans-usa</link>
+      <pubDate>Thu, 22 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Gravy (Southern Foodways): Creole vs. Cajun gumbo lineages and the family kitchens keeping Bywater and Tremé fed.
+
+Mentioned:
+• [14:00] Dooky Chase’s Restaurant (place)</description>
+      <itunes:author>Gravy (Southern Foodways)</itunes:author>
+      <itunes:duration>2040</itunes:duration>
+      <itunes:summary>Creole vs. Cajun gumbo lineages and the family kitchens keeping Bywater and Tremé fed.</itunes:summary>
+    </item>
+  </channel>
+</rss>

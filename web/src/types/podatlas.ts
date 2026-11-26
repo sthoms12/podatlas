@@ -3,6 +3,7 @@ export type CategoryFilter = 'All' | Category;
 export type DrawerTab = 'episodes' | 'books' | 'places';
 export type MentionType = 'book' | 'place' | 'gear';
 export type PlaceType = 'Landmark' | 'Food' | 'Gear';
+export type EndorsementLevel = 'strong_rec' | 'casual_mention';
 
 export interface EpisodeMention {
   sec: number;
@@ -31,6 +32,10 @@ export interface BookRecord {
   show: string;
   timestampSec: number;
   quote: string;
+  endorsement?: EndorsementLevel;
+  mentionCount?: number;
+  uniqueShowCount?: number;
+  mentionedByShows?: string[];
 }
 
 export interface PlaceOrGearRecord {
@@ -39,6 +44,13 @@ export interface PlaceOrGearRecord {
   note: string;
   episodeId: string;
   timestampSec: number;
+  show?: string;
+  lat?: number | null;
+  lon?: number | null;
+  endorsement?: EndorsementLevel;
+  mentionCount?: number;
+  uniqueShowCount?: number;
+  mentionedByShows?: string[];
 }
 
 export interface CityData {

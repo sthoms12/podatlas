@@ -9,6 +9,7 @@ Category = Literal["Travel", "History", "Food", "Culture"]
 MentionType = Literal["book", "place", "gear"]
 PlaceType = Literal["Landmark", "Food", "Gear"]
 SearchKind = Literal["City", "Episode", "Book", "Landmark", "Food", "Gear"]
+EndorsementLevel = Literal["strong_rec", "casual_mention"]
 
 
 class TranscriptSegment(BaseModel):
@@ -44,6 +45,10 @@ class BookRecord(BaseModel):
     show: str
     timestampSec: int = Field(ge=0)
     quote: str = ""
+    endorsement: EndorsementLevel = "strong_rec"
+    mentionCount: int = Field(default=1, ge=1)
+    uniqueShowCount: int = Field(default=1, ge=1)
+    mentionedByShows: list[str] = Field(default_factory=list)
 
 
 class PlaceOrGearRecord(BaseModel):
@@ -52,6 +57,13 @@ class PlaceOrGearRecord(BaseModel):
     note: str
     episodeId: str
     timestampSec: int = Field(ge=0)
+    show: str = ""
+    lat: float | None = Field(default=None, ge=-90.0, le=90.0)
+    lon: float | None = Field(default=None, ge=-180.0, le=180.0)
+    endorsement: EndorsementLevel = "strong_rec"
+    mentionCount: int = Field(default=1, ge=1)
+    uniqueShowCount: int = Field(default=1, ge=1)
+    mentionedByShows: list[str] = Field(default_factory=list)
 
 
 class CityData(BaseModel):
@@ -118,6 +130,7 @@ class ExtractedBook(BaseModel):
     author: str = ""
     quote: str = ""
     timestampSec: int = Field(default=0, ge=0)
+    endorsement: EndorsementLevel = "strong_rec"
 
 
 class ExtractedPlaceOrGear(BaseModel):
@@ -125,6 +138,7 @@ class ExtractedPlaceOrGear(BaseModel):
     type: PlaceType
     note: str = ""
     timestampSec: int = Field(default=0, ge=0)
+    endorsement: EndorsementLevel = "strong_rec"
 
 
 class EpisodeExtraction(BaseModel):

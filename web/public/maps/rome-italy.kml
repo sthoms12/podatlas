@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>PodAtlas Pins — Rome, Italy</name>
+    <description>Three millennia of emperors, Renaissance rivalries, and four sacred Roman pasta recipes.</description>
+    <Placemark>
+      <name>Basilica of San Clemente</name>
+      <description>[Landmark] Descend 3 stories underground from a 12th-century church into a 1st-century Mithraic temple. (Fall of Civilizations @ 48:20)</description>
+      <Point>
+        <coordinates>12.4975,41.8894,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Testaccio Market</name>
+      <description>[Food] Locals-first food hall famous for Mordi e Vai braised-beef sandwiches. (Gastropod @ 24:00)</description>
+      <Point>
+        <coordinates>12.4754,41.8777,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

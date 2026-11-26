@@ -770,8 +770,128 @@ def build_seed_cities() -> list[CityData]:
     ]
 
 
+PLACE_COORDS: dict[str, tuple[float, float]] = {
+    "Nishiki Market": (35.0050, 135.7649),
+    "Gion Hanamikoji Street": (35.0037, 135.7751),
+    "Honen-in Temple": (35.0221, 135.7973),
+    "Ippodo Tea Main Store": (35.0148, 135.7675),
+    "Carmo Convent Ruins": (38.7121, -9.1402),
+    "Baixa Pombalina": (38.7107, -9.1369),
+    "Ponto Final": (38.6860, -9.1520),
+    "Basilica of San Clemente": (41.8894, 12.4975),
+    "Testaccio Market": (41.8777, 12.4754),
+    "El Vilsito": (19.3976, -99.1597),
+    "Templo Mayor": (19.4350, -99.1313),
+    "Vesturbæjarlaug": (64.1455, -21.9619),
+    "Preservation Hall": (29.9584, -90.0654),
+    "Dooky Chase’s Restaurant": (29.9647, -90.0752),
+    "Çiya Sofrası": (40.9891, 29.0246),
+    "Basilica Cistern": (41.0084, 28.9779),
+    "Dean Village": (55.9519, -3.2179),
+    "Sacsayhuamán": (-13.5098, -71.9817),
+    "Le Jardin Secret": (31.6311, -7.9890),
+}
+
+
+def enrich_seed_cities(cities: list[CityData]) -> list[CityData]:
+    """Attach accurate WGS84 coordinates to landmarks/food and add multi-stop Story Map & consensus demo data."""
+    for city in cities:
+        if city.id == "kyoto-japan":
+            # Enrich flagship ky-1 episode with 2 geocoded Story Map stops + cross-show consensus
+            city.episodes[0].mentions = [
+                EpisodeMention(sec=480, type="place", label="Gion Hanamikoji Street"),
+                EpisodeMention(sec=840, type="book", label="Kyoto: A Cultural History"),
+                EpisodeMention(sec=1950, type="place", label="Nishiki Market"),
+            ]
+            city.placesAndGear.extend(
+                [
+                    PlaceOrGearRecord(
+                        name="Gion Hanamikoji Street",
+                        type="Landmark",
+                        note="Historic wooden machiya avenue in Gion where Edo-era merchant and geisha culture took shape.",
+                        episodeId="ky-1",
+                        timestampSec=480,
+                        show="History of Japan Podcast",
+                        endorsement="strong_rec",
+                    ),
+                    PlaceOrGearRecord(
+                        name="Nishiki Market",
+                        type="Food",
+                        note="Five-block 'Kyoto's Kitchen' food arcade dating back 400 years—sample yuba, pickles, and matcha.",
+                        episodeId="ky-1",
+                        timestampSec=1950,
+                        show="History of Japan Podcast",
+                        endorsement="strong_rec",
+                    ),
+                    # Second show recommending Honen-in Temple -> triggers consensus badge
+                    PlaceOrGearRecord(
+                        name="Honen-in Temple",
+                        type="Landmark",
+                        note="Quiet mossy hillside temple praised by both travel and history hosts.",
+                        episodeId="ky-1",
+                        timestampSec=2320,
+                        show="History of Japan Podcast",
+                        endorsement="strong_rec",
+                    ),
+                ]
+            )
+            # Second show recommending Kyoto: A Cultural History -> triggers consensus badge
+            city.books.append(
+                BookRecord(
+                    title="Kyoto: A Cultural History",
+                    author="John Dougill",
+                    isbn="9780195301380",
+                    episodeId="ky-2",
+                    show="Zero to Travel",
+                    timestampSec=1680,
+                    quote="Essential background on how Kyoto's temples shaped its neighborhoods.",
+                    endorsement="strong_rec",
+                )
+            )
+            # Mark one book as casual mention to demonstrate endorsement differentiation
+            city.books[2].endorsement = "casual_mention"
+
+        elif city.id == "lisbon-portugal":
+            city.episodes[0].mentions = [
+                EpisodeMention(sec=960, type="book", label="The Last Day by Nicholas Shrady"),
+                EpisodeMention(sec=1620, type="place", label="Baixa Pombalina"),
+                EpisodeMention(sec=2220, type="place", label="Carmo Convent Ruins"),
+            ]
+            city.placesAndGear.extend(
+                [
+                    PlaceOrGearRecord(
+                        name="Baixa Pombalina",
+                        type="Landmark",
+                        note="Neoclassical grid district rebuilt after the 1755 quake with Europe's earliest seismic-cage timber frames.",
+                        episodeId="li-1",
+                        timestampSec=1620,
+                        show="The Rest Is History",
+                        endorsement="strong_rec",
+                    ),
+                    PlaceOrGearRecord(
+                        name="Carmo Convent Ruins",
+                        type="Landmark",
+                        note="Unmissable viewpoint and 1755 landmark right off the Santa Justa terrace.",
+                        episodeId="li-2",
+                        timestampSec=920,
+                        show="Amateur Traveler",
+                        endorsement="strong_rec",
+                    ),
+                ]
+            )
+
+        ep_show = {ep.id: ep.show for ep in city.episodes}
+        for place in city.placesAndGear:
+            if not place.show:
+                place.show = ep_show.get(place.episodeId, "")
+            if place.type != "Gear" and place.name in PLACE_COORDS:
+                place.lat, place.lon = PLACE_COORDS[place.name]
+
+    return cities
+
+
 def main() -> None:
-    cities = build_seed_cities()
+    cities = enrich_seed_cities(build_seed_cities())
     output_dir = ROOT / "web" / "public"
     stats = export_static_site_data(cities, output_dir=output_dir)
     print("Seeded PodAtlas static dataset:", json.dumps(stats, indent=2))

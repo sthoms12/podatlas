@@ -2,7 +2,7 @@
   {
     "kind": "City",
     "title": "Kyoto, Japan",
-    "subtitle": "3 episodes · 3 books · 3 places",
+    "subtitle": "3 episodes · 3 books · 5 places",
     "cityId": "kyoto-japan",
     "tab": "episodes"
   },
@@ -33,11 +33,11 @@
   {
     "kind": "Book",
     "title": "Kyoto: A Cultural History",
-    "subtitle": "John Dougill · Kyoto",
+    "subtitle": "2 shows · John Dougill · Kyoto",
     "cityId": "kyoto-japan",
     "tab": "books",
-    "episodeId": "ky-1",
-    "timestampSec": 840
+    "episodeId": "ky-2",
+    "timestampSec": 1680
   },
   {
     "kind": "Book",
@@ -67,6 +67,15 @@
     "timestampSec": 1120
   },
   {
+    "kind": "Landmark",
+    "title": "Gion Hanamikoji Street",
+    "subtitle": "Kyoto · Historic wooden machiya avenue in Gion where Edo-era merchant an",
+    "cityId": "kyoto-japan",
+    "tab": "places",
+    "episodeId": "ky-1",
+    "timestampSec": 480
+  },
+  {
     "kind": "Food",
     "title": "Ippodo Tea Main Store",
     "subtitle": "Kyoto · 300-year-old tea house serving fresh hand-whisked matcha at the ",
@@ -74,6 +83,15 @@
     "tab": "places",
     "episodeId": "ky-3",
     "timestampSec": 1540
+  },
+  {
+    "kind": "Food",
+    "title": "Nishiki Market",
+    "subtitle": "Kyoto · Five-block 'Kyoto's Kitchen' food arcade dating back 400 years—s",
+    "cityId": "kyoto-japan",
+    "tab": "places",
+    "episodeId": "ky-1",
+    "timestampSec": 1950
   },
   {
     "kind": "Gear",
@@ -87,7 +105,7 @@
   {
     "kind": "City",
     "title": "Lisbon, Portugal",
-    "subtitle": "2 episodes · 2 books · 3 places",
+    "subtitle": "2 episodes · 2 books · 4 places",
     "cityId": "lisbon-portugal",
     "tab": "episodes"
   },
@@ -128,20 +146,20 @@
   {
     "kind": "Landmark",
     "title": "Carmo Convent Ruins",
-    "subtitle": "Lisbon · Open-air Gothic nave left roofless since the 1755 quake.",
-    "cityId": "lisbon-portugal",
-    "tab": "places",
-    "episodeId": "li-1",
-    "timestampSec": 2220
-  },
-  {
-    "kind": "Food",
-    "title": "Ponto Final",
-    "subtitle": "Lisbon · Waterfront tables across the Tagus with sunset views back at the",
+    "subtitle": "Lisbon · Unmissable viewpoint and 1755 landmark right off the Santa Justa",
     "cityId": "lisbon-portugal",
     "tab": "places",
     "episodeId": "li-2",
-    "timestampSec": 1350
+    "timestampSec": 920
+  },
+  {
+    "kind": "Landmark",
+    "title": "Baixa Pombalina",
+    "subtitle": "Lisbon · Neoclassical grid district rebuilt after the 1755 quake with Eur",
+    "cityId": "lisbon-portugal",
+    "tab": "places",
+    "episodeId": "li-1",
+    "timestampSec": 1620
   },
   {
     "kind": "Gear",
@@ -151,6 +169,15 @@
     "tab": "places",
     "episodeId": "li-2",
     "timestampSec": 2100
+  },
+  {
+    "kind": "Food",
+    "title": "Ponto Final",
+    "subtitle": "Lisbon · Waterfront tables across the Tagus with sunset views back at the",
+    "cityId": "lisbon-portugal",
+    "tab": "places",
+    "episodeId": "li-2",
+    "timestampSec": 1350
   },
   {
     "kind": "City",
@@ -295,15 +322,6 @@
   },
   {
     "kind": "Book",
-    "title": "The Sagas of Icelanders",
-    "subtitle": "Preface by Jane Smiley · Reykjavik",
-    "cityId": "reykjavik-iceland",
-    "tab": "books",
-    "episodeId": "re-2",
-    "timestampSec": 1140
-  },
-  {
-    "kind": "Book",
     "title": "Names for the Sea",
     "subtitle": "Sarah Moss · Reykjavik",
     "cityId": "reykjavik-iceland",
@@ -312,13 +330,13 @@
     "timestampSec": 2220
   },
   {
-    "kind": "Landmark",
-    "title": "Vesturbæjarlaug",
-    "subtitle": "Reykjavik · Beloved local geothermal pool with hot tubs and steam rooms for ",
+    "kind": "Book",
+    "title": "The Sagas of Icelanders",
+    "subtitle": "Preface by Jane Smiley · Reykjavik",
     "cityId": "reykjavik-iceland",
-    "tab": "places",
-    "episodeId": "re-1",
-    "timestampSec": 900
+    "tab": "books",
+    "episodeId": "re-2",
+    "timestampSec": 1140
   },
   {
     "kind": "Gear",
@@ -328,6 +346,15 @@
     "tab": "places",
     "episodeId": "re-1",
     "timestampSec": 1860
+  },
+  {
+    "kind": "Landmark",
+    "title": "Vesturbæjarlaug",
+    "subtitle": "Reykjavik · Beloved local geothermal pool with hot tubs and steam rooms for ",
+    "cityId": "reykjavik-iceland",
+    "tab": "places",
+    "episodeId": "re-1",
+    "timestampSec": 900
   },
   {
     "kind": "City",
@@ -354,15 +381,6 @@
   },
   {
     "kind": "Book",
-    "title": "Nine Lives: Mystery, Magic, Death & Life in New Orleans",
-    "subtitle": "Dan Baum · New Orleans",
-    "cityId": "new-orleans-usa",
-    "tab": "books",
-    "episodeId": "no-1",
-    "timestampSec": 2340
-  },
-  {
-    "kind": "Book",
     "title": "A Confederacy of Dunces",
     "subtitle": "John Kennedy Toole · New Orleans",
     "cityId": "new-orleans-usa",
@@ -371,13 +389,13 @@
     "timestampSec": 1500
   },
   {
-    "kind": "Landmark",
-    "title": "Preservation Hall",
-    "subtitle": "New Orleans · Intimate acoustic jazz hall in the French Quarter—no drinks, no ",
+    "kind": "Book",
+    "title": "Nine Lives: Mystery, Magic, Death & Life in New Orleans",
+    "subtitle": "Dan Baum · New Orleans",
     "cityId": "new-orleans-usa",
-    "tab": "places",
+    "tab": "books",
     "episodeId": "no-1",
-    "timestampSec": 1080
+    "timestampSec": 2340
   },
   {
     "kind": "Food",
@@ -387,6 +405,15 @@
     "tab": "places",
     "episodeId": "no-2",
     "timestampSec": 840
+  },
+  {
+    "kind": "Landmark",
+    "title": "Preservation Hall",
+    "subtitle": "New Orleans · Intimate acoustic jazz hall in the French Quarter—no drinks, no ",
+    "cityId": "new-orleans-usa",
+    "tab": "places",
+    "episodeId": "no-1",
+    "timestampSec": 1080
   },
   {
     "kind": "City",
@@ -430,15 +457,6 @@
     "timestampSec": 1860
   },
   {
-    "kind": "Food",
-    "title": "Çiya Sofrası",
-    "subtitle": "Istanbul · Anatolian regional dishes rescued from forgotten village recipes",
-    "cityId": "istanbul-turkey",
-    "tab": "places",
-    "episodeId": "is-2",
-    "timestampSec": 900
-  },
-  {
     "kind": "Landmark",
     "title": "Basilica Cistern",
     "subtitle": "Istanbul · Subterranean forest of 336 Roman marble columns beneath Sultanah",
@@ -446,6 +464,15 @@
     "tab": "places",
     "episodeId": "is-1",
     "timestampSec": 2700
+  },
+  {
+    "kind": "Food",
+    "title": "Çiya Sofrası",
+    "subtitle": "Istanbul · Anatolian regional dishes rescued from forgotten village recipes",
+    "cityId": "istanbul-turkey",
+    "tab": "places",
+    "episodeId": "is-2",
+    "timestampSec": 900
   },
   {
     "kind": "City",
@@ -523,15 +550,6 @@
   },
   {
     "kind": "Book",
-    "title": "Turn Right at Machu Picchu",
-    "subtitle": "Mark Adams · Cusco",
-    "cityId": "cusco-peru",
-    "tab": "books",
-    "episodeId": "cu-1",
-    "timestampSec": 1620
-  },
-  {
-    "kind": "Book",
     "title": "The Last Days of the Incas",
     "subtitle": "Kim MacQuarrie · Cusco",
     "cityId": "cusco-peru",
@@ -540,13 +558,13 @@
     "timestampSec": 2640
   },
   {
-    "kind": "Landmark",
-    "title": "Sacsayhuamán",
-    "subtitle": "Cusco · Zigzag megalithic walls overlooking Cusco with 100-ton interlock",
+    "kind": "Book",
+    "title": "Turn Right at Machu Picchu",
+    "subtitle": "Mark Adams · Cusco",
     "cityId": "cusco-peru",
-    "tab": "places",
+    "tab": "books",
     "episodeId": "cu-1",
-    "timestampSec": 3120
+    "timestampSec": 1620
   },
   {
     "kind": "Gear",
@@ -556,6 +574,15 @@
     "tab": "places",
     "episodeId": "cu-1",
     "timestampSec": 3660
+  },
+  {
+    "kind": "Landmark",
+    "title": "Sacsayhuamán",
+    "subtitle": "Cusco · Zigzag megalithic walls overlooking Cusco with 100-ton interlock",
+    "cityId": "cusco-peru",
+    "tab": "places",
+    "episodeId": "cu-1",
+    "timestampSec": 3120
   },
   {
     "kind": "City",

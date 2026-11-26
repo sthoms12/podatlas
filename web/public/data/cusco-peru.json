@@ -32,16 +32,6 @@
   ],
   "books": [
     {
-      "title": "Turn Right at Machu Picchu",
-      "author": "Mark Adams",
-      "isbn": "9780452297982",
-      "openLibraryKey": null,
-      "episodeId": "cu-1",
-      "show": "Fall of Civilizations",
-      "timestampSec": 1620,
-      "quote": "Funny, vivid retelling of Hiram Bingham’s 1911 expedition."
-    },
-    {
       "title": "The Last Days of the Incas",
       "author": "Kim MacQuarrie",
       "isbn": "9780743260503",
@@ -49,23 +39,63 @@
       "episodeId": "cu-1",
       "show": "Fall of Civilizations",
       "timestampSec": 2640,
-      "quote": "Gripping narrative of Pizarro, Atahualpa, and the siege of Cusco."
+      "quote": "Gripping narrative of Pizarro, Atahualpa, and the siege of Cusco.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Fall of Civilizations"
+      ]
+    },
+    {
+      "title": "Turn Right at Machu Picchu",
+      "author": "Mark Adams",
+      "isbn": "9780452297982",
+      "openLibraryKey": null,
+      "episodeId": "cu-1",
+      "show": "Fall of Civilizations",
+      "timestampSec": 1620,
+      "quote": "Funny, vivid retelling of Hiram Bingham’s 1911 expedition.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Fall of Civilizations"
+      ]
     }
   ],
   "placesAndGear": [
-    {
-      "name": "Sacsayhuamán",
-      "type": "Landmark",
-      "note": "Zigzag megalithic walls overlooking Cusco with 100-ton interlocked stones.",
-      "episodeId": "cu-1",
-      "timestampSec": 3120
-    },
     {
       "name": "Electrolyte Packets + Coca Tea",
       "type": "Gear",
       "note": "Acclimatize in the Sacred Valley first to beat 11,000ft altitude headaches.",
       "episodeId": "cu-1",
-      "timestampSec": 3660
+      "timestampSec": 3660,
+      "show": "Fall of Civilizations",
+      "lat": null,
+      "lon": null,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Fall of Civilizations"
+      ]
+    },
+    {
+      "name": "Sacsayhuamán",
+      "type": "Landmark",
+      "note": "Zigzag megalithic walls overlooking Cusco with 100-ton interlocked stones.",
+      "episodeId": "cu-1",
+      "timestampSec": 3120,
+      "show": "Fall of Civilizations",
+      "lat": -13.5098,
+      "lon": -71.9817,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Fall of Civilizations"
+      ]
     }
   ]
 }

@@ -39,7 +39,13 @@
       "episodeId": "ma-1",
       "show": "Travel With Rick Steves",
       "timestampSec": 1980,
-      "quote": "Entertaining deep dive into Moroccan courtyard life and craftsmanship."
+      "quote": "Entertaining deep dive into Moroccan courtyard life and craftsmanship.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Travel With Rick Steves"
+      ]
     }
   ],
   "placesAndGear": [
@@ -48,14 +54,32 @@
       "type": "Landmark",
       "note": "Restored 19th-century Islamic courtyard garden hidden right inside the medina.",
       "episodeId": "ma-1",
-      "timestampSec": 1020
+      "timestampSec": 1020,
+      "show": "Travel With Rick Steves",
+      "lat": 31.6311,
+      "lon": -7.989,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Travel With Rick Steves"
+      ]
     },
     {
       "name": "Organic Maps (Offline Navigation)",
       "type": "Gear",
       "note": "GPS drifts in narrow medina alleys—offline footpath maps are a lifesaver.",
       "episodeId": "ma-1",
-      "timestampSec": 2460
+      "timestampSec": 2460,
+      "show": "Travel With Rick Steves",
+      "lat": null,
+      "lon": null,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Travel With Rick Steves"
+      ]
     }
   ]
 }

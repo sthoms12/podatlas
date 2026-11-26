@@ -61,7 +61,13 @@
       "episodeId": "ro-1",
       "show": "Fall of Civilizations",
       "timestampSec": 1200,
-      "quote": "Witty, myth-busting Roman history that skips dry battle lists."
+      "quote": "Witty, myth-busting Roman history that skips dry battle lists.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Fall of Civilizations"
+      ]
     },
     {
       "title": "Tasting Rome",
@@ -71,7 +77,13 @@
       "episodeId": "ro-2",
       "show": "Gastropod",
       "timestampSec": 1980,
-      "quote": "Half cookbook, half neighborhood guide to Testaccio and Trastevere."
+      "quote": "Half cookbook, half neighborhood guide to Testaccio and Trastevere.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Gastropod"
+      ]
     }
   ],
   "placesAndGear": [
@@ -80,14 +92,32 @@
       "type": "Landmark",
       "note": "Descend 3 stories underground from a 12th-century church into a 1st-century Mithraic temple.",
       "episodeId": "ro-1",
-      "timestampSec": 2900
+      "timestampSec": 2900,
+      "show": "Fall of Civilizations",
+      "lat": 41.8894,
+      "lon": 12.4975,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Fall of Civilizations"
+      ]
     },
     {
       "name": "Testaccio Market",
       "type": "Food",
       "note": "Locals-first food hall famous for Mordi e Vai braised-beef sandwiches.",
       "episodeId": "ro-2",
-      "timestampSec": 1440
+      "timestampSec": 1440,
+      "show": "Gastropod",
+      "lat": 41.8777,
+      "lon": 12.4754,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Gastropod"
+      ]
     }
   ]
 }

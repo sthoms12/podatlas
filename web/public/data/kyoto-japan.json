@@ -18,6 +18,11 @@
       "summary": "Traces merchant life, geisha districts in Gion, and why Kyoto survived WWII bombing lists.",
       "mentions": [
         {
+          "sec": 480,
+          "type": "place",
+          "label": "Gion Hanamikoji Street"
+        },
+        {
           "sec": 840,
           "type": "book",
           "label": "Kyoto: A Cultural History"
@@ -80,10 +85,17 @@
       "author": "John Dougill",
       "isbn": "9780195301380",
       "openLibraryKey": null,
-      "episodeId": "ky-1",
-      "show": "History of Japan Podcast",
-      "timestampSec": 840,
-      "quote": "The single best primer before you step off the Shinkansen."
+      "episodeId": "ky-2",
+      "show": "Zero to Travel",
+      "timestampSec": 1680,
+      "quote": "Essential background on how Kyoto's temples shaped its neighborhoods.",
+      "endorsement": "strong_rec",
+      "mentionCount": 2,
+      "uniqueShowCount": 2,
+      "mentionedByShows": [
+        "History of Japan Podcast",
+        "Zero to Travel"
+      ]
     },
     {
       "title": "The Book of Tea",
@@ -93,7 +105,13 @@
       "episodeId": "ky-3",
       "show": "The Sporkful",
       "timestampSec": 620,
-      "quote": "Short 1906 classic explaining why Japanese tea rooms feel so calm."
+      "quote": "Short 1906 classic explaining why Japanese tea rooms feel so calm.",
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "The Sporkful"
+      ]
     },
     {
       "title": "Old Kyoto: A Short Social History",
@@ -103,7 +121,13 @@
       "episodeId": "ky-2",
       "show": "Zero to Travel",
       "timestampSec": 2100,
-      "quote": "Maps out historic wooden machiya workshops still open today."
+      "quote": "Maps out historic wooden machiya workshops still open today.",
+      "endorsement": "casual_mention",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Zero to Travel"
+      ]
     }
   ],
   "placesAndGear": [
@@ -112,21 +136,81 @@
       "type": "Landmark",
       "note": "Moss-covered gate near Philosopher’s Path with 1/10th the crowds of Kinkaku-ji.",
       "episodeId": "ky-2",
-      "timestampSec": 1120
+      "timestampSec": 1120,
+      "show": "Zero to Travel",
+      "lat": 35.0221,
+      "lon": 135.7973,
+      "endorsement": "strong_rec",
+      "mentionCount": 2,
+      "uniqueShowCount": 2,
+      "mentionedByShows": [
+        "Zero to Travel",
+        "History of Japan Podcast"
+      ]
+    },
+    {
+      "name": "Gion Hanamikoji Street",
+      "type": "Landmark",
+      "note": "Historic wooden machiya avenue in Gion where Edo-era merchant and geisha culture took shape.",
+      "episodeId": "ky-1",
+      "timestampSec": 480,
+      "show": "History of Japan Podcast",
+      "lat": 35.0037,
+      "lon": 135.7751,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "History of Japan Podcast"
+      ]
     },
     {
       "name": "Ippodo Tea Main Store",
       "type": "Food",
       "note": "300-year-old tea house serving fresh hand-whisked matcha at the counter.",
       "episodeId": "ky-3",
-      "timestampSec": 1540
+      "timestampSec": 1540,
+      "show": "The Sporkful",
+      "lat": 35.0148,
+      "lon": 135.7675,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "The Sporkful"
+      ]
+    },
+    {
+      "name": "Nishiki Market",
+      "type": "Food",
+      "note": "Five-block 'Kyoto's Kitchen' food arcade dating back 400 years—sample yuba, pickles, and matcha.",
+      "episodeId": "ky-1",
+      "timestampSec": 1950,
+      "show": "History of Japan Podcast",
+      "lat": 35.005,
+      "lon": 135.7649,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "History of Japan Podcast"
+      ]
     },
     {
       "name": "Peak Design Travel Backpack 30L",
       "type": "Gear",
       "note": "Recommended for fitting cleanly into Japanese station coin lockers.",
       "episodeId": "ky-2",
-      "timestampSec": 2410
+      "timestampSec": 2410,
+      "show": "Zero to Travel",
+      "lat": null,
+      "lon": null,
+      "endorsement": "strong_rec",
+      "mentionCount": 1,
+      "uniqueShowCount": 1,
+      "mentionedByShows": [
+        "Zero to Travel"
+      ]
     }
   ]
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>PodAtlas: Rome, Italy Podcast Playlist</title>
+    <link>https://podatlas.pages.dev/city/rome-italy</link>
+    <atom:link href="https://podatlas.pages.dev/feeds/rome-italy.xml" rel="self" type="application/rss+xml" />
+    <description>Three millennia of emperors, Renaissance rivalries, and four sacred Roman pasta recipes.</description>
+    <language>en-us</language>
+    <itunes:author>PodAtlas</itunes:author>
+    <itunes:summary>Three millennia of emperors, Renaissance rivalries, and four sacred Roman pasta recipes.</itunes:summary>
+    <item>
+      <title>Fall of Civilizations — Walking Caesar’s Forum: Power &amp; Propaganda in Stone</title>
+      <guid isPermaLink="false">podatlas:rome-italy:ro-1</guid>
+      <link>https://podatlas.pages.dev/city/rome-italy</link>
+      <pubDate>Thu, 04 Jun 2026 00:00:00 +0000</pubDate>
+      <description>Fall of Civilizations: What everyday Romans actually saw, smelled, and argued about in the Subura and Forum.
+
+Mentioned:
+• [20:00] SPQR by Mary Beard (book)
+• [48:20] Basilica of San Clemente (place)</description>
+      <itunes:author>Fall of Civilizations</itunes:author>
+      <itunes:duration>3900</itunes:duration>
+      <itunes:summary>What everyday Romans actually saw, smelled, and argued about in the Subura and Forum.</itunes:summary>
+    </item>
+    <item>
+      <title>Gastropod — The Real Science of Cacio e Pepe &amp; Carbonara</title>
+      <guid isPermaLink="false">podatlas:rome-italy:ro-2</guid>
+      <link>https://podatlas.pages.dev/city/rome-italy</link>
+      <pubDate>Tue, 29 Sep 2026 00:00:00 +0000</pubDate>
+      <description>Gastropod: Why Pecorino Romano clumps, where Testaccio’s fifth-quarter cuisine started, and neighborhood trattorias.
+
+Mentioned:
+• [24:00] Testaccio Market (place)
+• [33:00] Tasting Rome by Katie Parla (book)</description>
+      <itunes:author>Gastropod</itunes:author>
+      <itunes:duration>2580</itunes:duration>
+      <itunes:summary>Why Pecorino Romano clumps, where Testaccio’s fifth-quarter cuisine started, and neighborhood trattorias.</itunes:summary>
+    </item>
+  </channel>
+</rss>
