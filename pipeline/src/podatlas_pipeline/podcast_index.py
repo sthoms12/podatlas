@@ -224,3 +224,42 @@ def fetch_transcript_if_available(
 
     parsed = parse_srt_or_vtt(body)
     return parsed or None
+
+
+_SKIP_TITLE_RE = re.compile(
+    r"\b(trailer|teaser|introducing|bonus\s+clip|feed\s+drop|announcement|promo)\b",
+    flags=re.IGNORECASE,
+)
+
+
+def is_skippable_episode(episode: RawEpisode, min_duration_sec: int = 600) -> tuple[bool, str]:
+    """Return (True, reason) for short clips, trailers, or promos to save GPU credits."""
+    if episode.duration_sec > 0 and episode.duration_sec < min_duration_sec:
+        return True, f"duration {episode.duration_sec}s < {min_duration_sec}s"
+    if _SKIP_TITLE_RE.search(episode.title):
+        return True, "title matches trailer/promo pattern"
+    return False, ""
+
+
+def check_show_feed(show: ShowConfig, timeout: float = 15.0) -> dict[str, Any]:
+    """Check RSS feed health, enclosure count, and free <podcast:transcript> availability."""
+    try:
+        episodes = fetch_rss_episodes(show, timeout=timeout)
+        with_transcripts = sum(1 for ep in episodes if ep.transcript_url)
+        return {
+            "slug": show.slug,
+            "title": show.title,
+            "ok": True,
+            "episodesFound": len(episodes),
+            "withFreeTranscript": with_transcripts,
+            "error": None,
+        }
+    except Exception as exc:
+        return {
+            "slug": show.slug,
+            "title": show.title,
+            "ok": False,
+            "episodesFound": 0,
+            "withFreeTranscript": 0,
+            "error": str(exc),
+        }

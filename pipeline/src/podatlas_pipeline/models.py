@@ -133,3 +133,18 @@ class EpisodeExtraction(BaseModel):
     summary: str = ""
     books: list[ExtractedBook] = Field(default_factory=list)
     placesAndGear: list[ExtractedPlaceOrGear] = Field(default_factory=list)
+
+
+class CachedEpisodeTranscript(BaseModel):
+    id: str
+    guid: str
+    showSlug: str
+    showTitle: str
+    category: Category
+    title: str
+    audioUrl: str
+    durationSec: int = Field(ge=0)
+    publishedAt: str
+    description: str = ""
+    transcriptSource: Literal["rss_tag", "faster_whisper"]
+    segments: list[TranscriptSegment] = Field(default_factory=list)

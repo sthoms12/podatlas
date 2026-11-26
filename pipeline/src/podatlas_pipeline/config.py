@@ -22,3 +22,4 @@ class PipelineSettings(BaseSettings):
     cache_dir: Path = Path("cache")
     output_dir: Path = Path("../web/public")
     site_base_url: str = "https://podatlas.pages.dev"
+    min_duration_sec: int = 600
