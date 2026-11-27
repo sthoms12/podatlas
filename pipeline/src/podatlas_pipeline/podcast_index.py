@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+import xml.etree.ElementTree as ET
 
 import feedparser
 import httpx
@@ -18,6 +19,7 @@ import httpx
 from .models import Category, TranscriptSegment
 
 PODCAST_INDEX_BASE = "https://api.podcastindex.org/api/1.0"
+PODCAST_NS = "{https://podcastindex.org/namespace/1.0}"
 
 
 @dataclass
@@ -44,6 +46,7 @@ class RawEpisode:
     description: str
     transcript_url: str | None = None
     transcript_type: str | None = None
+    subject_location: str | None = None
 
 
 def load_shows_csv(path: Path) -> list[ShowConfig]:
@@ -68,7 +71,7 @@ def podcast_index_headers(api_key: str, api_secret: str) -> dict[str, str]:
     now = str(int(time.time()))
     token = hashlib.sha1(f"{api_key}{api_secret}{now}".encode("utf-8")).hexdigest()
     return {
-        "User-Agent": "PodAtlas/0.1 (+https://github.com/sthoms12/podatlas)",
+        "User-Agent": "PodAtlas/0.2 (+https://github.com/sthoms12/podatlas)",
         "X-Auth-Date": now,
         "X-Auth-Key": api_key,
         "Authorization": token,
@@ -113,12 +116,66 @@ def _extract_transcript_link(entry: Any) -> tuple[str | None, str | None]:
     return None, None
 
 
+def _pick_subject_location(elements: list[ET.Element]) -> str | None:
+    """Return the best <podcast:location> text, preferring rel='subject' and ignoring rel='creator'."""
+    fallback: str | None = None
+    for el in elements:
+        rel = (el.attrib.get("rel") or "").strip().lower()
+        name = (el.text or "").strip()
+        if not name or rel == "creator":
+            continue
+        country = (el.attrib.get("country") or "").strip().upper()
+        formatted = f"{name}, {country}" if country and country.lower() not in name.lower() else name
+        if rel == "subject":
+            return formatted
+        if not rel and fallback is None:
+            fallback = formatted
+    return fallback
+
+
+def parse_podcast_locations(xml_text: str) -> tuple[str | None, dict[str, str]]:
+    """Extract channel-level and item-level <podcast:location> subject tags from RSS XML."""
+    try:
+        root = ET.fromstring(xml_text)
+    except ET.ParseError:
+        return None, {}
+
+    channel = root.find("channel")
+    if channel is None:
+        return None, {}
+
+    def _location_children(parent: ET.Element) -> list[ET.Element]:
+        return [
+            child
+            for child in parent
+            if child.tag == f"{PODCAST_NS}location" or child.tag.endswith("}location")
+        ]
+
+    channel_location = _pick_subject_location(_location_children(channel))
+    item_locations: dict[str, str] = {}
+    for item in channel.findall("item"):
+        loc = _pick_subject_location(_location_children(item))
+        if not loc:
+            continue
+        guid_el = item.find("guid")
+        title_el = item.find("title")
+        if guid_el is not None and (guid_el.text or "").strip():
+            item_locations[(guid_el.text or "").strip()] = loc
+        if title_el is not None and (title_el.text or "").strip():
+            item_locations[(title_el.text or "").strip()] = loc
+
+    return channel_location, item_locations
+
+
 def fetch_rss_episodes(show: ShowConfig, timeout: float = 20.0) -> list[RawEpisode]:
     """Fetch recent episodes directly from a podcast's public RSS feed."""
     with httpx.Client(timeout=timeout, follow_redirects=True) as client:
-        resp = client.get(show.rss_url, headers={"User-Agent": "PodAtlas/0.1"})
+        resp = client.get(show.rss_url, headers={"User-Agent": "PodAtlas/0.2 (+https://github.com/sthoms12/podatlas)"})
         resp.raise_for_status()
-        parsed = feedparser.parse(resp.text)
+        xml_text = resp.text
+        parsed = feedparser.parse(xml_text)
+
+    channel_location, item_locations = parse_podcast_locations(xml_text)
 
     episodes: list[RawEpisode] = []
     for entry in parsed.entries[: show.max_episodes]:
@@ -131,6 +188,7 @@ def fetch_rss_episodes(show: ShowConfig, timeout: float = 20.0) -> list[RawEpiso
             continue
 
         guid = entry.get("id") or entry.get("guid") or audio_url
+        title = (entry.get("title") or "Untitled Episode").strip()
         pub_struct = entry.get("published_parsed")
         if pub_struct:
             published_at = datetime(*pub_struct[:6], tzinfo=timezone.utc).strftime("%Y-%m-%d")
@@ -138,6 +196,7 @@ def fetch_rss_episodes(show: ShowConfig, timeout: float = 20.0) -> list[RawEpiso
             published_at = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
         transcript_url, transcript_type = _extract_transcript_link(entry)
+        subject_location = item_locations.get(guid) or item_locations.get(title) or channel_location
         episodes.append(
             RawEpisode(
                 id=_make_episode_id(show.slug, guid),
@@ -145,13 +204,14 @@ def fetch_rss_episodes(show: ShowConfig, timeout: float = 20.0) -> list[RawEpiso
                 show_slug=show.slug,
                 show_title=show.title,
                 category=show.category,
-                title=(entry.get("title") or "Untitled Episode").strip(),
+                title=title,
                 audio_url=audio_url,
                 duration_sec=_parse_duration(entry.get("itunes_duration")),
                 published_at=published_at,
                 description=(entry.get("summary") or "").strip(),
                 transcript_url=transcript_url,
                 transcript_type=transcript_type,
+                subject_location=subject_location,
             )
         )
     return episodes
@@ -242,16 +302,18 @@ def is_skippable_episode(episode: RawEpisode, min_duration_sec: int = 600) -> tu
 
 
 def check_show_feed(show: ShowConfig, timeout: float = 15.0) -> dict[str, Any]:
-    """Check RSS feed health, enclosure count, and free <podcast:transcript> availability."""
+    """Check RSS feed health, enclosure count, and Podcasting 2.0 transcript/location tags."""
     try:
         episodes = fetch_rss_episodes(show, timeout=timeout)
         with_transcripts = sum(1 for ep in episodes if ep.transcript_url)
+        with_locations = sum(1 for ep in episodes if ep.subject_location)
         return {
             "slug": show.slug,
             "title": show.title,
             "ok": True,
             "episodesFound": len(episodes),
             "withFreeTranscript": with_transcripts,
+            "withSubjectLocation": with_locations,
             "error": None,
         }
     except Exception as exc:
@@ -261,5 +323,6 @@ def check_show_feed(show: ShowConfig, timeout: float = 15.0) -> dict[str, Any]:
             "ok": False,
             "episodesFound": 0,
             "withFreeTranscript": 0,
+            "withSubjectLocation": 0,
             "error": str(exc),
         }

@@ -160,5 +160,6 @@ class CachedEpisodeTranscript(BaseModel):
     durationSec: int = Field(ge=0)
     publishedAt: str
     description: str = ""
+    subjectLocation: str | None = None
     transcriptSource: Literal["rss_tag", "faster_whisper"]
     segments: list[TranscriptSegment] = Field(default_factory=list)

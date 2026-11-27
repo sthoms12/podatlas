@@ -19,6 +19,16 @@ from .models import (
     EpisodeRecord,
     PlaceOrGearRecord,
 )
+from .open_datasets import (
+    LOCATIONS_DATASET_URL,
+    RECOMMENDATIONS_DATASET_URL,
+    discover_from_locations,
+    discover_from_podroll,
+    discovered_feeds_to_dicts,
+    export_discovered_csv,
+    fetch_or_load_dataset,
+    normalize_feed_url,
+)
 from .podcast_index import (
     check_show_feed,
     fetch_rss_episodes,
@@ -254,6 +264,7 @@ def run_transcribe_pass(max_episodes: int | None = None) -> dict[str, int]:
                     durationSec=raw_ep.duration_sec,
                     publishedAt=raw_ep.published_at,
                     description=raw_ep.description,
+                    subjectLocation=raw_ep.subject_location,
                     transcriptSource=source,  # type: ignore[arg-type]
                     segments=segments,
                 ),
@@ -308,6 +319,7 @@ def run_extract_pass(
             cached_ep.showTitle,
             cached_ep.title,
             cached_ep.segments,
+            subject_location=cached_ep.subjectLocation,
         )
         added_cities = merge_extraction_into_cities(
             cities_by_id=cities_by_id,
@@ -337,10 +349,65 @@ def run_extract_pass(
     return stats
 
 
-def run_check_feeds() -> list[dict[str, object]]:
+def run_check_feeds(max_workers: int = 8) -> list[dict[str, object]]:
+    from concurrent.futures import ThreadPoolExecutor
+
     settings = PipelineSettings()
     shows = load_shows_csv(settings.shows_csv)
-    return [check_show_feed(show) for show in shows]
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        return list(pool.map(check_show_feed, shows))
+
+
+def run_discover_feeds(
+    source: str = "all",
+    country: str = "",
+    query: str = "",
+    limit: int = 25,
+    write_csv: Path | None = None,
+) -> dict[str, object]:
+    """Discover new candidate feeds from Podcast Index public open datasets (no API key)."""
+    settings = PipelineSettings()
+    existing_shows = load_shows_csv(settings.shows_csv)
+    existing_urls = {normalize_feed_url(s.rss_url) for s in existing_shows}
+    datasets_dir = settings.cache_dir / "open_datasets"
+
+    discovered = []
+    if source in ("all", "locations"):
+        loc_records = fetch_or_load_dataset(LOCATIONS_DATASET_URL, datasets_dir / "locations.json")
+        discovered.extend(
+            discover_from_locations(
+                loc_records,
+                existing_urls,
+                country_filter=country,
+                query=query,
+                limit=limit,
+            )
+        )
+    if source in ("all", "podroll") and not country:
+        rec_records = fetch_or_load_dataset(
+            RECOMMENDATIONS_DATASET_URL, datasets_dir / "recommendations.json"
+        )
+        # Avoid duplicates across locations and podroll
+        seen_already = existing_urls | {normalize_feed_url(f.rssUrl) for f in discovered}
+        podroll_hits = discover_from_podroll(
+            rec_records,
+            existing_shows,
+            query=query,
+            limit=limit,
+        )
+        discovered.extend([f for f in podroll_hits if normalize_feed_url(f.rssUrl) not in seen_already])
+
+    discovered = discovered[:limit]
+    exported_to: str | None = None
+    if write_csv is not None:
+        export_discovered_csv(discovered, write_csv)
+        exported_to = str(write_csv)
+
+    return {
+        "discoveredCount": len(discovered),
+        "exportedCsv": exported_to,
+        "candidates": discovered_feeds_to_dicts(discovered),
+    }
 
 
 def validate_output(output_dir: Path) -> dict[str, int]:
@@ -373,6 +440,16 @@ def main() -> None:
 
     sub.add_parser("check-feeds", help="CPU-only check of all RSS feeds in shows.csv")
 
+    disc_cmd = sub.add_parser(
+        "discover-feeds",
+        help="Discover candidate feeds from Podcast Index public datasets (locations.json & recommendations.json)",
+    )
+    disc_cmd.add_argument("--source", choices=["all", "locations", "podroll"], default="all")
+    disc_cmd.add_argument("--country", type=str, default="", help="Optional ISO-2 country code filter (e.g. JP, CO)")
+    disc_cmd.add_argument("--query", type=str, default="", help="Optional keyword filter on title/locale")
+    disc_cmd.add_argument("--limit", type=int, default=25, help="Max candidates to return")
+    disc_cmd.add_argument("--write-csv", type=Path, default=None, help="Optional path to export candidates as CSV")
+
     val_cmd = sub.add_parser("validate", help="Validate exported static JSON files")
     val_cmd.add_argument("--output-dir", type=Path, default=Path("../web/public"))
 
@@ -403,7 +480,32 @@ def main() -> None:
         results = run_check_feeds()
         ok_count = sum(1 for r in results if r["ok"])
         free_tx = sum(int(r["withFreeTranscript"]) for r in results)  # type: ignore[arg-type]
-        print(json.dumps({"feedsOk": ok_count, "feedsTotal": len(results), "freeTranscriptEpisodes": free_tx, "details": results}, indent=2))
+        with_loc = sum(int(r["withSubjectLocation"]) for r in results)  # type: ignore[arg-type]
+        print(
+            json.dumps(
+                {
+                    "feedsOk": ok_count,
+                    "feedsTotal": len(results),
+                    "freeTranscriptEpisodes": free_tx,
+                    "subjectLocationEpisodes": with_loc,
+                    "details": results,
+                },
+                indent=2,
+            )
+        )
+    elif args.command == "discover-feeds":
+        print(
+            json.dumps(
+                run_discover_feeds(
+                    source=args.source,
+                    country=args.country,
+                    query=args.query,
+                    limit=args.limit,
+                    write_csv=args.write_csv,
+                ),
+                indent=2,
+            )
+        )
     elif args.command == "validate":
         print(json.dumps(validate_output(args.output_dir), indent=2))
 

@@ -83,11 +83,18 @@ class LLMExtractor:
         show_title: str,
         episode_title: str,
         segments: list[TranscriptSegment],
+        subject_location: str | None = None,
     ) -> EpisodeExtraction:
         transcript_text = format_transcript_for_llm(segments)
+        location_line = (
+            f"RSS Subject Location Hint (<podcast:location>): {subject_location}\n"
+            if subject_location
+            else ""
+        )
         user_prompt = (
             f"Show: {show_title}\n"
-            f"Episode: {episode_title}\n\n"
+            f"Episode: {episode_title}\n"
+            f"{location_line}\n"
             f"Transcript:\n{transcript_text}"
         )
 
