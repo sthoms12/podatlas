@@ -7,6 +7,7 @@ import {
   buildViatorUrl,
 } from '../config/monetization';
 import { CATEGORY_COLORS, formatTime } from '../lib/format';
+import { slugify } from '../lib/staticData';
 
 interface Props {
   city: CityData;
@@ -60,9 +61,12 @@ function getBookCoverUrl(isbn?: string | null): string | null {
           <span aria-hidden="true">←</span>
           <span>All destinations</span>
         </a>
-        <div class="text-[11px] font-semibold uppercase tracking-widest text-stone-400">
+        <a
+          href={`/country/${encodeURIComponent(slugify(city.country))}`}
+          class="inline-block text-[11px] font-semibold uppercase tracking-widest text-stone-400 hover:text-sky-700 transition"
+        >
           {city.country}
-        </div>
+        </a>
         <h1 class="font-serif text-2xl font-semibold text-stone-900 tracking-tight mt-0.5 leading-tight">
           {city.name}
         </h1>

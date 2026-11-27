@@ -1,6 +1,7 @@
 ---
 import type { CitiesGeoJSON, CityData } from '../types/podatlas';
 import { CATEGORY_COLORS } from '../lib/format';
+import { loadAllCountriesSync, loadAllShowsSync } from '../lib/staticData';
 
 interface Props {
   geoJson: CitiesGeoJSON;
@@ -9,6 +10,8 @@ interface Props {
 
 const { geoJson, demoCity } = Astro.props;
 const features = geoJson.features;
+const countries = loadAllCountriesSync();
+const shows = loadAllShowsSync();
 
 const totalEps = features.reduce((sum, f) => sum + f.properties.episodeCount, 0);
 const totalBooks = features.reduce((sum, f) => sum + f.properties.bookCount, 0);
@@ -174,6 +177,45 @@ const demoMention = demoEpisode?.mentions[0];
             );
           })
         }
+      </div>
+    </div>
+
+    <!-- Browse by Country & Show (Internal SEO Links) -->
+    <div class="pt-2 border-t border-stone-200/80 space-y-3">
+      <div>
+        <h2 class="text-[11px] font-semibold uppercase tracking-wider text-stone-400 px-0.5 mb-1.5">
+          Browse by Country ({countries.length})
+        </h2>
+        <div class="flex flex-wrap gap-1.5">
+          {
+            countries.map((country) => (
+              <a
+                href={`/country/${encodeURIComponent(country.slug)}`}
+                class="px-2.5 py-1 rounded-full bg-white border border-stone-200/90 hover:border-sky-400 hover:text-sky-700 text-[11px] font-medium text-stone-700 transition"
+              >
+                {country.name}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-[11px] font-semibold uppercase tracking-wider text-stone-400 px-0.5 mb-1.5">
+          Indexed Shows ({shows.length})
+        </h2>
+        <div class="flex flex-wrap gap-1.5">
+          {
+            shows.slice(0, 12).map((show) => (
+              <a
+                href={`/show/${encodeURIComponent(show.slug)}`}
+                class="px-2.5 py-1 rounded-full bg-stone-100/90 hover:bg-sky-50 hover:text-sky-700 text-[11px] font-medium text-stone-600 transition"
+              >
+                {show.name}
+              </a>
+            ))
+          }
+        </div>
       </div>
     </div>
   </div>

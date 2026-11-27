@@ -1,0 +1,316 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import {
+  buildAmazonUrl,
+  buildBookshopUrl,
+  buildGoogleMapsUrl,
+  buildViatorUrl,
+} from '../../config/monetization';
+import { CATEGORY_COLORS, formatTime } from '../../lib/format';
+import { loadAllCountriesSync, slugify, type CountrySummary } from '../../lib/staticData';
+
+export function getStaticPaths() {
+  const countries = loadAllCountriesSync();
+  return countries.map((country) => ({
+    params: { slug: country.slug },
+    props: { country },
+  }));
+}
+
+interface Props {
+  country: CountrySummary;
+}
+
+const { country } = Astro.props;
+const siteOrigin = Astro.site?.toString().replace(/\/+$/, '') || 'https://podatlas.app';
+const canonicalPath = `/country/${encodeURIComponent(country.slug)}`;
+const pageUrl = new URL(canonicalPath, `${siteOrigin}/`).toString();
+
+const title = `Best Podcasts & Books About ${country.name} — Audio Map & Travel Guide | PodAtlas`;
+const description = `Explore ${country.episodes.length} curated podcasts about ${country.name}, ${country.books.length} books to read before visiting ${country.name}, and ${country.placesAndGear.length} landmarks & gear across ${country.cities.map((c) => c.name).join(', ')}.`;
+
+const jsonLd: Record<string, unknown>[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'PodAtlas World Map', item: siteOrigin },
+      { '@type': 'ListItem', position: 2, name: country.name, item: pageUrl },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `Podcasts About ${country.name}`,
+    numberOfItems: country.episodes.length,
+    itemListElement: country.episodes.map((item, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      item: {
+        '@type': 'PodcastEpisode',
+        name: item.episode.title,
+        description: item.episode.summary,
+        datePublished: item.episode.publishedAt,
+        partOfSeries: { '@type': 'PodcastSeries', name: item.episode.show },
+      },
+    })),
+  },
+  ...(country.books.length > 0
+    ? [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          name: `Best Books About ${country.name} Mentioned on Podcasts`,
+          numberOfItems: country.books.length,
+          itemListElement: country.books.map((item, idx) => ({
+            '@type': 'ListItem',
+            position: idx + 1,
+            item: {
+              '@type': 'Book',
+              name: item.book.title,
+              author: { '@type': 'Person', name: item.book.author },
+              ...(item.book.isbn ? { isbn: item.book.isbn } : {}),
+            },
+          })),
+        },
+      ]
+    : []),
+];
+---
+
+<Layout title={title} description={description} canonicalPath={canonicalPath} jsonLd={jsonLd}>
+  <div class="min-h-dvh bg-[#faf9f6] text-stone-900">
+    <header class="border-b border-stone-200/80 bg-white">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
+        <a href="/" class="inline-flex items-center gap-2 font-serif text-lg font-semibold text-stone-900 hover:text-sky-700 transition">
+          <span>PodAtlas</span>
+        </a>
+        <a
+          href="/"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-stone-900 text-white hover:bg-sky-700 text-xs font-semibold transition"
+        >
+          <span>Open 3D Globe</span>
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10">
+      <section class="bg-white rounded-3xl border border-stone-200/90 p-6 sm:p-8 shadow-2xs">
+        <div class="text-xs font-semibold uppercase tracking-widest text-sky-700">
+          Country Audio &amp; Reading Guide
+        </div>
+        <h1 class="font-serif text-3xl sm:text-4xl font-semibold text-stone-900 tracking-tight mt-2">
+          Best Podcasts &amp; Books About {country.name}
+        </h1>
+        <p class="text-stone-600 mt-3 max-w-2xl leading-relaxed text-[15px]">
+          {description}
+        </p>
+
+        <div class="flex flex-wrap items-center gap-2 mt-5 text-xs">
+          <span class="px-3 py-1 rounded-full bg-stone-100 text-stone-700 font-medium">
+            {country.cities.length} {country.cities.length === 1 ? 'City' : 'Cities'}
+          </span>
+          <span class="px-3 py-1 rounded-full bg-sky-50 text-sky-800 font-medium">
+            {country.episodes.length} Podcast Episodes
+          </span>
+          <span class="px-3 py-1 rounded-full bg-amber-50 text-amber-900 font-medium">
+            {country.books.length} Mentioned Books
+          </span>
+          <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-900 font-medium">
+            {country.placesAndGear.length} Places &amp; Gear
+          </span>
+        </div>
+      </section>
+
+      <!-- Cities in Country -->
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl font-semibold text-stone-900">
+          Interactive City Maps in {country.name}
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {
+            country.cities.map((city) => {
+              const catColor = CATEGORY_COLORS[city.primaryCategory] ?? '#0284c7';
+              return (
+                <a
+                  href={`/city/${encodeURIComponent(city.id)}`}
+                  class="group block p-5 rounded-2xl bg-white border border-stone-200/90 hover:border-stone-400 hover:shadow-sm transition"
+                >
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                      <span class="w-2.5 h-2.5 rounded-full shrink-0" style={`background-color: ${catColor};`} />
+                      <h3 class="font-serif text-xl font-semibold text-stone-900 group-hover:text-sky-700 transition">
+                        {city.name}
+                      </h3>
+                    </div>
+                    <span class="text-xs font-medium text-stone-400 group-hover:text-sky-700">Listen →</span>
+                  </div>
+                  <p class="text-xs text-stone-600 mt-2 leading-relaxed line-clamp-2">{city.tagline}</p>
+                  <div class="text-[11px] text-stone-500 mt-3">
+                    {city.episodes.length} episodes · {city.books.length} books · {city.placesAndGear.length} spots
+                  </div>
+                </a>
+              );
+            })
+          }
+        </div>
+      </section>
+
+      <!-- Podcast Episodes -->
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl font-semibold text-stone-900">
+          Curated Podcasts About {country.name}
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {
+            country.episodes.map(({ cityId, cityName, episode }) => (
+              <article class="p-5 rounded-2xl bg-white border border-stone-200/90 flex flex-col justify-between gap-3">
+                <div>
+                  <div class="flex items-center justify-between gap-2 text-xs">
+                    <a
+                      href={`/show/${encodeURIComponent(slugify(episode.show))}`}
+                      class="font-semibold text-sky-700 hover:underline truncate"
+                    >
+                      {episode.show}
+                    </a>
+                    <span class="text-stone-400 shrink-0">{episode.category}</span>
+                  </div>
+                  <h3 class="font-serif text-lg font-semibold text-stone-900 mt-1 leading-snug">
+                    {episode.title}
+                  </h3>
+                  <p class="text-xs text-stone-600 mt-2 leading-relaxed">{episode.summary}</p>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-stone-100 text-xs">
+                  <span class="text-stone-400 font-mono">{formatTime(episode.durationSec)}</span>
+                  <a
+                    href={`/city/${encodeURIComponent(cityId)}`}
+                    class="font-semibold text-stone-900 hover:text-sky-700 transition"
+                  >
+                    Stream on {cityName} map →
+                  </a>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- Books Mentioned -->
+      {
+        country.books.length > 0 && (
+          <section class="space-y-4">
+            <h2 class="font-serif text-2xl font-semibold text-stone-900">
+              Books to Read Before Visiting {country.name}
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {country.books.map(({ cityId, cityName, book }) => (
+                <article class="p-5 rounded-2xl bg-white border border-stone-200/90 flex flex-col justify-between gap-3">
+                  <div>
+                    <div class="text-[11px] font-medium text-amber-800">
+                      Mentioned on{' '}
+                      <a
+                        href={`/show/${encodeURIComponent(slugify(book.show))}`}
+                        class="underline hover:text-sky-700"
+                      >
+                        {book.show}
+                      </a>{' '}
+                      ({cityName})
+                    </div>
+                    <h3 class="font-serif text-lg font-semibold text-stone-900 mt-1">{book.title}</h3>
+                    <div class="text-xs text-stone-500">by {book.author}</div>
+                    {book.quote && (
+                      <blockquote class="text-xs text-stone-600 italic mt-2 pl-3 border-l-2 border-amber-300">
+                        “{book.quote}”
+                      </blockquote>
+                    )}
+                  </div>
+                  <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-stone-100 text-xs">
+                    <a
+                      href={buildBookshopUrl(book)}
+                      target="_blank"
+                      rel="noopener noreferrer sponsored"
+                      class="px-3 py-1.5 rounded-lg bg-stone-900 text-white hover:bg-sky-700 font-medium transition"
+                    >
+                      Bookshop.org
+                    </a>
+                    <a
+                      href={buildAmazonUrl(`${book.title} ${book.author}`)}
+                      target="_blank"
+                      rel="noopener noreferrer sponsored"
+                      class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-800 hover:bg-stone-200 font-medium transition"
+                    >
+                      Amazon
+                    </a>
+                    <a
+                      href={`/city/${encodeURIComponent(cityId)}`}
+                      class="ml-auto text-stone-500 hover:text-sky-700 font-medium"
+                    >
+                      Jump to {formatTime(book.timestampSec)} →
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- Places & Gear -->
+      {
+        country.placesAndGear.length > 0 && (
+          <section class="space-y-4">
+            <h2 class="font-serif text-2xl font-semibold text-stone-900">
+              Landmarks, Restaurants &amp; Gear Mentioned in {country.name}
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {country.placesAndGear.map(({ cityName, place }) => (
+                <div class="p-4 rounded-2xl bg-white border border-stone-200/90 flex flex-col justify-between gap-2">
+                  <div>
+                    <div class="text-[10px] font-semibold uppercase tracking-wider text-stone-400">
+                      {place.type} · {cityName}
+                    </div>
+                    <h3 class="font-semibold text-sm text-stone-900 mt-0.5">{place.name}</h3>
+                    <p class="text-xs text-stone-600 mt-1 leading-relaxed">{place.note}</p>
+                  </div>
+                  <div class="flex items-center gap-2 pt-2 border-t border-stone-100 text-[11px] font-medium">
+                    {place.type === 'Gear' ? (
+                      <a
+                        href={buildAmazonUrl(place.name)}
+                        target="_blank"
+                        rel="noopener noreferrer sponsored"
+                        class="text-sky-700 hover:underline"
+                      >
+                        Check on Amazon →
+                      </a>
+                    ) : (
+                      <>
+                        <a
+                          href={buildGoogleMapsUrl(place, cityName)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="text-sky-700 hover:underline"
+                        >
+                          Google Maps
+                        </a>
+                        <span class="text-stone-300">·</span>
+                        <a
+                          href={buildViatorUrl(cityName, place.name)}
+                          target="_blank"
+                          rel="noopener noreferrer sponsored"
+                          class="text-stone-600 hover:text-sky-700"
+                        >
+                          Tours
+                        </a>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      }
+    </main>
+  </div>
+</Layout>
