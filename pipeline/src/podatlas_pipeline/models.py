@@ -34,6 +34,7 @@ class EpisodeRecord(BaseModel):
     publishedAt: str
     summary: str
     mentions: list[EpisodeMention] = Field(default_factory=list)
+    source: Literal["podcast", "nps", "substack"] = "podcast"
 
 
 class BookRecord(BaseModel):
@@ -41,22 +42,24 @@ class BookRecord(BaseModel):
     author: str
     isbn: str | None = None
     openLibraryKey: str | None = None
-    episodeId: str
-    show: str
-    timestampSec: int = Field(ge=0)
+    episodeId: str = ""
+    show: str = ""
+    timestampSec: int = Field(default=0, ge=0)
     quote: str = ""
     endorsement: EndorsementLevel = "strong_rec"
     mentionCount: int = Field(default=1, ge=1)
     uniqueShowCount: int = Field(default=1, ge=1)
     mentionedByShows: list[str] = Field(default_factory=list)
+    wikidataId: str | None = None
+    source: Literal["podcast", "wikidata"] = "podcast"
 
 
 class PlaceOrGearRecord(BaseModel):
     name: str
     type: PlaceType
     note: str
-    episodeId: str
-    timestampSec: int = Field(ge=0)
+    episodeId: str = ""
+    timestampSec: int = Field(default=0, ge=0)
     show: str = ""
     lat: float | None = Field(default=None, ge=-90.0, le=90.0)
     lon: float | None = Field(default=None, ge=-180.0, le=180.0)
@@ -64,6 +67,10 @@ class PlaceOrGearRecord(BaseModel):
     mentionCount: int = Field(default=1, ge=1)
     uniqueShowCount: int = Field(default=1, ge=1)
     mentionedByShows: list[str] = Field(default_factory=list)
+    isUnesco: bool = False
+    unescoId: str | None = None
+    unescoName: str | None = None
+    source: Literal["podcast", "nps"] = "podcast"
 
 
 class CityData(BaseModel):
@@ -161,5 +168,5 @@ class CachedEpisodeTranscript(BaseModel):
     publishedAt: str
     description: str = ""
     subjectLocation: str | None = None
-    transcriptSource: Literal["rss_tag", "faster_whisper"]
+    transcriptSource: Literal["rss_tag", "content_encoded", "faster_whisper"]
     segments: list[TranscriptSegment] = Field(default_factory=list)

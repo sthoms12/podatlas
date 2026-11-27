@@ -19,6 +19,7 @@ class VerifiedBook:
     author: str
     isbn: str | None
     open_library_key: str | None
+    wikidata_id: str | None = None
 
 
 def _tokens(text: str) -> set[str]:
@@ -83,36 +84,61 @@ def pick_best_open_library_doc(
 class OpenLibraryVerifier:
     """Caches Open Library book lookups on disk to stay polite and fast."""
 
-    def __init__(self, cache_path: Path | None = None, timeout: float = 15.0) -> None:
+    def __init__(
+        self,
+        cache_path: Path | None = None,
+        timeout: float = 15.0,
+        fallback_verifier: Any | None = None,
+    ) -> None:
         self.cache_path = cache_path
         self.timeout = timeout
+        self.fallback_verifier = fallback_verifier
         self._cache: dict[str, dict[str, Any] | None] = {}
         if cache_path and cache_path.exists():
-            self._cache = json.loads(cache_path.read_text(encoding="utf-8"))
+            try:
+                loaded = json.loads(cache_path.read_text(encoding="utf-8"))
+                if isinstance(loaded, dict):
+                    self._cache = loaded
+            except Exception:
+                self._cache = {}
 
     def _save_cache(self) -> None:
         if self.cache_path:
             self.cache_path.parent.mkdir(parents=True, exist_ok=True)
             self.cache_path.write_text(json.dumps(self._cache, indent=2), encoding="utf-8")
 
+    def _run_fallback(self, title: str, author: str) -> VerifiedBook | None:
+        if self.fallback_verifier is None:
+            return None
+        if hasattr(self.fallback_verifier, "verify_book"):
+            return self.fallback_verifier.verify_book(title, author)
+        if hasattr(self.fallback_verifier, "verify"):
+            return self.fallback_verifier.verify(title, author)
+        return None
+
     def verify(self, title: str, author: str = "") -> VerifiedBook | None:
         cache_key = f"{title.strip().lower()}::{author.strip().lower()}"
         if cache_key in self._cache:
             cached = self._cache[cache_key]
-            return VerifiedBook(**cached) if cached else None
+            if cached:
+                return VerifiedBook(**cached)
+            return self._run_fallback(title, author)
 
         params: dict[str, Any] = {"title": title, "limit": 6}
         if author:
             params["author"] = author
 
-        with httpx.Client(timeout=self.timeout) as client:
-            resp = client.get(
-                OPEN_LIBRARY_SEARCH_URL,
-                params=params,
-                headers={"User-Agent": "PodAtlas/0.1 (+https://github.com/sthoms12/podatlas)"},
-            )
-            resp.raise_for_status()
-            docs = resp.json().get("docs", [])
+        try:
+            with httpx.Client(timeout=self.timeout) as client:
+                resp = client.get(
+                    OPEN_LIBRARY_SEARCH_URL,
+                    params=params,
+                    headers={"User-Agent": "PodAtlas/0.2 (+https://github.com/sthoms12/podatlas)"},
+                )
+                resp.raise_for_status()
+                docs = resp.json().get("docs", [])
+        except Exception:
+            return self._run_fallback(title, author)
 
         verified = pick_best_open_library_doc(title, author, docs)
         self._cache[cache_key] = (
@@ -126,4 +152,6 @@ class OpenLibraryVerifier:
             else None
         )
         self._save_cache()
-        return verified
+        if verified:
+            return verified
+        return self._run_fallback(title, author)

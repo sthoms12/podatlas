@@ -50,12 +50,14 @@ def test_country_names_covers_global_destinations() -> None:
     assert COUNTRY_NAMES["EC"] == "Ecuador"
 
 
-def test_shows_csv_has_42_unique_valid_english_shows() -> None:
+def test_shows_csv_has_100_plus_unique_valid_english_shows() -> None:
     shows_path = Path(__file__).resolve().parents[1] / "shows.csv"
     shows = load_shows_csv(shows_path)
-    assert len(shows) == 42
+    assert len(shows) >= 100
     slugs = [s.slug for s in shows]
     assert len(slugs) == len(set(slugs))
+    normalized_urls = [normalize_feed_url(s.rss_url) for s in shows]
+    assert len(normalized_urls) == len(set(normalized_urls))
     categories = {s.category for s in shows}
     assert categories == {"Travel", "History", "Food", "Culture"}
     assert all(s.rss_url.startswith(("http://", "https://")) for s in shows)

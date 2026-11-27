@@ -50,45 +50,93 @@ def apply_city_consensus(city: CityData) -> CityData:
     """Deduplicate books & places within a city, compute cross-show consensus, and sort by signal."""
     episode_shows = {ep.id: ep.show for ep in city.episodes}
 
-    # --- Books consensus ---
-    book_groups: dict[str, list[BookRecord]] = {}
-    for book in city.books:
-        key = (
-            (book.openLibraryKey or "").strip().lower()
-            or (book.isbn or "").replace("-", "").strip().lower()
-            or f"{normalize_key(book.title)}|{normalize_key(book.author)}"
-        )
-        book_groups.setdefault(key, []).append(book)
+    # --- Books consensus (cross-identifier grouping across OL key, ISBN, Wikidata ID, title+author) ---
+    n_books = len(city.books)
+    parent = list(range(n_books))
+
+    def _find(i: int) -> int:
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    def _union(a: int, b: int) -> None:
+        ra, rb = _find(a), _find(b)
+        if ra != rb:
+            parent[rb] = ra
+
+    seen_book_ids: dict[str, int] = {}
+    for idx, book in enumerate(city.books):
+        ident_keys: list[str] = []
+        if book.openLibraryKey and book.openLibraryKey.strip():
+            ident_keys.append(f"ol:{book.openLibraryKey.strip().lower()}")
+        if book.isbn and book.isbn.replace("-", "").strip():
+            ident_keys.append(f"isbn:{book.isbn.replace('-', '').strip().lower()}")
+        if book.wikidataId and book.wikidataId.strip():
+            ident_keys.append(f"wd:{book.wikidataId.strip().upper()}")
+        ta_key = f"ta:{normalize_key(book.title)}|{normalize_key(book.author)}"
+        ident_keys.append(ta_key)
+
+        for ik in ident_keys:
+            if ik in seen_book_ids:
+                _union(seen_book_ids[ik], idx)
+            else:
+                seen_book_ids[ik] = idx
+
+    grouped_books: dict[int, list[BookRecord]] = {}
+    for idx, book in enumerate(city.books):
+        grouped_books.setdefault(_find(idx), []).append(book)
 
     merged_books: list[BookRecord] = []
-    for group in book_groups.values():
-        lead = max(
-            group,
-            key=lambda b: (
-                1 if b.endorsement == "strong_rec" else 0,
-                1 if b.isbn else 0,
-                len(b.quote),
-            ),
-        )
-        shows: list[str] = []
-        for item in group:
-            for s in item.mentionedByShows or ([item.show] if item.show else []):
-                if s and s not in shows:
-                    shows.append(s)
-        total_mentions = sum(max(1, item.mentionCount) for item in group)
-        unique_shows = max(len(shows), max(item.uniqueShowCount for item in group), 1)
-        endorsement = (
-            "strong_rec"
-            if any(item.endorsement == "strong_rec" for item in group)
-            else "casual_mention"
-        )
+    for group in grouped_books.values():
+        podcast_books = [b for b in group if b.source == "podcast"]
+        if podcast_books:
+            lead = max(
+                podcast_books,
+                key=lambda b: (
+                    1 if b.endorsement == "strong_rec" else 0,
+                    1 if b.isbn else 0,
+                    len(b.quote),
+                ),
+            )
+            shows: list[str] = []
+            for item in podcast_books:
+                for s in item.mentionedByShows or ([item.show] if item.show else []):
+                    if s and s not in shows:
+                        shows.append(s)
+            total_mentions = sum(max(1, item.mentionCount) for item in podcast_books)
+            unique_shows = max(len(shows), max(item.uniqueShowCount for item in podcast_books), 1)
+            endorsement = (
+                "strong_rec"
+                if any(item.endorsement == "strong_rec" for item in podcast_books)
+                else "casual_mention"
+            )
+            source = "podcast"
+        else:
+            lead = max(
+                group,
+                key=lambda b: (
+                    1 if b.isbn else 0,
+                    1 if b.openLibraryKey else 0,
+                    len(b.quote),
+                ),
+            )
+            shows = []
+            total_mentions = 1
+            unique_shows = 1
+            endorsement = lead.endorsement
+            source = "wikidata"
+
         isbn = lead.isbn or next((b.isbn for b in group if b.isbn), None)
         ol_key = lead.openLibraryKey or next((b.openLibraryKey for b in group if b.openLibraryKey), None)
+        wikidata_id = lead.wikidataId or next((b.wikidataId for b in group if b.wikidataId), None)
         merged_books.append(
             lead.model_copy(
                 update={
                     "isbn": isbn,
                     "openLibraryKey": ol_key,
+                    "wikidataId": wikidata_id,
+                    "source": source,
                     "endorsement": endorsement,
                     "mentionCount": total_mentions,
                     "uniqueShowCount": unique_shows,
@@ -99,6 +147,7 @@ def apply_city_consensus(city: CityData) -> CityData:
 
     merged_books.sort(
         key=lambda b: (
+            0 if b.source == "podcast" else 1,
             -b.uniqueShowCount,
             0 if b.endorsement == "strong_rec" else 1,
             -b.mentionCount,
@@ -118,6 +167,7 @@ def apply_city_consensus(city: CityData) -> CityData:
             group,
             key=lambda p: (
                 1 if p.endorsement == "strong_rec" else 0,
+                1 if (p.isUnesco and p.lat is not None and p.lon is not None) else 0,
                 1 if (p.lat is not None and p.lon is not None) else 0,
                 len(p.note),
             ),
@@ -135,8 +185,27 @@ def apply_city_consensus(city: CityData) -> CityData:
             if any(item.endorsement == "strong_rec" for item in group)
             else "casual_mention"
         )
-        lat = lead.lat if lead.lat is not None else next((p.lat for p in group if p.lat is not None), None)
-        lon = lead.lon if lead.lon is not None else next((p.lon for p in group if p.lon is not None), None)
+        is_unesco = any(p.isUnesco for p in group)
+        unesco_id = next(
+            (p.unescoId for p in group if p.isUnesco and p.unescoId),
+            None,
+        ) or next((p.unescoId for p in group if p.unescoId), None)
+        unesco_name = next(
+            (p.unescoName for p in group if p.isUnesco and p.unescoName),
+            None,
+        ) or next((p.unescoName for p in group if p.unescoName), None)
+
+        unesco_with_coords = next(
+            (p for p in group if p.isUnesco and p.lat is not None and p.lon is not None),
+            None,
+        )
+        if unesco_with_coords is not None:
+            lat = unesco_with_coords.lat
+            lon = unesco_with_coords.lon
+        else:
+            lat = lead.lat if lead.lat is not None else next((p.lat for p in group if p.lat is not None), None)
+            lon = lead.lon if lead.lon is not None else next((p.lon for p in group if p.lon is not None), None)
+
         lead_show = lead.show or episode_shows.get(lead.episodeId, "")
         merged_places.append(
             lead.model_copy(
@@ -148,6 +217,9 @@ def apply_city_consensus(city: CityData) -> CityData:
                     "mentionCount": total_mentions,
                     "uniqueShowCount": unique_shows,
                     "mentionedByShows": shows,
+                    "isUnesco": is_unesco,
+                    "unescoId": unesco_id,
+                    "unescoName": unesco_name,
                 }
             )
         )
@@ -210,20 +282,33 @@ def build_search_index(cities: list[CityData]) -> list[SearchIndexItem]:
                 )
             )
         for book in city.books:
-            consensus_prefix = (
-                f"{book.uniqueShowCount} shows · " if book.uniqueShowCount >= 2 else ""
-            )
-            items.append(
-                SearchIndexItem(
-                    kind="Book",
-                    title=book.title,
-                    subtitle=f"{consensus_prefix}{book.author} · {city.name}",
-                    cityId=city.id,
-                    tab="books",
-                    episodeId=book.episodeId,
-                    timestampSec=book.timestampSec,
+            if book.source == "wikidata":
+                items.append(
+                    SearchIndexItem(
+                        kind="Book",
+                        title=book.title,
+                        subtitle=f"Set in {city.name} · {book.author}",
+                        cityId=city.id,
+                        tab="books",
+                        episodeId=None,
+                        timestampSec=None,
+                    )
                 )
-            )
+            else:
+                consensus_prefix = (
+                    f"{book.uniqueShowCount} shows · " if book.uniqueShowCount >= 2 else ""
+                )
+                items.append(
+                    SearchIndexItem(
+                        kind="Book",
+                        title=book.title,
+                        subtitle=f"{consensus_prefix}{book.author} · {city.name}",
+                        cityId=city.id,
+                        tab="books",
+                        episodeId=book.episodeId or None,
+                        timestampSec=book.timestampSec if book.episodeId else None,
+                    )
+                )
         for place in city.placesAndGear:
             items.append(
                 SearchIndexItem(
@@ -232,8 +317,8 @@ def build_search_index(cities: list[CityData]) -> list[SearchIndexItem]:
                     subtitle=f"{city.name} · {place.note[:64]}",
                     cityId=city.id,
                     tab="places",
-                    episodeId=place.episodeId,
-                    timestampSec=place.timestampSec,
+                    episodeId=place.episodeId or None,
+                    timestampSec=place.timestampSec if place.episodeId else None,
                 )
             )
     return items
@@ -302,13 +387,21 @@ def build_city_kml(city: CityData) -> str:
     for item in city.placesAndGear:
         if item.type == "Gear" or item.lat is None or item.lon is None:
             continue
+        unesco_tag = "[UNESCO World Heritage] " if item.isUnesco else ""
         consensus_note = (
             f"Recommended by {item.uniqueShowCount} shows. "
             if item.uniqueShowCount >= 2
             else ""
         )
-        show_note = f" ({item.show} @ {_format_mmss(item.timestampSec)})" if item.show else f" (@ {_format_mmss(item.timestampSec)})"
-        desc = f"[{item.type}] {consensus_note}{item.note}{show_note}"
+        if item.episodeId and item.show:
+            show_note = f" ({item.show} @ {_format_mmss(item.timestampSec)})"
+        elif item.episodeId:
+            show_note = f" (@ {_format_mmss(item.timestampSec)})"
+        elif item.show:
+            show_note = f" ({item.show})"
+        else:
+            show_note = ""
+        desc = f"[{item.type}] {unesco_tag}{consensus_note}{item.note}{show_note}"
         placemarks.append(
             "\n".join(
                 [

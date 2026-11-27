@@ -9,8 +9,10 @@ import re
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 import xml.etree.ElementTree as ET
 
 import feedparser
@@ -47,6 +49,7 @@ class RawEpisode:
     transcript_url: str | None = None
     transcript_type: str | None = None
     subject_location: str | None = None
+    content_encoded: str = ""
 
 
 def load_shows_csv(path: Path) -> list[ShowConfig]:
@@ -167,6 +170,38 @@ def parse_podcast_locations(xml_text: str) -> tuple[str | None, dict[str, str]]:
     return channel_location, item_locations
 
 
+_AUDIO_EXTENSIONS = (".mp3", ".m4a", ".aac", ".ogg", ".wav", ".opus")
+
+
+def _extract_content_encoded(entry: Any) -> str:
+    """Extract <content:encoded> (or Atom <content>) HTML from a feedparser entry."""
+    content = entry.get("content")
+    if isinstance(content, str):
+        return content.strip()
+    if not isinstance(content, list):
+        return ""
+
+    html_blocks: list[str] = []
+    other_blocks: list[str] = []
+    for block in content:
+        if not isinstance(block, dict):
+            continue
+        value = (block.get("value") or "").strip()
+        if not value:
+            continue
+        ctype = (block.get("type") or "").lower()
+        if "html" in ctype or "xhtml" in ctype:
+            html_blocks.append(value)
+        else:
+            other_blocks.append(value)
+
+    if html_blocks:
+        return max(html_blocks, key=len)
+    if other_blocks:
+        return max(other_blocks, key=len)
+    return ""
+
+
 def fetch_rss_episodes(show: ShowConfig, timeout: float = 20.0) -> list[RawEpisode]:
     """Fetch recent episodes directly from a podcast's public RSS feed."""
     with httpx.Client(timeout=timeout, follow_redirects=True) as client:
@@ -180,9 +215,14 @@ def fetch_rss_episodes(show: ShowConfig, timeout: float = 20.0) -> list[RawEpiso
     episodes: list[RawEpisode] = []
     for entry in parsed.entries[: show.max_episodes]:
         audio_url = ""
-        for enc in entry.get("enclosures", []):
-            if "audio" in (enc.get("type") or "") or (enc.get("href") or "").endswith(".mp3"):
-                audio_url = enc.get("href", "")
+        for enc in entry.get("enclosures") or []:
+            href = (enc.get("href") or "").strip()
+            if not href:
+                continue
+            enc_type = (enc.get("type") or "").lower()
+            path_lower = urlparse(href).path.lower()
+            if "audio" in enc_type or path_lower.endswith(_AUDIO_EXTENSIONS):
+                audio_url = href
                 break
         if not audio_url:
             continue
@@ -197,6 +237,7 @@ def fetch_rss_episodes(show: ShowConfig, timeout: float = 20.0) -> list[RawEpiso
 
         transcript_url, transcript_type = _extract_transcript_link(entry)
         subject_location = item_locations.get(guid) or item_locations.get(title) or channel_location
+        content_encoded = _extract_content_encoded(entry)
         episodes.append(
             RawEpisode(
                 id=_make_episode_id(show.slug, guid),
@@ -212,6 +253,7 @@ def fetch_rss_episodes(show: ShowConfig, timeout: float = 20.0) -> list[RawEpiso
                 transcript_url=transcript_url,
                 transcript_type=transcript_type,
                 subject_location=subject_location,
+                content_encoded=content_encoded,
             )
         )
     return episodes
@@ -286,6 +328,164 @@ def fetch_transcript_if_available(
     return parsed or None
 
 
+_BLOCK_TAGS = frozenset(
+    {
+        "p",
+        "div",
+        "br",
+        "li",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "blockquote",
+        "tr",
+        "section",
+        "article",
+        "hr",
+    }
+)
+_SKIP_TAGS = frozenset({"script", "style"})
+_BLANK_LINE_RE = re.compile(r"\r?\n\s*\r?\n")
+
+
+class _ContentHTMLParser(HTMLParser):
+    """Pure-stdlib HTML-to-paragraphs parser that strips script/style and normalizes text."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self._skip_depth = 0
+        self._chunks: list[str] = []
+        self._paragraphs: list[str] = []
+
+    def _flush(self) -> None:
+        if not self._chunks:
+            return
+        raw = "".join(self._chunks).replace("\xa0", " ")
+        cleaned = re.sub(r"\s+", " ", raw).strip()
+        if cleaned:
+            self._paragraphs.append(cleaned)
+        self._chunks = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        t = tag.lower()
+        if t in _SKIP_TAGS:
+            self._skip_depth += 1
+        elif self._skip_depth == 0 and t in _BLOCK_TAGS:
+            self._flush()
+
+    def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        t = tag.lower()
+        if self._skip_depth == 0 and t in _BLOCK_TAGS:
+            self._flush()
+
+    def handle_endtag(self, tag: str) -> None:
+        t = tag.lower()
+        if t in _SKIP_TAGS:
+            self._skip_depth = max(0, self._skip_depth - 1)
+        elif self._skip_depth == 0 and t in _BLOCK_TAGS:
+            self._flush()
+
+    def handle_data(self, data: str) -> None:
+        if self._skip_depth > 0 or not data:
+            return
+        if _BLANK_LINE_RE.search(data):
+            parts = _BLANK_LINE_RE.split(data)
+            for idx, part in enumerate(parts):
+                if idx > 0:
+                    self._flush()
+                if part:
+                    self._chunks.append(part)
+        else:
+            self._chunks.append(data)
+
+    def get_paragraphs(self) -> list[str]:
+        self._flush()
+        return self._paragraphs
+
+
+def _chunk_paragraph(text: str, max_chunk_chars: int = 2000) -> list[str]:
+    """Split oversized paragraphs so downstream LLM context caps never drop an entire segment."""
+    if len(text) <= max_chunk_chars:
+        return [text]
+
+    chunks: list[str] = []
+    sentences = re.split(r"(?<=[.!?])\s+", text)
+    current = ""
+    for sentence in sentences:
+        if not sentence:
+            continue
+        if len(sentence) > max_chunk_chars:
+            if current:
+                chunks.append(current)
+                current = ""
+            words = sentence.split(" ")
+            buf = ""
+            for word in words:
+                if len(word) > max_chunk_chars:
+                    if buf:
+                        chunks.append(buf)
+                        buf = ""
+                    for i in range(0, len(word), max_chunk_chars):
+                        chunks.append(word[i : i + max_chunk_chars])
+                elif not buf:
+                    buf = word
+                elif len(buf) + 1 + len(word) <= max_chunk_chars:
+                    buf = f"{buf} {word}"
+                else:
+                    chunks.append(buf)
+                    buf = word
+            if buf:
+                current = buf
+        elif not current:
+            current = sentence
+        elif len(current) + 1 + len(sentence) <= max_chunk_chars:
+            current = f"{current} {sentence}"
+        else:
+            chunks.append(current)
+            current = sentence
+    if current:
+        chunks.append(current)
+    return chunks
+
+
+def parse_content_encoded_to_segments(
+    html_text: str | None,
+    duration_sec: int = 0,
+    min_chars: int = 500,
+) -> list[TranscriptSegment]:
+    """Convert RSS <content:encoded> HTML into TranscriptSegment paragraphs when >= min_chars."""
+    if not html_text or not html_text.strip():
+        return []
+
+    parser = _ContentHTMLParser()
+    parser.feed(html_text)
+    parser.close()
+
+    paragraphs: list[str] = []
+    for para in parser.get_paragraphs():
+        paragraphs.extend(_chunk_paragraph(para))
+
+    total_chars = sum(len(p) for p in paragraphs)
+    if not paragraphs or total_chars < min_chars:
+        return []
+
+    segments: list[TranscriptSegment] = []
+    if duration_sec > 0:
+        offset = 0
+        for para in paragraphs:
+            start = round((offset / total_chars) * duration_sec, 3)
+            offset += len(para)
+            end = max(start, round((offset / total_chars) * duration_sec, 3))
+            segments.append(TranscriptSegment(start=start, end=end, text=para))
+    else:
+        for para in paragraphs:
+            segments.append(TranscriptSegment(start=0.0, end=0.0, text=para))
+    return segments
+
+
 _SKIP_TITLE_RE = re.compile(
     r"\b(trailer|teaser|introducing|bonus\s+clip|feed\s+drop|announcement|promo)\b",
     flags=re.IGNORECASE,
@@ -294,10 +494,14 @@ _SKIP_TITLE_RE = re.compile(
 
 def is_skippable_episode(episode: RawEpisode, min_duration_sec: int = 600) -> tuple[bool, str]:
     """Return (True, reason) for short clips, trailers, or promos to save GPU credits."""
-    if episode.duration_sec > 0 and episode.duration_sec < min_duration_sec:
-        return True, f"duration {episode.duration_sec}s < {min_duration_sec}s"
     if _SKIP_TITLE_RE.search(episode.title):
         return True, "title matches trailer/promo pattern"
+    if 0 < episode.duration_sec < min_duration_sec:
+        has_free_text = bool(episode.transcript_url) or bool(
+            parse_content_encoded_to_segments(episode.content_encoded)
+        )
+        if not has_free_text:
+            return True, f"duration {episode.duration_sec}s < {min_duration_sec}s"
     return False, ""
 
 
@@ -307,6 +511,9 @@ def check_show_feed(show: ShowConfig, timeout: float = 15.0) -> dict[str, Any]:
         episodes = fetch_rss_episodes(show, timeout=timeout)
         with_transcripts = sum(1 for ep in episodes if ep.transcript_url)
         with_locations = sum(1 for ep in episodes if ep.subject_location)
+        with_content_encoded = sum(
+            1 for ep in episodes if parse_content_encoded_to_segments(ep.content_encoded)
+        )
         return {
             "slug": show.slug,
             "title": show.title,
@@ -314,6 +521,7 @@ def check_show_feed(show: ShowConfig, timeout: float = 15.0) -> dict[str, Any]:
             "episodesFound": len(episodes),
             "withFreeTranscript": with_transcripts,
             "withSubjectLocation": with_locations,
+            "withContentEncoded": with_content_encoded,
             "error": None,
         }
     except Exception as exc:
@@ -324,5 +532,6 @@ def check_show_feed(show: ShowConfig, timeout: float = 15.0) -> dict[str, Any]:
             "episodesFound": 0,
             "withFreeTranscript": 0,
             "withSubjectLocation": 0,
+            "withContentEncoded": 0,
             "error": str(exc),
         }

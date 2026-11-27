@@ -287,6 +287,7 @@ class GeoCity:
     lat: float
     lon: float
     population: int
+    geonames_id: str = ""
 
 
 class GeoNamesIndex:
@@ -329,6 +330,7 @@ class GeoNamesIndex:
                     lat=round(lat, 4),
                     lon=round(lon, 4),
                     population=population,
+                    geonames_id=parts[0].strip(),
                 )
                 cities.append(city)
                 for alt in filter(None, [asciiname, *alternatenames.split(",")[:8]]):

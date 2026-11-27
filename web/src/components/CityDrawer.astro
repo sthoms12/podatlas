@@ -16,7 +16,8 @@ const { city } = Astro.props;
 const leadEpisode = city.episodes[0];
 
 function findEpisode(epId: string): EpisodeRecord | undefined {
-  return city.episodes.find((ep) => ep.id === epId) || city.episodes[0];
+  if (!epId) return undefined;
+  return city.episodes.find((ep) => ep.id === epId);
 }
 
 function getBookCoverUrl(isbn?: string | null): string | null {
@@ -166,6 +167,11 @@ function getBookCoverUrl(isbn?: string | null): string | null {
                       />
                       {ep.category}
                     </span>
+                    {ep.source === 'nps' && (
+                      <span class="inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200">
+                        NPS Audio · Public Domain
+                      </span>
+                    )}
                   </div>
                   <h2 class="text-[15px] font-semibold text-stone-900 mt-1.5 leading-snug">
                     {ep.title}
@@ -227,7 +233,8 @@ function getBookCoverUrl(isbn?: string | null): string | null {
     <div data-tab-panel="books" class="hidden space-y-3.5">
       {
         city.books.map((book) => {
-          const ep = findEpisode(book.episodeId);
+          const isWikidata = book.source === 'wikidata';
+          const ep = isWikidata ? undefined : findEpisode(book.episodeId);
           const coverUrl = getBookCoverUrl(book.isbn);
           const showCount = book.uniqueShowCount ?? 1;
           const showsLabel =
@@ -250,7 +257,11 @@ function getBookCoverUrl(isbn?: string | null): string | null {
                   <div class="flex items-start justify-between gap-2">
                     <div class="min-w-0">
                       <div class="flex items-center gap-1.5 flex-wrap mb-1">
-                        {showCount >= 2 ? (
+                        {isWikidata ? (
+                          <span class="inline-flex items-center gap-1 text-[10.5px] font-medium px-2 py-0.5 rounded-full bg-violet-50 text-violet-700 border border-violet-200/80">
+                            Set in {city.name} · Wikidata
+                          </span>
+                        ) : showCount >= 2 ? (
                           <span class="inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
                             ★ {showCount} shows agree
                           </span>
@@ -282,10 +293,16 @@ function getBookCoverUrl(isbn?: string | null): string | null {
                       </button>
                     )}
                   </div>
-                  <div class="text-xs text-stone-400 mt-1.5">
-                    {showCount >= 2 ? 'Recommended on ' : 'Mentioned on '}
-                    <span class="text-stone-700 font-medium">{showsLabel}</span>
-                  </div>
+                  {isWikidata ? (
+                    <div class="text-xs text-stone-400 mt-1.5">
+                      Literary setting via <span class="text-stone-700 font-medium">Wikidata</span>
+                    </div>
+                  ) : showsLabel ? (
+                    <div class="text-xs text-stone-400 mt-1.5">
+                      {showCount >= 2 ? 'Recommended on ' : 'Mentioned on '}
+                      <span class="text-stone-700 font-medium">{showsLabel}</span>
+                    </div>
+                  ) : null}
                 </div>
               </div>
 
@@ -343,6 +360,31 @@ function getBookCoverUrl(isbn?: string | null): string | null {
                     >
                       {item.type}
                     </span>
+                    {item.isUnesco && (
+                      item.unescoId ? (
+                        <a
+                          href={`https://whc.unesco.org/en/list/${encodeURIComponent(item.unescoId)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={item.unescoName || 'UNESCO World Heritage Site'}
+                          class="inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-800 border border-indigo-200 hover:bg-indigo-100 transition"
+                        >
+                          UNESCO
+                        </a>
+                      ) : (
+                        <span
+                          title={item.unescoName || 'UNESCO World Heritage Site'}
+                          class="inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-800 border border-indigo-200"
+                        >
+                          UNESCO
+                        </span>
+                      )
+                    )}
+                    {item.source === 'nps' && (
+                      <span class="inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200">
+                        NPS Audio · Public Domain
+                      </span>
+                    )}
                     {showCount >= 2 && (
                       <span class="inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
                         ★ {showCount} shows agree

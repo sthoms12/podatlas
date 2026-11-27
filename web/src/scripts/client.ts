@@ -27,6 +27,15 @@ const OPENFREEMAP_STYLE = 'https://tiles.openfreemap.org/styles/positron';
 const SPEEDS = [1, 1.25, 1.5, 2];
 const MENTION_WINDOW_SEC = 75;
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 interface ClientRuntime {
   initializedPersisted: boolean;
   map: maplibregl.Map | null;
@@ -506,25 +515,57 @@ async function initMapOnce(): Promise<void> {
       if (!feature) return;
       const geom = feature.geometry as GeoJSON.Point;
       const props = feature.properties;
+      const epId = String(props.episodeId || '');
       const sec = Number(props.timestampSec || 0);
       const name = String(props.name || '');
       const note = String(props.note || '');
+      const isUnesco = Boolean(props.isUnesco);
+      const unescoId = String(props.unescoId || '');
+      const unescoName = String(props.unescoName || '');
+      const source = String(props.source || 'podcast');
       const cityName = String(props.cityName || runtime.currentCity?.name || '');
       const mapsUrl = buildGoogleMapsUrl({ name }, cityName);
 
-      if (runtime.currentEpisode) {
+      if (epId && runtime.currentEpisode && runtime.currentEpisode.id === epId) {
         seekTo(sec);
       }
+
+      const badges: string[] = [];
+      if (isUnesco) {
+        const unescoTitle = escapeHtml(unescoName || 'UNESCO World Heritage Site');
+        if (unescoId) {
+          badges.push(
+            `<a href="https://whc.unesco.org/en/list/${encodeURIComponent(unescoId)}" target="_blank" rel="noopener noreferrer" title="${unescoTitle}" style="display:inline-flex;align-items:center;font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:9999px;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;text-decoration:none">UNESCO World Heritage</a>`
+          );
+        } else {
+          badges.push(
+            `<span title="${unescoTitle}" style="display:inline-flex;align-items:center;font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:9999px;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe">UNESCO World Heritage</span>`
+          );
+        }
+      }
+      if (source === 'nps') {
+        badges.push(
+          `<span style="display:inline-flex;align-items:center;font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:9999px;background:#f0fdfa;color:#115e59;border:1px solid #99f6e4">NPS</span>`
+        );
+      }
+      const badgeRow =
+        badges.length > 0
+          ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px">${badges.join('')}</div>`
+          : '';
+      const timeHtml = epId
+        ? `<span style="font-family:monospace;color:#0369a1;font-weight:600">▶ ${formatTime(sec)}</span>`
+        : '<span></span>';
 
       storyPopup
         .setLngLat(geom.coordinates as [number, number])
         .setHTML(
           `<div style="font-size:12.5px;line-height:1.45;color:#1c1917">
-            <div style="font-weight:700">${props.index}. ${name}</div>
-            <div style="color:#57534e;margin-top:3px">${note}</div>
+            <div style="font-weight:700">${escapeHtml(String(props.index ?? ''))}. ${escapeHtml(name)}</div>
+            ${badgeRow}
+            <div style="color:#57534e;margin-top:3px">${escapeHtml(note)}</div>
             <div style="margin-top:6px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11.5px">
-              <span style="font-family:monospace;color:#0369a1;font-weight:600">▶ ${formatTime(sec)}</span>
-              <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" style="color:#0284c7;font-weight:600;text-decoration:none">Google Maps ↗</a>
+              ${timeHtml}
+              <a href="${escapeHtml(mapsUrl)}" target="_blank" rel="noopener noreferrer" style="color:#0284c7;font-weight:600;text-decoration:none">Google Maps ↗</a>
             </div>
           </div>`
         )
@@ -693,6 +734,10 @@ function activateStoryMap(
       timestampSec: p.timestampSec,
       episodeId: p.episodeId,
       cityName: city.name,
+      isUnesco: Boolean(p.isUnesco),
+      unescoId: p.unescoId ?? '',
+      unescoName: p.unescoName ?? '',
+      source: p.source ?? 'podcast',
     },
   }));
 
@@ -1037,7 +1082,11 @@ function playEpisode(episode: EpisodeRecord, city: CityData, startSec = 0): void
   const markersEl = document.getElementById('podatlas-mention-markers');
 
   if (titleEl) titleEl.textContent = episode.title;
-  if (showEl) showEl.textContent = `${episode.show} · ${city.name}, ${city.country}`;
+  if (showEl) {
+    showEl.textContent = episode.show
+      ? `${episode.show} · ${city.name}, ${city.country}`
+      : `${city.name}, ${city.country}`;
+  }
 
   if (markersEl) {
     markersEl.innerHTML = '';
@@ -1398,7 +1447,7 @@ function bindCurrentPageElements(): void {
       const name = focusBtn.dataset.focusPlaceName || '';
       const epId = focusBtn.dataset.focusPlaceEp || '';
       if (Number.isFinite(lat) && Number.isFinite(lon)) {
-        const ep = city.episodes.find((item) => item.id === epId) || null;
+        const ep = epId ? city.episodes.find((item) => item.id === epId) || null : null;
         setMobileView('map');
         activateStoryMap(ep, city, { lat, lon, name });
         showFlightToast(`Zooming to ${name}`);
@@ -1409,8 +1458,9 @@ function bindCurrentPageElements(): void {
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-play-ep]');
     if (!btn || !city) return;
     const epId = btn.dataset.playEp;
+    if (!epId) return;
     const startSec = Number(btn.dataset.startSec || 0);
-    const ep = city.episodes.find((item) => item.id === epId) || city.episodes[0];
+    const ep = city.episodes.find((item) => item.id === epId);
     if (ep) {
       playEpisode(ep, city, startSec);
     }

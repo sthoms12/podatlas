@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 from .config import PipelineSettings
@@ -19,6 +20,7 @@ from .models import (
     EpisodeRecord,
     PlaceOrGearRecord,
 )
+from .nps import NPSClient, ingest_nps_parks
 from .open_datasets import (
     LOCATIONS_DATASET_URL,
     RECOMMENDATIONS_DATASET_URL,
@@ -35,9 +37,15 @@ from .podcast_index import (
     fetch_transcript_if_available,
     is_skippable_episode,
     load_shows_csv,
+    parse_content_encoded_to_segments,
 )
 from .transcribe import WhisperTranscriber
+from .unesco import UnescoIndex
 from .verify_books import OpenLibraryVerifier
+from .wikidata_books import (
+    WikidataBookClient,
+    fill_cold_start_books as fill_cold_start_city_books,
+)
 
 
 def _load_checkpoint(path: Path) -> set[str]:
@@ -86,6 +94,7 @@ def merge_extraction_into_cities(
     geonames: GeoNamesIndex,
     book_verifier: OpenLibraryVerifier | None = None,
     place_geocoder: PlaceGeocoder | None = None,
+    unesco_index: UnescoIndex | None = None,
 ) -> int:
     """Idempotently merge one episode's extraction into cities_by_id. Returns cities updated."""
     if not extraction.isDestinationFocused or not extraction.primaryCities:
@@ -139,6 +148,7 @@ def merge_extraction_into_cities(
                     author=final_author,
                     isbn=verified.isbn if verified else None,
                     openLibraryKey=verified.open_library_key if verified else None,
+                    wikidataId=verified.wikidata_id if verified else None,
                     episodeId=cached_ep.id,
                     show=cached_ep.showTitle,
                     timestampSec=b.timestampSec,
@@ -155,7 +165,22 @@ def merge_extraction_into_cities(
                 continue
             existing_place_keys.add(place_key)
             coords: tuple[float, float] | None = None
-            if place_geocoder and pl.type in {"Landmark", "Food"}:
+            is_unesco = False
+            unesco_id: str | None = None
+            unesco_name: str | None = None
+            if unesco_index is not None and pl.type == "Landmark":
+                unesco_match = unesco_index.match(
+                    pl.name,
+                    geo.lat,
+                    geo.lon,
+                    country_code=geo.country_code,
+                )
+                if unesco_match is not None:
+                    coords = (unesco_match.lat, unesco_match.lon)
+                    is_unesco = True
+                    unesco_id = unesco_match.unesco_id
+                    unesco_name = unesco_match.name
+            if coords is None and place_geocoder and pl.type in {"Landmark", "Food"}:
                 coords = place_geocoder.geocode(
                     pl.name,
                     geo.name,
@@ -175,6 +200,9 @@ def merge_extraction_into_cities(
                     lon=coords[1] if coords else None,
                     endorsement=pl.endorsement,
                     mentionedByShows=[cached_ep.showTitle],
+                    isUnesco=is_unesco,
+                    unescoId=unesco_id,
+                    unescoName=unesco_name,
                 )
             )
             m_type = "gear" if pl.type == "Gear" else "place"
@@ -213,6 +241,7 @@ def run_transcribe_pass(max_episodes: int | None = None) -> dict[str, int]:
 
     stats = {
         "cachedFromRss": 0,
+        "cachedFromContentEncoded": 0,
         "transcribedWithWhisper": 0,
         "skippedAlreadyCached": 0,
         "skippedFiltered": 0,
@@ -244,12 +273,22 @@ def run_transcribe_pass(max_episodes: int | None = None) -> dict[str, int]:
 
             segments = fetch_transcript_if_available(raw_ep.transcript_url)
             source: str = "rss_tag"
-            if not segments:
-                segments = transcriber.transcribe_audio_url(raw_ep.audio_url)
-                source = "faster_whisper"
-                stats["transcribedWithWhisper"] += 1
-            else:
+            if segments:
                 stats["cachedFromRss"] += 1
+            else:
+                segments = parse_content_encoded_to_segments(
+                    raw_ep.content_encoded,
+                    duration_sec=raw_ep.duration_sec,
+                )
+                if segments:
+                    source = "content_encoded"
+                    stats["cachedFromContentEncoded"] += 1
+                elif raw_ep.audio_url:
+                    segments = transcriber.transcribe_audio_url(raw_ep.audio_url)
+                    source = "faster_whisper"
+                    stats["transcribedWithWhisper"] += 1
+                else:
+                    continue
 
             save_cached_transcript(
                 settings.cache_dir,
@@ -283,6 +322,10 @@ def run_extract_pass(
     verify_books: bool = True,
     geocode_places: bool = True,
     reprocess: bool = False,
+    use_unesco: bool = True,
+    use_wikidata: bool = True,
+    fill_cold_start_books: bool = False,
+    min_city_books: int = 3,
 ) -> dict[str, int]:
     """Pass 2: Run vLLM JSON extraction over cached transcripts, geocode, verify books, and export."""
     settings = PipelineSettings()
@@ -290,13 +333,22 @@ def run_extract_pass(
     processed = _load_checkpoint(checkpoint_path)
 
     geonames = GeoNamesIndex.download_and_load(settings.cache_dir)
+    unesco_index = UnescoIndex.download_and_load(settings.cache_dir) if use_unesco else None
+    wikidata_client = (
+        WikidataBookClient(cache_path=settings.cache_dir / "wikidata_books_cache.json")
+        if use_wikidata
+        else None
+    )
     extractor = LLMExtractor(
         base_url=settings.llm_base_url,
         api_key=settings.llm_api_key,
         model=settings.llm_model,
     )
     book_verifier = (
-        OpenLibraryVerifier(cache_path=settings.cache_dir / "open_library_cache.json")
+        OpenLibraryVerifier(
+            cache_path=settings.cache_dir / "open_library_cache.json",
+            fallback_verifier=wikidata_client,
+        )
         if verify_books
         else None
     )
@@ -328,6 +380,7 @@ def run_extract_pass(
             geonames=geonames,
             book_verifier=book_verifier,
             place_geocoder=place_geocoder,
+            unesco_index=unesco_index,
         )
         city_names = [c.city for c in extraction.primaryCities]
         print(
@@ -340,12 +393,22 @@ def run_extract_pass(
         # Save checkpoint incrementally so Colab disconnects never lose progress
         _save_checkpoint(checkpoint_path, processed)
 
+    cold_start_added = 0
+    if fill_cold_start_books and wikidata_client is not None:
+        cold_start_added = fill_cold_start_city_books(
+            cities_by_id,
+            wikidata_client,
+            geonames_index=geonames,
+            min_books=min_city_books,
+        )
+
     stats = export_static_site_data(
         list(cities_by_id.values()),
         output_dir=settings.output_dir,
         site_base_url=settings.site_base_url,
     )
     stats["episodesExtractedThisRun"] = extracted_count
+    stats["coldStartBooksAdded"] = cold_start_added
     return stats
 
 
@@ -410,6 +473,50 @@ def run_discover_feeds(
     }
 
 
+def run_ingest_nps(
+    park_code: str | None = None,
+    limit: int = 25,
+) -> dict[str, object]:
+    """Ingest official public-domain NPS parks, /audio tours, and /places into static site data."""
+    settings = PipelineSettings()
+    api_key = (settings.nps_api_key or os.environ.get("NPS_API_KEY", "")).strip()
+    if not api_key:
+        return {
+            "skipped": True,
+            "reason": "PODATLAS_NPS_API_KEY not set",
+            "parksIngested": 0,
+            "episodesAdded": 0,
+            "placesAdded": 0,
+        }
+
+    existing_cities = load_existing_cities(settings.output_dir)
+    before_cities = len(existing_cities)
+    before_eps = sum(len(c.episodes) for c in existing_cities.values())
+    before_places = sum(len(c.placesAndGear) for c in existing_cities.values())
+
+    client = NPSClient(api_key=api_key, cache_dir=settings.cache_dir / "nps")
+    merged = ingest_nps_parks(
+        client,
+        park_code=park_code,
+        limit=limit,
+        existing_cities=existing_cities,
+    )
+    export_stats = export_static_site_data(
+        list(merged.values()),
+        output_dir=settings.output_dir,
+        site_base_url=settings.site_base_url,
+    )
+    after_eps = sum(len(c.episodes) for c in merged.values())
+    after_places = sum(len(c.placesAndGear) for c in merged.values())
+    return {
+        "skipped": False,
+        "parksIngested": max(0, len(merged) - before_cities),
+        "episodesAdded": max(0, after_eps - before_eps),
+        "placesAdded": max(0, after_places - before_places),
+        **export_stats,
+    }
+
+
 def validate_output(output_dir: Path) -> dict[str, int]:
     cities = load_existing_cities(output_dir)
     return {
@@ -431,12 +538,29 @@ def main() -> None:
     p2.add_argument("--max-episodes", type=int, default=None, help="Max cached episodes to extract this run")
     p2.add_argument("--skip-book-verify", action="store_true", help="Skip Open Library API verification")
     p2.add_argument("--skip-place-geocode", action="store_true", help="Skip OSM Nominatim place geocoding")
+    p2.add_argument("--skip-unesco", action="store_true", help="Skip UNESCO World Heritage landmark matching")
+    p2.add_argument("--skip-wikidata", action="store_true", help="Skip Wikidata fallback book verification")
+    p2.add_argument(
+        "--fill-cold-start-books",
+        action="store_true",
+        help="Fill cold-start cities with Wikidata P840 books",
+    )
+    p2.add_argument(
+        "--min-city-books",
+        type=int,
+        default=3,
+        help="Minimum books per city before cold-start Wikidata filling triggers",
+    )
     p2.add_argument("--reprocess", action="store_true", help="Re-run extraction over already processed transcripts")
 
     run_cmd = sub.add_parser("run", help="Run Pass 1 (transcribe) followed by Pass 2 (extract)")
     run_cmd.add_argument("--max-episodes", type=int, default=None)
     run_cmd.add_argument("--skip-book-verify", action="store_true")
     run_cmd.add_argument("--skip-place-geocode", action="store_true")
+    run_cmd.add_argument("--skip-unesco", action="store_true")
+    run_cmd.add_argument("--skip-wikidata", action="store_true")
+    run_cmd.add_argument("--fill-cold-start-books", action="store_true")
+    run_cmd.add_argument("--min-city-books", type=int, default=3)
 
     sub.add_parser("check-feeds", help="CPU-only check of all RSS feeds in shows.csv")
 
@@ -449,6 +573,13 @@ def main() -> None:
     disc_cmd.add_argument("--query", type=str, default="", help="Optional keyword filter on title/locale")
     disc_cmd.add_argument("--limit", type=int, default=25, help="Max candidates to return")
     disc_cmd.add_argument("--write-csv", type=Path, default=None, help="Optional path to export candidates as CSV")
+
+    nps_cmd = sub.add_parser(
+        "ingest-nps",
+        help="Ingest public-domain U.S. National Park Service /parks, /audio, and /places data",
+    )
+    nps_cmd.add_argument("--park-code", type=str, default=None, help="Optional NPS park code (e.g. yell, yose)")
+    nps_cmd.add_argument("--limit", type=int, default=25, help="Max parks to ingest")
 
     val_cmd = sub.add_parser("validate", help="Validate exported static JSON files")
     val_cmd.add_argument("--output-dir", type=Path, default=Path("../web/public"))
@@ -464,6 +595,10 @@ def main() -> None:
                     verify_books=not args.skip_book_verify,
                     geocode_places=not args.skip_place_geocode,
                     reprocess=args.reprocess,
+                    use_unesco=not args.skip_unesco,
+                    use_wikidata=not args.skip_wikidata,
+                    fill_cold_start_books=args.fill_cold_start_books,
+                    min_city_books=args.min_city_books,
                 ),
                 indent=2,
             )
@@ -474,6 +609,10 @@ def main() -> None:
             max_episodes=args.max_episodes,
             verify_books=not args.skip_book_verify,
             geocode_places=not args.skip_place_geocode,
+            use_unesco=not args.skip_unesco,
+            use_wikidata=not args.skip_wikidata,
+            fill_cold_start_books=args.fill_cold_start_books,
+            min_city_books=args.min_city_books,
         )
         print(json.dumps({"transcribe": t_stats, "extract": e_stats}, indent=2))
     elif args.command == "check-feeds":
@@ -481,6 +620,7 @@ def main() -> None:
         ok_count = sum(1 for r in results if r["ok"])
         free_tx = sum(int(r["withFreeTranscript"]) for r in results)  # type: ignore[arg-type]
         with_loc = sum(int(r["withSubjectLocation"]) for r in results)  # type: ignore[arg-type]
+        with_content_encoded = sum(int(r.get("withContentEncoded", 0)) for r in results)  # type: ignore[arg-type]
         print(
             json.dumps(
                 {
@@ -488,6 +628,7 @@ def main() -> None:
                     "feedsTotal": len(results),
                     "freeTranscriptEpisodes": free_tx,
                     "subjectLocationEpisodes": with_loc,
+                    "contentEncodedEpisodes": with_content_encoded,
                     "details": results,
                 },
                 indent=2,
@@ -502,6 +643,16 @@ def main() -> None:
                     query=args.query,
                     limit=args.limit,
                     write_csv=args.write_csv,
+                ),
+                indent=2,
+            )
+        )
+    elif args.command == "ingest-nps":
+        print(
+            json.dumps(
+                run_ingest_nps(
+                    park_code=args.park_code,
+                    limit=args.limit,
                 ),
                 indent=2,
             )

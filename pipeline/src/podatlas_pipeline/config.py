@@ -11,6 +11,7 @@ class PipelineSettings(BaseSettings):
 
     podcast_index_key: str = ""
     podcast_index_secret: str = ""
+    nps_api_key: str = ""
     llm_base_url: str = "http://localhost:8000/v1"
     llm_api_key: str = "EMPTY"
     llm_model: str = "Qwen/Qwen2.5-7B-Instruct"

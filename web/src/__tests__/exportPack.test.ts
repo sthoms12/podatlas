@@ -95,4 +95,149 @@ describe('exportPack generators', () => {
     expect(opml).toContain('PodAtlas Trip Playlist — Kyoto, Japan');
     expect(opml).toContain('History of Japan Podcast');
   });
+
+  it('emits [UNESCO World Heritage] in KML only for UNESCO landmarks', () => {
+    const cityWithUnesco: CityData = {
+      ...SAMPLE_CITY,
+      placesAndGear: [
+        {
+          name: 'Kinkaku-ji',
+          type: 'Landmark',
+          note: 'Golden Pavilion reflecting in the pond.',
+          episodeId: 'ky-1',
+          timestampSec: 600,
+          show: 'History of Japan Podcast',
+          lat: 35.0394,
+          lon: 135.7292,
+          isUnesco: true,
+          unescoId: '688',
+          unescoName: 'Historic Monuments of Ancient Kyoto',
+        },
+        ...SAMPLE_CITY.placesAndGear,
+      ],
+    };
+
+    const kml = buildCityKml(cityWithUnesco);
+    expect(kml).toContain(
+      '<description>[Landmark] [UNESCO World Heritage] Golden Pavilion reflecting in the pond. (History of Japan Podcast @ 10:00)</description>'
+    );
+    expect(kml).toContain(
+      '<description>[Landmark] Recommended by 2 shows. Quiet mossy gate. (History of Japan Podcast @ 18:40)</description>'
+    );
+  });
+
+  it('omits empty show and timestamp suffixes in KML for standalone NPS places', () => {
+    const npsCity: CityData = {
+      ...SAMPLE_CITY,
+      placesAndGear: [
+        {
+          name: 'Yosemite Valley Overlook',
+          type: 'Landmark',
+          note: 'Granite cliffs and glacial valley.',
+          episodeId: '',
+          timestampSec: 0,
+          show: '',
+          lat: 37.7456,
+          lon: -119.5936,
+          source: 'nps',
+          isUnesco: true,
+          unescoId: '308',
+          unescoName: 'Yosemite National Park',
+        },
+      ],
+    };
+
+    const kml = buildCityKml(npsCity);
+    expect(kml).toContain(
+      '<description>[Landmark] [UNESCO World Heritage] Granite cliffs and glacial valley.</description>'
+    );
+    expect(kml).not.toContain('(@ 00:00)');
+    expect(kml).not.toContain('()');
+  });
+
+  it('formats UNESCO places, standalone NPS places, and Wikidata cold-start books cleanly in itinerary text', () => {
+    const expandedCity: CityData = {
+      ...SAMPLE_CITY,
+      episodes: [
+        ...SAMPLE_CITY.episodes,
+        {
+          id: 'nps-1',
+          show: 'National Park Service',
+          title: 'Ranger Walk Through the Cedar Grove',
+          category: 'History',
+          audioUrl: 'https://www.nps.gov/audio/cedar.mp3',
+          durationSec: 420,
+          publishedAt: '2026-08-01',
+          summary: 'Public domain ranger tour.',
+          mentions: [],
+          source: 'nps',
+        },
+      ],
+      books: [
+        ...SAMPLE_CITY.books,
+        {
+          title: 'The Temple of the Golden Pavilion',
+          author: 'Yukio Mishima',
+          episodeId: '',
+          show: '',
+          timestampSec: 0,
+          quote: '',
+          wikidataId: 'Q1197296',
+          source: 'wikidata',
+        },
+      ],
+      placesAndGear: [
+        {
+          name: 'Kinkaku-ji',
+          type: 'Landmark',
+          note: 'Golden Pavilion.',
+          episodeId: '',
+          timestampSec: 0,
+          show: '',
+          lat: 35.0394,
+          lon: 135.7292,
+          isUnesco: true,
+          unescoId: '688',
+          source: 'nps',
+        },
+      ],
+    };
+
+    const txt = buildTripItineraryText(expandedCity);
+    expect(txt).toContain(
+      '- The Temple of the Golden Pavilion by Yukio Mishima [Set in Kyoto]'
+    );
+    expect(txt).toContain(
+      '- [Landmark] [UNESCO World Heritage] Kinkaku-ji (35.0394, 135.7292): Golden Pavilion.'
+    );
+    expect(txt).toContain('Ranger Walk Through the Cedar Grove [NPS Audio]');
+    expect(txt).not.toContain('(@ 00:00)');
+    expect(txt).not.toContain('( @ 00:00)');
+  });
+
+  it('escapes XML special characters for UNESCO places in KML', () => {
+    const specialCity: CityData = {
+      ...SAMPLE_CITY,
+      placesAndGear: [
+        {
+          name: 'St. Peter & Paul <Cathedral>',
+          type: 'Landmark',
+          note: 'Known for bells & mosaics > 500 years old.',
+          episodeId: '',
+          timestampSec: 0,
+          show: '',
+          lat: 41.9022,
+          lon: 12.4539,
+          isUnesco: true,
+          unescoId: '91',
+        },
+      ],
+    };
+
+    const kml = buildCityKml(specialCity);
+    expect(kml).toContain('<name>St. Peter &amp; Paul &lt;Cathedral&gt;</name>');
+    expect(kml).toContain(
+      '<description>[Landmark] [UNESCO World Heritage] Known for bells &amp; mosaics &gt; 500 years old.</description>'
+    );
+  });
 });

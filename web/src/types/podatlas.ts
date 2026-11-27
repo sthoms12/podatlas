@@ -21,6 +21,7 @@ export interface EpisodeRecord {
   publishedAt: string;
   summary: string;
   mentions: EpisodeMention[];
+  source?: 'podcast' | 'nps' | 'substack';
 }
 
 export interface BookRecord {
@@ -36,6 +37,8 @@ export interface BookRecord {
   mentionCount?: number;
   uniqueShowCount?: number;
   mentionedByShows?: string[];
+  wikidataId?: string | null;
+  source?: 'podcast' | 'wikidata';
 }
 
 export interface PlaceOrGearRecord {
@@ -51,6 +54,10 @@ export interface PlaceOrGearRecord {
   mentionCount?: number;
   uniqueShowCount?: number;
   mentionedByShows?: string[];
+  isUnesco?: boolean;
+  unescoId?: string | null;
+  unescoName?: string | null;
+  source?: 'podcast' | 'nps';
 }
 
 export interface CityData {
