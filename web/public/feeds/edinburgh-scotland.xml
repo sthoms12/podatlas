@@ -2,8 +2,8 @@
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>PodAtlas: Edinburgh, Scotland Podcast Playlist</title>
-    <link>https://podatlas.pages.dev/city/edinburgh-scotland</link>
-    <atom:link href="https://podatlas.pages.dev/feeds/edinburgh-scotland.xml" rel="self" type="application/rss+xml" />
+    <link>https://podatlas.app/city/edinburgh-scotland</link>
+    <atom:link href="https://podatlas.app/feeds/edinburgh-scotland.xml" rel="self" type="application/rss+xml" />
     <description>Volcanic crags, underground closes, Enlightenment pubs, and literary ghosts.</description>
     <language>en-us</language>
     <itunes:author>PodAtlas</itunes:author>
@@ -11,7 +11,7 @@
     <item>
       <title>In Our Time (BBC) — The Scottish Enlightenment: Hume, Smith &amp; Old Town Taverns</title>
       <guid isPermaLink="false">podatlas:edinburgh-scotland:ed-1</guid>
-      <link>https://podatlas.pages.dev/city/edinburgh-scotland</link>
+      <link>https://podatlas.app/city/edinburgh-scotland</link>
       <pubDate>Fri, 18 Sep 2026 00:00:00 +0000</pubDate>
       <description>In Our Time (BBC): How a smoky, overcrowded 18th-century hill town invented modern economics and philosophy.
 
@@ -24,7 +24,7 @@ Mentioned:
     <item>
       <title>Rick Steves Audio Europe — Royal Mile Secrets, Arthur’s Seat &amp; Dean Village</title>
       <guid isPermaLink="false">podatlas:edinburgh-scotland:ed-2</guid>
-      <link>https://podatlas.pages.dev/city/edinburgh-scotland</link>
+      <link>https://podatlas.app/city/edinburgh-scotland</link>
       <pubDate>Mon, 26 Oct 2026 00:00:00 +0000</pubDate>
       <description>Rick Steves Audio Europe: A self-guided walking loop from Calton Hill down into hidden riverside Dean Village.
 

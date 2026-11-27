@@ -359,7 +359,7 @@ def build_sitemap_xml(cities: list[CityData], base_url: str) -> str:
 def export_static_site_data(
     cities: list[CityData],
     output_dir: Path,
-    site_base_url: str = "https://podatlas.pages.dev",
+    site_base_url: str = "https://podatlas.app",
 ) -> dict[str, int]:
     """Write cities.geojson, data/{city}.json, feeds/{city}.xml, maps/{city}.kml, search-index.json, and sitemap.xml."""
     output_dir.mkdir(parents=True, exist_ok=True)

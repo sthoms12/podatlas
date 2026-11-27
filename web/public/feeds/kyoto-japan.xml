@@ -2,8 +2,8 @@
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>PodAtlas: Kyoto, Japan Podcast Playlist</title>
-    <link>https://podatlas.pages.dev/city/kyoto-japan</link>
-    <atom:link href="https://podatlas.pages.dev/feeds/kyoto-japan.xml" rel="self" type="application/rss+xml" />
+    <link>https://podatlas.app/city/kyoto-japan</link>
+    <atom:link href="https://podatlas.app/feeds/kyoto-japan.xml" rel="self" type="application/rss+xml" />
     <description>Former imperial capital packed with Zen gardens, Edo-era lore, and century-old ramen &amp; matcha shops.</description>
     <language>en-us</language>
     <itunes:author>PodAtlas</itunes:author>
@@ -11,7 +11,7 @@
     <item>
       <title>History of Japan Podcast — Walking the Tokaido: Kyoto at the Dawn of the Edo Era</title>
       <guid isPermaLink="false">podatlas:kyoto-japan:ky-1</guid>
-      <link>https://podatlas.pages.dev/city/kyoto-japan</link>
+      <link>https://podatlas.app/city/kyoto-japan</link>
       <pubDate>Mon, 14 Sep 2026 00:00:00 +0000</pubDate>
       <description>History of Japan Podcast: Traces merchant life, geisha districts in Gion, and why Kyoto survived WWII bombing lists.
 
@@ -26,7 +26,7 @@ Mentioned:
     <item>
       <title>Zero to Travel — Kyoto Beyond the Crowds: Backstreet Temples &amp; Dawn Walks</title>
       <guid isPermaLink="false">podatlas:kyoto-japan:ky-2</guid>
-      <link>https://podatlas.pages.dev/city/kyoto-japan</link>
+      <link>https://podatlas.app/city/kyoto-japan</link>
       <pubDate>Fri, 02 Oct 2026 00:00:00 +0000</pubDate>
       <description>Zero to Travel: How to beat 9 AM tour buses at Fushimi Inari, plus hidden northern Zen gardens and rail pass math.
 
@@ -40,7 +40,7 @@ Mentioned:
     <item>
       <title>The Sporkful — Inside Kyoto’s 400-Year-Old Tofu &amp; Matcha Craft</title>
       <guid isPermaLink="false">podatlas:kyoto-japan:ky-3</guid>
-      <link>https://podatlas.pages.dev/city/kyoto-japan</link>
+      <link>https://podatlas.app/city/kyoto-japan</link>
       <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
       <description>The Sporkful: Why soft mountain water made Kyoto the capital of kaiseki dining and Uji ceremonial matcha.
 

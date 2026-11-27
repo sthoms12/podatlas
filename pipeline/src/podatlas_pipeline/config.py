@@ -21,5 +21,5 @@ class PipelineSettings(BaseSettings):
     shows_csv: Path = Path("shows.csv")
     cache_dir: Path = Path("cache")
     output_dir: Path = Path("../web/public")
-    site_base_url: str = "https://podatlas.pages.dev"
+    site_base_url: str = "https://podatlas.app"
     min_duration_sec: int = 600

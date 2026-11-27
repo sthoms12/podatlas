@@ -2,8 +2,8 @@
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>PodAtlas: Mexico City, Mexico Podcast Playlist</title>
-    <link>https://podatlas.pages.dev/city/mexico-city-mexico</link>
-    <atom:link href="https://podatlas.pages.dev/feeds/mexico-city-mexico.xml" rel="self" type="application/rss+xml" />
+    <link>https://podatlas.app/city/mexico-city-mexico</link>
+    <atom:link href="https://podatlas.app/feeds/mexico-city-mexico.xml" rel="self" type="application/rss+xml" />
     <description>Aztec canals beneath leafy Art Deco neighborhoods and the greatest street-food capital in the Americas.</description>
     <language>en-us</language>
     <itunes:author>PodAtlas</itunes:author>
@@ -11,7 +11,7 @@
     <item>
       <title>Proof (America’s Test Kitchen) — Tacos al Pastor: From Lebanese Spit to CDMX Street Icon</title>
       <guid isPermaLink="false">podatlas:mexico-city-mexico:mx-1</guid>
-      <link>https://podatlas.pages.dev/city/mexico-city-mexico</link>
+      <link>https://podatlas.app/city/mexico-city-mexico</link>
       <pubDate>Sun, 18 Oct 2026 00:00:00 +0000</pubDate>
       <description>Proof (America’s Test Kitchen): How 1920s Lebanese immigrants in Puebla sparked Mexico City’s late-night trompo revolution.
 
@@ -25,7 +25,7 @@ Mentioned:
     <item>
       <title>99% Invisible — The Sinking City Built on Lake Texcoco</title>
       <guid isPermaLink="false">podatlas:mexico-city-mexico:mx-2</guid>
-      <link>https://podatlas.pages.dev/city/mexico-city-mexico</link>
+      <link>https://podatlas.app/city/mexico-city-mexico</link>
       <pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate>
       <description>99% Invisible: Why Mexico City’s palaces tilt sideways and how engineers battle geology every day.
 

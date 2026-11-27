@@ -2,8 +2,8 @@
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>PodAtlas: New Orleans, USA Podcast Playlist</title>
-    <link>https://podatlas.pages.dev/city/new-orleans-usa</link>
-    <atom:link href="https://podatlas.pages.dev/feeds/new-orleans-usa.xml" rel="self" type="application/rss+xml" />
+    <link>https://podatlas.app/city/new-orleans-usa</link>
+    <atom:link href="https://podatlas.app/feeds/new-orleans-usa.xml" rel="self" type="application/rss+xml" />
     <description>Brass bands, Congo Square jazz roots, gumbo debates, and Creole architecture.</description>
     <language>en-us</language>
     <itunes:author>PodAtlas</itunes:author>
@@ -11,7 +11,7 @@
     <item>
       <title>A History of Rock Music in 500 Songs — How New Orleans Second Lines Invented Modern Rhythm</title>
       <guid isPermaLink="false">podatlas:new-orleans-usa:no-1</guid>
-      <link>https://podatlas.pages.dev/city/new-orleans-usa</link>
+      <link>https://podatlas.app/city/new-orleans-usa</link>
       <pubDate>Thu, 03 Sep 2026 00:00:00 +0000</pubDate>
       <description>A History of Rock Music in 500 Songs: From Congo Square drumming to Professor Longhair and Preservation Hall.
 
@@ -25,7 +25,7 @@ Mentioned:
     <item>
       <title>Gravy (Southern Foodways) — Dark Roux Diplomacy: Gumbo Across Bayou &amp; City</title>
       <guid isPermaLink="false">podatlas:new-orleans-usa:no-2</guid>
-      <link>https://podatlas.pages.dev/city/new-orleans-usa</link>
+      <link>https://podatlas.app/city/new-orleans-usa</link>
       <pubDate>Thu, 22 Oct 2026 00:00:00 +0000</pubDate>
       <description>Gravy (Southern Foodways): Creole vs. Cajun gumbo lineages and the family kitchens keeping Bywater and Tremé fed.
 

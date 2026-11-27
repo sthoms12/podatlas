@@ -17,17 +17,136 @@ interface Props {
 
 const { city, geoJson, mode = 'city', pageTitle } = Astro.props;
 const isWelcome = mode === 'welcome';
+const siteOrigin = Astro.site?.toString().replace(/\/+$/, '') || 'https://podatlas.app';
+const canonicalPath = isWelcome ? '/' : `/city/${encodeURIComponent(city.id)}`;
+const pageUrl = new URL(canonicalPath, `${siteOrigin}/`).toString();
+
 const title =
   pageTitle ??
   (isWelcome
-    ? 'PodAtlas — Spin the Globe, Hear the City'
-    : `${city.name}, ${city.country} — PodAtlas`);
+    ? 'PodAtlas — Interactive Podcast World Map, Travel & History Podcasts'
+    : `Best Podcasts & Books About ${city.name}, ${city.country} — Audio Map & Guide | PodAtlas`);
 const description = isWelcome
   ? 'Interactive 3D Podcast World Map: pick any city to stream curated travel, history, food & culture podcasts with every book, restaurant, and landmark linked to its exact timestamp.'
-  : `${city.tagline} Explore ${city.episodes.length} podcast episodes, ${city.books.length} books, and ${city.placesAndGear.length} places & gear for ${city.name}.`;
+  : `Listen to ${city.episodes.length} curated podcasts about ${city.name}, ${city.country}, plus ${city.books.length} mentioned books, ${city.placesAndGear.length} landmarks & gear, an interactive Story Map, and free RSS/KML trip exports. ${city.tagline}`;
+
+const jsonLd: Record<string, unknown>[] = isWelcome
+  ? [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'PodAtlas',
+        url: siteOrigin,
+        description,
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        name: 'PodAtlas',
+        url: siteOrigin,
+        applicationCategory: 'TravelApplication',
+        operatingSystem: 'Web',
+        description,
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+        },
+      },
+    ]
+  : [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'PodAtlas World Map',
+            item: siteOrigin,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: `${city.name}, ${city.country}`,
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'TouristDestination',
+        name: `${city.name}, ${city.country}`,
+        description: city.tagline,
+        url: pageUrl,
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: city.lat,
+          longitude: city.lon,
+        },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: `Podcasts About ${city.name}, ${city.country}`,
+        numberOfItems: city.episodes.length,
+        itemListElement: city.episodes.map((ep, idx) => ({
+          '@type': 'ListItem',
+          position: idx + 1,
+          item: {
+            '@type': 'PodcastEpisode',
+            name: ep.title,
+            description: ep.summary,
+            datePublished: ep.publishedAt,
+            partOfSeries: {
+              '@type': 'PodcastSeries',
+              name: ep.show,
+            },
+            ...(ep.audioUrl
+              ? {
+                  associatedMedia: {
+                    '@type': 'AudioObject',
+                    contentUrl: ep.audioUrl,
+                  },
+                }
+              : {}),
+          },
+        })),
+      },
+      ...(city.books.length > 0
+        ? [
+            {
+              '@context': 'https://schema.org',
+              '@type': 'ItemList',
+              name: `Books Mentioned on Podcasts About ${city.name}`,
+              numberOfItems: city.books.length,
+              itemListElement: city.books.map((book, idx) => ({
+                '@type': 'ListItem',
+                position: idx + 1,
+                item: {
+                  '@type': 'Book',
+                  name: book.title,
+                  author: {
+                    '@type': 'Person',
+                    name: book.author,
+                  },
+                  ...(book.isbn ? { isbn: book.isbn } : {}),
+                },
+              })),
+            },
+          ]
+        : []),
+    ];
 ---
 
-<Layout title={title} description={description}>
+<Layout
+  title={title}
+  description={description}
+  canonicalPath={canonicalPath}
+  rssUrl={isWelcome ? undefined : `/feeds/${encodeURIComponent(city.id)}.xml`}
+  rssTitle={isWelcome ? undefined : `${city.name} Podcasts — PodAtlas RSS`}
+  jsonLd={jsonLd}
+>
   <div class="h-dvh flex flex-col bg-[#faf9f6] text-stone-900 overflow-hidden">
     <TopBar />
 

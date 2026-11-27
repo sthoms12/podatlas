@@ -2,8 +2,8 @@
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>PodAtlas: Reykjavik, Iceland Podcast Playlist</title>
-    <link>https://podatlas.pages.dev/city/reykjavik-iceland</link>
-    <atom:link href="https://podatlas.pages.dev/feeds/reykjavik-iceland.xml" rel="self" type="application/rss+xml" />
+    <link>https://podatlas.app/city/reykjavik-iceland</link>
+    <atom:link href="https://podatlas.app/feeds/reykjavik-iceland.xml" rel="self" type="application/rss+xml" />
     <description>Geothermal pools, Viking sagas, volcanic Ring Road drives, and winter aurora chasing.</description>
     <language>en-us</language>
     <itunes:author>PodAtlas</itunes:author>
@@ -11,7 +11,7 @@
     <item>
       <title>Women Who Travel — Ring Road Reality Check: Winter Driving &amp; Geothermal Pools</title>
       <guid isPermaLink="false">podatlas:reykjavik-iceland:re-1</guid>
-      <link>https://podatlas.pages.dev/city/reykjavik-iceland</link>
+      <link>https://podatlas.app/city/reykjavik-iceland</link>
       <pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
       <description>Women Who Travel: Skip the $100 tourist lagoons—how locals use neighborhood sundlaugar pools and pack for 40mph winds.
 
@@ -25,7 +25,7 @@ Mentioned:
     <item>
       <title>Saga Thing — Njal’s Saga: Lawsuits, Feuds &amp; Fire in Medieval Iceland</title>
       <guid isPermaLink="false">podatlas:reykjavik-iceland:re-2</guid>
-      <link>https://podatlas.pages.dev/city/reykjavik-iceland</link>
+      <link>https://podatlas.app/city/reykjavik-iceland</link>
       <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
       <description>Saga Thing: Why medieval Icelanders settled blood feuds at Thingvellir’s rocky open-air parliament.
 

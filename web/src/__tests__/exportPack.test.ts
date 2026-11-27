@@ -73,7 +73,7 @@ describe('exportPack generators', () => {
   });
 
   it('builds a valid playable Podcast RSS 2.0 feed with enclosures', () => {
-    const rss = buildCityRssFeed(SAMPLE_CITY, 'https://podatlas.pages.dev');
+    const rss = buildCityRssFeed(SAMPLE_CITY, 'https://podatlas.app');
     expect(rss).toContain('<rss version="2.0"');
     expect(rss).toContain('PodAtlas: Kyoto, Japan Podcast Playlist');
     expect(rss).toContain('<enclosure url="https://example.com/ky-1.mp3" length="0" type="audio/mpeg" />');

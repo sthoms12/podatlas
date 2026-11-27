@@ -2,8 +2,8 @@
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>PodAtlas: Istanbul, Turkey Podcast Playlist</title>
-    <link>https://podatlas.pages.dev/city/istanbul-turkey</link>
-    <atom:link href="https://podatlas.pages.dev/feeds/istanbul-turkey.xml" rel="self" type="application/rss+xml" />
+    <link>https://podatlas.app/city/istanbul-turkey</link>
+    <atom:link href="https://podatlas.app/feeds/istanbul-turkey.xml" rel="self" type="application/rss+xml" />
     <description>Where Byzantine domes meet Ottoman bazaars across the Bosphorus Strait.</description>
     <language>en-us</language>
     <itunes:author>PodAtlas</itunes:author>
@@ -11,7 +11,7 @@
     <item>
       <title>History of Byzantium — 1453: The Walls of Constantinople &amp; Hagia Sophia</title>
       <guid isPermaLink="false">podatlas:istanbul-turkey:is-1</guid>
-      <link>https://podatlas.pages.dev/city/istanbul-turkey</link>
+      <link>https://podatlas.app/city/istanbul-turkey</link>
       <pubDate>Wed, 12 Aug 2026 00:00:00 +0000</pubDate>
       <description>History of Byzantium: Walk the Theodosian Walls and learn how Hagia Sophia’s dome stood for 1,500 years.
 
@@ -25,7 +25,7 @@ Mentioned:
     <item>
       <title>Culinary Backstreets Audio — Crossing to Kadıköy: Istanbul’s Best Breakfast &amp; Meyhanes</title>
       <guid isPermaLink="false">podatlas:istanbul-turkey:is-2</guid>
-      <link>https://podatlas.pages.dev/city/istanbul-turkey</link>
+      <link>https://podatlas.app/city/istanbul-turkey</link>
       <pubDate>Fri, 09 Oct 2026 00:00:00 +0000</pubDate>
       <description>Culinary Backstreets Audio: Why the 20-minute commuter ferry to the Asian side unlocks Istanbul’s best street food.
 

@@ -44,7 +44,7 @@ export function buildTripItineraryText(city: CityData): string {
 
 export function buildCityRssFeed(
   city: CityData,
-  siteBaseUrl = 'https://podatlas.pages.dev'
+  siteBaseUrl = 'https://podatlas.app'
 ): string {
   const cleanBase = siteBaseUrl.replace(/\/+$/, '');
   const cityUrl = `${cleanBase}/city/${city.id}`;
